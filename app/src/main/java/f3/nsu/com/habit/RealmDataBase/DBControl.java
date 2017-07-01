@@ -62,7 +62,6 @@ public class DBControl {
      */
 
 
-
     /**
      * 返回创建任务列表数据库的id
      */
@@ -105,14 +104,6 @@ public class DBControl {
      * 累计总积分
      */
     public int sumTotalModify(){
-//        List<IntegralDataBase> integralDataBases = sleDataIntegralDataBase();
-//        int size = integralDataBases.size();
-//        int sumTotalModify = 0;
-//        for(int i = 0;i < size;i++){
-//            if(integralDataBases.equals("todayIntegral")){
-//                sumTotalModify += integralDataBases.get(i).getTodayIntegral();
-//            }
-//    }
         int sumTotalModify  = mRealm.where(IntegralDataBase.class).sum("todayIntegral").intValue();
         return sumTotalModify;
     }
