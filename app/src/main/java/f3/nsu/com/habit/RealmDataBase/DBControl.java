@@ -122,14 +122,10 @@ public class DBControl {
      * @param data 传入的data标志符
      */
     public int sumTodayModify (String data){
-        List<IntegralDataBase> integralDataBases = sleDataIntegralDataBase();
-        int size = integralDataBases.size();
-        int sumTodayModify = 0;
-        for (int i = 0;i < size;i++){
-            if(data.equals(integralDataBases.equals("data"))){
-                sumTodayModify = integralDataBases.get(i).getTodayIntegral();
-            }
-        }
+        List<IntegralDataBase> integralDataBasesList = sleDataIntegralDataBase();
+        int size = integralDataBasesList.size();
+        RealmResults<IntegralDataBase> integralDataBase = mRealm.where(IntegralDataBase.class).equalTo("data",data).findAll();
+        int sumTodayModify = integralDataBase.sum("todayIntegral").intValue();
         return sumTodayModify;
     }
 
