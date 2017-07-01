@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="f3.nsu.com.habit.MainActivity">
+    tools:context="f3.nsu.com.habit.acitvity.MainActivity">
 
     <LinearLayout
         android:id="@+id/bottom_bar_group"
@@ -47,21 +47,21 @@
             android:id="@+id/fragment_home"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:name="f3.nsu.com.habit.HomeFragment">
+            android:name="f3.nsu.com.habit.fragment.HomeFragment">
 
         </fragment>
         <fragment
             android:id="@+id/fragment_pet"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:name="f3.nsu.com.habit.PetFragment">
+            android:name="f3.nsu.com.habit.fragment.PetFragment">
 
         </fragment>
         <fragment
             android:id="@+id/fragment_personal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:name="f3.nsu.com.habit.PersonalFragment">
+            android:name="f3.nsu.com.habit.fragment.PersonalFragment">
 
         </fragment>
 

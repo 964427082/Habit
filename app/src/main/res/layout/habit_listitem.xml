@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="75.7dp"
+    android:background="@drawable/background_color1">
+
+
+    <TextView
+        android:id="@+id/text1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="早起"
+        android:textSize="18sp"
+        android:textColor="#ffffff"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="5.3dp"/>
+    <TextView
+        android:id="@+id/text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/text1"
+        android:text="12/45天"
+        android:textColor="#ffffff"
+        android:textSize="10.7sp"
+        android:layout_marginTop="36.7dp"/>
+    <View
+        android:layout_width="203.7dp"
+        android:layout_height="2.3dp"
+        android:layout_alignLeft="@id/text1"
+        android:layout_marginTop="57dp"
+        android:background="#ff4886"/>
+    <ImageButton
+        android:id="@+id/button_complete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_complete"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="13.3dp"/>
+</RelativeLayout>

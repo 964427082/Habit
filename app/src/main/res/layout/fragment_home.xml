@@ -2,12 +2,31 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/bg_btn"
+        android:layout_marginTop="117dp"
+        android:layout_centerHorizontal="true"/>
 
     <ImageView
+        android:id="@+id/imageView_rencentage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@mipmap/rencentage"/>
 
+    <GridView
+        android:id="@+id/gridView_week"
+        android:layout_width="337.9dp"
+        android:layout_height="21.3dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="75.7dp"
+        android:listSelector="@android:color/transparent"
+        android:numColumns="7"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+    </GridView>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -38,5 +57,13 @@
             android:layout_alignParentRight="true"/>
     </RelativeLayout>
 
+    <ListView
+        android:id="@+id/habit_ListView"
+        android:layout_width="296.3dp"
+        android:layout_height="75.7dp"
+        android:layout_below="@id/imageView_rencentage"
+        android:layout_centerHorizontal="true">
+
+    </ListView>
 
 </RelativeLayout>

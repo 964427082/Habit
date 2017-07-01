@@ -1,10 +1,14 @@
-package f3.nsu.com.habit;
+package f3.nsu.com.habit.acitvity;
 
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+
+import f3.nsu.com.habit.fragment.HomeFragment;
+import f3.nsu.com.habit.fragment.PersonalFragment;
+import f3.nsu.com.habit.fragment.PetFragment;
+import f3.nsu.com.habit.R;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
 
