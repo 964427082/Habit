@@ -110,7 +110,6 @@ public class DBControl {
 
     /**
      *查看当天的积分
-     * @param data 传入的data标志符
      */
     public int sumTodayModify (String data){
         List<IntegralDataBase> integralDataBasesList = sleDataIntegralDataBase();
