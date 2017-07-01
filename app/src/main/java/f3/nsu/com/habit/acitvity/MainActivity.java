@@ -34,7 +34,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         button_home.setOnClickListener(this);
         button_pet.setOnClickListener(this);
         button_personal.setOnClickListener(this);
-        button_home.performClick();//主动调用button_home点击事件,进入时，显示home界面
+        button_home.performClick();//主动调用button_home点击事件,进入时，显示home界面。
     }
 
     @Override
