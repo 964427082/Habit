@@ -1,14 +1,19 @@
 package f3.nsu.com.habit.acitvity;
 
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageButton;
 
+import f3.nsu.com.habit.R;
+import f3.nsu.com.habit.RealmDataBase.DBControl;
+import f3.nsu.com.habit.RealmDataBase.IntegralDataBase;
+import f3.nsu.com.habit.RealmDataBase.TaskData.TaskDataBase;
 import f3.nsu.com.habit.fragment.HomeFragment;
 import f3.nsu.com.habit.fragment.PersonalFragment;
 import f3.nsu.com.habit.fragment.PetFragment;
-import f3.nsu.com.habit.R;
+
+import static f3.nsu.com.habit.RealmDataBase.DBControl.createRealm;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
 
@@ -21,6 +26,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if(DBControl.createRealm(this).showTaskDataBase().size() == 0){
+            DBControl.createRealm(this).addTaskDataBase(new TaskDataBase());
+        }
         initView();
     }
 
@@ -62,5 +70,40 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
         v.setEnabled(false);//setEnabled控制控件false不激活，不管什么属性都无效
         currentButton = v;
+    }
+
+
+    /**
+     * 修改当天积分信息
+     * @param data  当天的主键   日期
+     * @param today  修改后的当天积分
+     * @param week   星期几
+     */
+    public void todayIntegral(String data,int today,String week){
+        IntegralDataBase idb = new IntegralDataBase();
+        idb.setData(data);
+        idb.setTodayIntegral(today);
+        idb.setWeek(week);
+        createRealm(this).addIDataBase(idb);
+    }
+
+    /**
+     * 查看所有总积分
+     * @return   总积分
+     */
+    public int showTotalModify(){
+        int totalModify = 0;
+        totalModify = DBControl.createRealm(this).sumTotalModify();
+        return totalModify;
+    }
+
+    /**
+     * 查询某天积分
+     * @param data  当天的日期
+     * @return   当天的积分
+     */
+    public int showAnyDayModify(String data){
+        int anyDayModify = DBControl.createRealm(this).sumTodayModify(data);
+        return anyDayModify;
     }
 }

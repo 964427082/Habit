@@ -15,10 +15,7 @@ public class IntegralDataBase extends RealmObject {
     private int todayIntegral;   //当天获得的积分
     private String week;    //周日期
 
-    public IntegralDataBase() {
-    }
-
-    private IntegralDataBase(String data, int todayIntegral, String week) {
+    public IntegralDataBase(String data, int todayIntegral, String week) {
         this.data = data;
         this.todayIntegral = todayIntegral;
         this.week = week;
