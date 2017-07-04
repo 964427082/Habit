@@ -12,7 +12,6 @@ import f3.nsu.com.habit.RealmDataBase.TaskData.SystemTask;
 import f3.nsu.com.habit.RealmDataBase.TaskData.TaskList;
 import f3.nsu.com.habit.acitvity.MainActivity;
 import io.realm.Realm;
-import io.realm.RealmAsyncTask;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 
@@ -109,24 +108,31 @@ public class DBControl {
 
     public void addCustomTask(final String name,final int day,final String word,final String  color){
 
-        RealmAsyncTask realmAsyncTask = mRealm.executeTransactionAsync(new Realm.Transaction() {
+//        RealmAsyncTask realmAsyncTask = mRealm.executeTransactionAsync(new Realm.Transaction() {
+//            @Override
+//            public void execute(Realm realm) {
+//                CustomTask customTask  = realm.createObject(CustomTask.class);
+//                Log.i(TAG, "execute: 1");
+//                CustomList customList = realm.createObject(CustomList.class);
+//                Log.i(TAG, "execute: 2");
+//                customList.setName(name);
+//                customList.setDay(day);
+//                customList.setWord(word);
+//                customList.setColor(color);
+//                customTask.getCustomTaskList().add(customList);
+//            }
+//        });
+        mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                CustomList customList = realm.createObject(CustomList.class);
-//                CustomTask customTask  = realm.createObject(CustomTask.class);
-//                CustomList customList = customTask.getCustomTaskList().get(0);
-                customList.setName(name);
+                CustomTask customTask = realm.createObject(CustomTask.class,"customTask");
+                CustomList customList = realm.createObject(CustomList.class,name);
                 customList.setDay(day);
                 customList.setWord(word);
                 customList.setColor(color);
-                realm.copyToRealmOrUpdate(customList);
+                customTask.getCustomTaskList().add(customList);
             }
         });
-//        mRealm.executeTransaction(new Realm.Transaction() {
-//            @Override
-//            public void execute(Realm realm) {
-//            }
-//        });
     }
 //    public void addCustomTask(final CustomTask ct) {
 //        Realm.init(context);
