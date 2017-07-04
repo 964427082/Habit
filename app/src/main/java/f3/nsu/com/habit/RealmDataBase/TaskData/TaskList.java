@@ -1,14 +1,21 @@
 package f3.nsu.com.habit.RealmDataBase.TaskData;
 
+import io.realm.RealmObject;
+
 /**
  * Created by 爸爸你好 on 2017/7/2.
  */
 
-public class TaskList {
-    String name;
-    int modify;
-    boolean isStart;
-    public TaskList (String name,int modify,boolean isStart){
+public class TaskList extends RealmObject {
+    private String name;
+
+    private int modify;
+    private boolean isStart;
+
+    public TaskList() {
+    }
+
+    public TaskList(String name, int modify, boolean isStart) {
         this.name = name;
         this.modify = modify;
         this.isStart = isStart;
