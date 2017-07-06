@@ -1,15 +1,13 @@
 package f3.nsu.com.habit.acitvity;
 
 import android.content.Context;
-import android.icu.util.Calendar;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -18,18 +16,22 @@ import java.util.LinkedList;
 import java.util.List;
 
 import f3.nsu.com.habit.Adapter.HabitAdapter;
-import f3.nsu.com.habit.GetTime.GetTime;
+import f3.nsu.com.habit.R;
+import f3.nsu.com.habit.RealmDataBase.TaskData.CustomTask;
 import f3.nsu.com.habit.fragment.HomeFragment;
 import f3.nsu.com.habit.fragment.PersonalFragment;
 import f3.nsu.com.habit.fragment.PetFragment;
-import f3.nsu.com.habit.R;
 import f3.nsu.com.habit.ui.ExpandLayout;
 import f3.nsu.com.habit.ui.HabitList;
+import io.realm.Realm;
+
+import static f3.nsu.com.habit.RealmDataBase.DBControl.createRealm;
 
 /**
  * 主界面
  */
 public class MainActivity extends FragmentActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+    private static final String TAG = "MainActivity";
 
     HomeFragment mHomeFragment;
     PersonalFragment mPersonalFragment;
@@ -42,6 +44,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private HabitAdapter habitAdapter = null;
     private ListView habitListView;
     private ExpandLayout mExpandLayout;
+    public Realm realm;
+    public static boolean firstIn = true;
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -49,7 +53,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Realm.init(this);
+        realm = Realm.getDefaultInstance();
         initView();
+        //添加自定义习惯方式
+//        showCustomTask();
+//        addCustomTask("ok1", 5, "加油1", "#00000","12:06");
+//        showCustomTask();
     }
 
     /**
@@ -107,7 +117,28 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         button_home.performClick();//主动调用button_home点击事件,进入时，显示home界面。
 
         initExpandView();
+
+//        initSystemTask();       //初始化系统习惯任务列表
     }
+
+    /**
+     * 初始化系统习惯任务列表
+     */
+//    private void initSystemTask() {
+//        List<SystemTask> st = DBControl.createRealm(this).showSystemTask();
+//        int size = st.size();
+//        Log.i(TAG, "initView: size = " + size);
+//        if (size == 0) {
+//            firstIn = true;
+//            DBControl.createRealm(this).addSystemTask(new SystemTask());
+//        } else {
+//            firstIn = false;
+//            for (TaskList s : st.get(0).getSystemTaskList()) {
+//                Log.i(TAG, "initView:  = " + s.getName());
+//            }
+//        }
+//    }
+
 
     /**
      * 初始化日历按钮折叠布局 状态为  折叠
@@ -157,5 +188,44 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
         v.setEnabled(false);//setEnabled控制控件false不激活，不管什么属性都无效
         currentButton = v;
+    }
+
+
+
+    /**
+     * 自定义添加习惯列表并保存
+     *
+     * @param name  自定义习惯的名称
+     * @param expectDay   需要坚持的天数
+     * @param word  一段鼓励自己的话
+     * @param color 列表的颜色
+     * @param clockTime 设置提醒时间
+     */
+    public void addCustomTask(String name, int expectDay, String word, String color,String clockTime) {
+        createRealm(this).addCustomTask(name,expectDay,word,color,clockTime);
+    }
+
+    /**
+     * 查看自定义习惯列表
+     */
+    public void showCustomTask() {
+        List<CustomTask> customTask = createRealm(this).showCustomTask();
+        for (CustomTask s : customTask) {
+            Log.i(TAG, "initView:  = " + s.getColor());
+        }
+    }
+
+//    /**
+//     * 根据名字删除自定义习惯列表项
+//     * @param name   键值
+//     */
+//    public void deleteCustomTask(String name){
+//        DBControl.createRealm(this).deleteCustomTask(name);
+//    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
     }
 }
