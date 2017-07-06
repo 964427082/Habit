@@ -70,7 +70,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         habitDate.add(new HabitList("装逼","15:30","50/50天",R.drawable.round_button_color1,R.drawable.icon_right_default));
         habitDate.add(new HabitList("早起","13:00","21/45天",R.drawable.round_button_color1,R.drawable.icon_right_default));
         habitAdapter = new HabitAdapter((LinkedList<HabitList>)habitDate,mContext);
-
         habitListView.setAdapter(habitAdapter);
         habitListView.setOnItemClickListener(this);
 
