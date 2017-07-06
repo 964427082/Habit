@@ -1,69 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--homeFragment-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/bg_btn"
-        android:layout_marginTop="117dp"
-        android:layout_centerHorizontal="true"/>
-
-    <ImageView
-        android:id="@+id/imageView_rencentage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@mipmap/rencentage"/>
-
-    <GridView
-        android:id="@+id/gridView_week"
-        android:layout_width="337.9dp"
-        android:layout_height="21.3dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="75.7dp"
-        android:listSelector="@android:color/transparent"
-        android:numColumns="7"
-        android:overScrollMode="never"
-        android:scrollbars="none">
-
-    </GridView>
+    <!--标题栏-->
     <RelativeLayout
+        android:id="@+id/tab_relative"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="50dp"
+        android:layout_marginTop="25dp"
+        android:background="@mipmap/clander_bg_top">
         <ImageButton
+            android:id="@+id/calendar_ImageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/icon_edit"
+            android:src="@mipmap/icon_icon_calendar"
+            android:layout_centerVertical="true"
             android:background="@null"
-            android:layout_marginLeft="16.7dp"
-            android:layout_marginTop="44dp"/>
-
+            android:layout_marginLeft="17dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="主界面"
-            android:textSize="21.3sp"
+            android:textSize="21sp"
             android:textColor="#ffffff"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="37.7dp"/>
-
+            android:layout_centerInParent="true"/>
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/icon_insert"
             android:background="@null"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="42.7dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="21dp"
             android:layout_alignParentRight="true"/>
-    </RelativeLayout>
 
+    </RelativeLayout>
+    <!--日历按钮折叠部分-->
+    <f3.nsu.com.habit.ui.ExpandLayout
+        android:id="@+id/expandLayout"
+        android:layout_width="match_parent"
+        android:layout_height="139dp"
+        android:background="@mipmap/clander_bg"
+        android:layout_below="@id/tab_relative">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="123456789"
+            android:layout_centerInParent="true"/>
+
+    </f3.nsu.com.habit.ui.ExpandLayout>
+    <!--listView-->
     <ListView
+
         android:id="@+id/habit_ListView"
-        android:layout_width="296.3dp"
-        android:layout_height="75.7dp"
-        android:layout_below="@id/imageView_rencentage"
-        android:layout_centerHorizontal="true">
+        android:layout_width="347dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        android:layout_below="@id/expandLayout"
+        android:divider="#00000000"
+        android:dividerHeight="10dp">
 
     </ListView>
-
 </RelativeLayout>

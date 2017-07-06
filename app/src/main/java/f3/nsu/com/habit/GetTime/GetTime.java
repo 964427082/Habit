@@ -5,6 +5,7 @@ import android.util.Log;
 import java.util.Calendar;
 
 /**
+ * 获取时间
  * Created by 爸爸你好 on 2017/6/27.
  */
 public class GetTime {

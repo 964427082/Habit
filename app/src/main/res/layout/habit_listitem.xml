@@ -1,40 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--习惯item-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="75.7dp"
-    android:background="@drawable/background_color1">
-
-
+    android:id="@+id/item_layout"
+    android:layout_height="77dp"
+    android:elevation="4dp"
+    android:background="@mipmap/mask">
+    <Button
+        android:id="@+id/color_button"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:background="@drawable/round_button_color3"
+        android:layout_marginTop="13dp"
+        android:layout_marginLeft="10dp"/>
     <TextView
-        android:id="@+id/text1"
+        android:id="@+id/habit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="早起"
-        android:textSize="18sp"
-        android:textColor="#ffffff"
-        android:layout_marginLeft="14dp"
-        android:layout_marginTop="5.3dp"/>
-    <TextView
-        android:id="@+id/text2"
+        android:text="每天看书一小时"
+        android:textSize="16sp"
+        android:textColor="#262626"
+        android:layout_marginTop="6dp"
+        android:layout_marginLeft="25dp"/>
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/text1"
-        android:text="12/45天"
-        android:textColor="#ffffff"
-        android:textSize="10.7sp"
-        android:layout_marginTop="36.7dp"/>
+        android:src="@mipmap/icon_clock"
+        android:layout_marginLeft="27dp"
+        android:layout_marginTop="32dp"/>
+    <TextView
+        android:id="@+id/time_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="13:00"
+        android:textSize="11sp"
+        android:textColor="#434343"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="44dp"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/icon_aieplane"
+        android:layout_marginTop="48dp"
+        android:layout_marginLeft="27dp"/>
+    <TextView
+        android:id="@+id/day_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5天/40天"
+        android:textSize="11sp"
+        android:textColor="#434343"
+        android:layout_marginTop="47dp"
+        android:layout_marginLeft="44dp"/>
     <View
-        android:layout_width="203.7dp"
-        android:layout_height="2.3dp"
-        android:layout_alignLeft="@id/text1"
-        android:layout_marginTop="57dp"
-        android:background="#ff4886"/>
-    <ImageButton
-        android:id="@+id/button_complete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_complete"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="13.3dp"/>
+        android:layout_width="207dp"
+        android:layout_height="5dp"
+        android:layout_marginLeft="27dp"
+        android:layout_marginTop="62dp"
+        android:background="#50cfde"/>
+    <Button
+        android:id="@+id/complete_button"
+        android:layout_width="33dp"
+        android:layout_height="33dp"
+        android:background="@drawable/icon_right_selected"
+        android:layout_marginTop="22dp"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentRight="true"/>
+
 </RelativeLayout>

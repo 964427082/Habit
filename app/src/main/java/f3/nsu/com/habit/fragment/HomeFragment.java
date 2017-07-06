@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import f3.nsu.com.habit.R;
 
 /**
+ * 主界面fragment
  * Created by zhy on 2017/6/29.
  */
 
