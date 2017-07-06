@@ -46,7 +46,6 @@ public class GetTime {
 
     public String getData() {
         data = String.valueOf(year) + String.valueOf(month) + String.valueOf(day);
-        Log.i(TAG, "getData: 日期是data = " + data);
         return data;
     }
 

@@ -6,7 +6,6 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import f3.nsu.com.habit.RealmDataBase.TaskData.CustomList;
 import f3.nsu.com.habit.RealmDataBase.TaskData.CustomTask;
 import f3.nsu.com.habit.RealmDataBase.TaskData.SystemTask;
 import f3.nsu.com.habit.RealmDataBase.TaskData.TaskList;
@@ -89,8 +88,6 @@ public class DBControl {
      * 查看系统习惯任务列表
      */
     public List<SystemTask> showSystemTask() {
-//        mRealm = Realm.getDefaultInstance();
-//        mRealm = Realm.getDefaultInstance();
         final List<SystemTask> s = new ArrayList<>();
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
@@ -103,61 +100,23 @@ public class DBControl {
     }
 
     /**
-     * 保存自定义习惯列表
+     * 保存添加的自定义习惯列表
      */
 
-    public void addCustomTask(final String name,final int day,final String word,final String  color){
+    public void addCustomTask(final String name, final int expectDay, final String word, final String color,final String clockTime) {
 
-//        RealmAsyncTask realmAsyncTask = mRealm.executeTransactionAsync(new Realm.Transaction() {
-//            @Override
-//            public void execute(Realm realm) {
-//                CustomTask customTask  = realm.createObject(CustomTask.class);
-//                Log.i(TAG, "execute: 1");
-//                CustomList customList = realm.createObject(CustomList.class);
-//                Log.i(TAG, "execute: 2");
-//                customList.setName(name);
-//                customList.setDay(day);
-//                customList.setWord(word);
-//                customList.setColor(color);
-//                customTask.getCustomTaskList().add(customList);
-//            }
-//        });
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                CustomTask customTask = realm.createObject(CustomTask.class,"customTask");
-                CustomList customList = realm.createObject(CustomList.class,name);
-                customList.setDay(day);
-                customList.setWord(word);
-                customList.setColor(color);
-                customTask.getCustomTaskList().add(customList);
+                CustomTask customTask = realm.createObject(CustomTask.class, name);
+                customTask.setExpectDay(expectDay);
+                customTask.setWord(word);
+                customTask.setColor(color);
+                customTask.setClockTime(clockTime);
+                customTask.setStart(false);
             }
         });
     }
-//    public void addCustomTask(final CustomTask ct) {
-//        Realm.init(context);
-//        mRealm.executeTransaction(new Realm.Transaction() {
-//            @Override
-//            public void execute(Realm realm) {
-//                Log.i(TAG, "execute: ct  size = " + ct.getCustomTaskList().size());
-//
-//                for (CustomList s : ct.getCustomTaskList()) {
-//                    Log.i(TAG, "initView:  = " + s.getName());
-//                }
-////                if (ct.getCustomTaskList().size() == 1) {
-////                    Log.i(TAG, "execute: ct name = " + ct.getCustomTaskList().get(1).getName());
-////                }
-//                mRealm.copyToRealmOrUpdate(ct);
-////                CustomList customList = realm.createObject(CustomList.class);
-////                for (int i = 0;i < ct.size();i++){
-////                    customList.setName(ct.get(i).getName());
-////                    customList.setDay(ct.get(i).getDay());
-////                    customList.setWord(ct.get(i).getWord());
-////                    customList.setWord(ct.get(i).getColor());
-////                }
-//            }
-//        });
-//    }
 
     /**
      * 查看自定义习惯列表
@@ -165,19 +124,42 @@ public class DBControl {
     public List<CustomTask> showCustomTask() {
         RealmResults<CustomTask> customTasks = mRealm.where((CustomTask.class)).findAll();
         Log.i(TAG, "showCustomTask: TaskSize = " + customTasks.size());
-//        List<CustomList> customList = customTasks.get(0).getCustomTaskList();
-//        for(int i = 0;i < customList.size();i++){
-//            Log.i(TAG, "execute: " + customList.get(i).getName());
-//        }
         return mRealm.copyFromRealm(customTasks);
     }
 
     /**
      * 删除自定义列表中的某项
      */
-    public void deleteCustomTask(String name) {
+    public void deleteCustomTask(final String name) {
         final RealmResults<CustomTask> customTasks = mRealm.where(CustomTask.class).findAll();
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                int j = -1;
+                for (int i = 0; i < customTasks.size(); i++) {
+                    if (name.equals(customTasks.get(i).getName())) {
+                        j = i;
+                    }
+                }
+                customTasks.deleteFromRealm(j);
+            }
+        });
+    }
 
+
+    /**
+     * 更改自定义习惯预计坚持天数
+     * @param name    键值  唯一的
+     * @param amendDay     修改后的预计天数
+     */
+    public void amendData(final String name,final int amendDay){
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                CustomTask customTasks = mRealm.where(CustomTask.class).equalTo("name",name).findFirst();
+                customTasks.setExpectDay(amendDay);
+            }
+        });
     }
 
 

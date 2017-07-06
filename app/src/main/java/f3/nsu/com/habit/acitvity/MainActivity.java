@@ -4,17 +4,12 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import f3.nsu.com.habit.R;
 import f3.nsu.com.habit.RealmDataBase.DBControl;
-import f3.nsu.com.habit.RealmDataBase.TaskData.CustomList;
 import f3.nsu.com.habit.RealmDataBase.TaskData.CustomTask;
 import f3.nsu.com.habit.fragment.HomeFragment;
 import f3.nsu.com.habit.fragment.PersonalFragment;
@@ -29,8 +24,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     HomeFragment mHomeFragment;
     PersonalFragment mPersonalFragment;
     PetFragment mPetFragment;
-    @BindView(R.id.button_eg)
-    Button buttonEg;
     private ImageButton button_home, button_pet, button_personal;
     private View currentButton;
     public Realm realm;
@@ -40,10 +33,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
         Realm.init(this);
         realm = Realm.getDefaultInstance();
         initView();
+
+        //添加自定义习惯方式
+//        addCustomTask("ok1", 5, "加油1", "#00000","12:06");
+//        showCustomTask();
     }
 
     private void initView() {
@@ -58,9 +54,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         button_personal.setOnClickListener(this);
         button_home.performClick();//主动调用button_home点击事件,进入时，显示home界面。
 
-        /**
-         * 初始化系统习惯任务列表
-         */
+//        initSystemTask();       //初始化系统习惯任务列表
+    }
+
+    /**
+     * 初始化系统习惯任务列表
+     */
+//    private void initSystemTask() {
 //        List<SystemTask> st = DBControl.createRealm(this).showSystemTask();
 //        int size = st.size();
 //        Log.i(TAG, "initView: size = " + size);
@@ -73,22 +73,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 //                Log.i(TAG, "initView:  = " + s.getName());
 //            }
 //        }
+//    }
 
-
-        DBControl.createRealm(this).addCustomTask("ok1", 5, "加油", "#00000");
-//        DBControl.createRealm(this).addCustomTask("ok2", 5, "加油22222", "#02222");
-//        DBControl.createRealm(this).addCustomTask("ok3", 5, "加3333", "#33333");
-//        DBControl.createRealm(this).addCustomTask("ok4", 5, "加44444", "#44444");
-//        showCustomTask();
-    }
-
-    @OnClick(R.id.button_eg)
-    public void onViewClicked() {
-        List<CustomTask> customTask = createRealm(this).showCustomTask();
-        for (CustomList s : customTask.get(0).getCustomTaskList()) {
-            Log.i(TAG, "initView:  = " + s.getName());
-        }
-    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -118,51 +104,36 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
 
-//    /**
-//     * 自定义添加习惯列表并保存
-//     *
-//     * @param name  自定义习惯的名称
-//     * @param day   需要坚持的天数
-//     * @param word  一段鼓励自己的话
-//     * @param color 列表的颜色
-//     */
-//    public void addCustomTask(String name, int day, String word, String color) {
-//        List<CustomTask> customTask = createRealm(this).showCustomTask();
-//
-//        if (customTask.size() == 0) {
-//            CustomTask ct = new CustomTask();
-//            RealmList<CustomList> customLists = ct.getCustomTaskList();
-//            customLists.add(new CustomList(name, day, word, color));
-//            createRealm(this).addCustomTask(ct);
-//        }
-//        else {
-//            RealmList<CustomList> cl = customTask.get(0).getCustomTaskList();
-//        }
-////        else {
-////            CustomTask ct = customTask.get(0);
-////            RealmList<CustomList> customLists = ct.getCustomTaskList();
-////            int i = 0;
-////            Log.i(TAG, "addCustomTask: MainActivity size =  " + customLists.size());
-////            while (i < customLists.size()) {
-////                i++;
-////            }
-////            CustomList cl = new CustomList();
-////            cl.setName(name);
-////            cl.setDay(day);
-////            cl.setWord(word);
-////            cl.setColor(color);
-////            customLists.add(i + 1, cl);
-////            createRealm(this).addCustomTask(ct);
-////        }
-//    }
+    /**
+     * 自定义添加习惯列表并保存
+     *
+     * @param name  自定义习惯的名称
+     * @param expectDay   需要坚持的天数
+     * @param word  一段鼓励自己的话
+     * @param color 列表的颜色
+     * @param clockTime 设置提醒时间
+     */
+    public void addCustomTask(String name, int expectDay, String word, String color,String clockTime) {
+        DBControl.createRealm(this).addCustomTask(name,expectDay,word,color,clockTime);
+    }
 
+    /**
+     * 查看自定义习惯列表
+     */
     public void showCustomTask() {
         List<CustomTask> customTask = createRealm(this).showCustomTask();
-        Log.i(TAG, "showCustomTask: TaskSize = " + customTask.size());
-        if (customTask.size() != 0) {
-            Log.i(TAG, "showCustomTask: name = " + customTask.get(0).getCustomTaskList().get(0).getName());
+        for (CustomTask s : customTask) {
+            Log.i(TAG, "initView:  = " + s.getColor());
         }
     }
+
+//    /**
+//     * 根据名字删除自定义习惯列表项
+//     * @param name   键值
+//     */
+//    public void deleteCustomTask(String name){
+//        DBControl.createRealm(this).deleteCustomTask(name);
+//    }
 
 
 //    /**
