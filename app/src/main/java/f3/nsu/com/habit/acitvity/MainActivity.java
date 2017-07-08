@@ -8,23 +8,34 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import f3.nsu.com.habit.Adapter.HabitAdapter;
+import f3.nsu.com.habit.GetTime.GetTime;
 import f3.nsu.com.habit.R;
+import f3.nsu.com.habit.RealmDataBase.DBControl;
 import f3.nsu.com.habit.RealmDataBase.TaskData.CustomTask;
+import f3.nsu.com.habit.RealmDataBase.TaskData.MyHabitTask;
+import f3.nsu.com.habit.RealmDataBase.TaskData.MyIntegralList;
+import f3.nsu.com.habit.RealmDataBase.TaskData.SystemTask;
+import f3.nsu.com.habit.RealmDataBase.TaskData.TaskList;
 import f3.nsu.com.habit.fragment.HomeFragment;
 import f3.nsu.com.habit.fragment.PersonalFragment;
 import f3.nsu.com.habit.fragment.PetFragment;
 import f3.nsu.com.habit.ui.ExpandLayout;
 import f3.nsu.com.habit.ui.HabitList;
+import f3.nsu.com.habit.ui.MonthDateView;
 import io.realm.Realm;
 
+import static android.content.ContentValues.TAG;
 import static f3.nsu.com.habit.RealmDataBase.DBControl.createRealm;
 
 /**
@@ -38,6 +49,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     PetFragment mPetFragment;
     private ImageButton button_home,button_pet,button_personal;
     private ImageButton calendar_ImageButton;
+    private TextView dayTextView,monthTextView;
     private View currentButton;
     private List<HabitList> habitDate = null;
     private Context mContext;
@@ -46,7 +58,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private ExpandLayout mExpandLayout;
     public Realm realm;
     public static boolean firstIn = true;
-
+    private MonthDateView monthDateView;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -86,14 +98,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     /**
-     * list点击事件
-     * @param parent
-     * @param view
-     * @param position
-     * @param id
+     * 响应ListView中item的点击事件
      */
-    public void onItemClick(AdapterView<?> parent, View view ,int position,long id){
-        Toast.makeText(mContext,"你点击了第"+position + "项",Toast.LENGTH_LONG).show();
+    @Override
+    public void onItemClick(AdapterView<?> arg0, View v, int position, long id) {
+        Toast.makeText(this, "listview的item被点击了！，点击的位置是-->" + position,
+                Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -106,7 +116,22 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mPetFragment = (PetFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_pet);
         mPersonalFragment = (PersonalFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_personal);
 
+
+        monthDateView = (MonthDateView) findViewById(R.id.monthDateView);
+        completeTag();
+        monthDateView.setDateClick(new MonthDateView.DateClick() {
+
+            @Override
+            public void onClickOnDate() {
+                Toast.makeText(getApplication(), "点击了：" + monthDateView.getmSelDay(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
         addHabit();
+        dayTextView = (TextView) findViewById(R.id.day_textView);
+        monthTextView = (TextView) findViewById(R.id.month_textView);
+
+        setDay();
         calendar_ImageButton = (ImageButton) findViewById(R.id.calendar_ImageButton);
         button_home = (ImageButton) findViewById(R.id.button_home);
         button_personal = (ImageButton) findViewById(R.id.button_personal);
@@ -114,6 +139,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         button_home.setOnClickListener(this);
         button_pet.setOnClickListener(this);
         button_personal.setOnClickListener(this);
+
+
+
         button_home.performClick();//主动调用button_home点击事件,进入时，显示home界面。
 
         initExpandView();
@@ -122,22 +150,45 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     /**
+     * 为完成的日期在日历中添加标记
+     */
+    private void completeTag() {
+        //添加指定日期做标记  10 12 15 16
+        List<Integer> list = new ArrayList<Integer>();
+        list.add(10);
+        list.add(12);
+        list.add(15);
+        list.add(16);
+        monthDateView.setDaysHasThingList(list);
+    }
+
+    /**
+     * 设置当天日期
+     */
+    private void setDay() {
+        int day = new GetTime().getDay();
+        int month = new GetTime().getMonth();
+        dayTextView.setText(day+"日");
+        monthTextView.setText(month+"月");
+    }
+
+    /**
      * 初始化系统习惯任务列表
      */
-//    private void initSystemTask() {
-//        List<SystemTask> st = DBControl.createRealm(this).showSystemTask();
-//        int size = st.size();
-//        Log.i(TAG, "initView: size = " + size);
-//        if (size == 0) {
-//            firstIn = true;
-//            DBControl.createRealm(this).addSystemTask(new SystemTask());
-//        } else {
-//            firstIn = false;
-//            for (TaskList s : st.get(0).getSystemTaskList()) {
-//                Log.i(TAG, "initView:  = " + s.getName());
-//            }
-//        }
-//    }
+    private void initSystemTask() {
+        List<SystemTask> st = DBControl.createRealm(this).showSystemTask();
+        int size = st.size();
+        Log.i(TAG, "initView: size = " + size);
+        if (size == 0) {
+            firstIn = true;
+            DBControl.createRealm(this).addSystemTask(new SystemTask());
+        } else {
+            firstIn = false;
+            for (TaskList s : st.get(0).getSystemTaskList()) {
+                Log.i(TAG, "initView:  = " + s.getName());
+            }
+        }
+    }
 
 
     /**
@@ -227,5 +278,28 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void onDestroy() {
         super.onDestroy();
         realm.close();
+    }
+
+
+    private void showMyHabitTask() {
+        List<MyHabitTask> myHabitTask = DBControl.createRealm(this).showMyHabitEveyTask();
+
+        Log.i(TAG, "showMyHabitEveyTask: 我创建的天数 = " + myHabitTask.size());
+//        for(int i = 0;i < myHabitTask.size();i++){
+//            myIntegralList.add(myHabitTask.get(i).getMyIntegralList());
+//        }
+        int i = 0;
+        for (MyHabitTask s : myHabitTask) {
+            Log.i(TAG, "initView:  创建的日期= " + s.getData());
+            //遍历某一天的习惯名称
+            for(MyIntegralList l : myHabitTask.get(i).getMyIntegralList()){
+                Log.i(TAG, "showMyHabitTask: name = " + l.getName());
+            }
+            i++;
+        }
+    }
+
+    private void addMyHabitTask(String data, String name, int modify, int expectDay, String clockTime) {
+        DBControl.createRealm(this).addMyHabitTask(data,name,modify,expectDay,clockTime);
     }
 }
