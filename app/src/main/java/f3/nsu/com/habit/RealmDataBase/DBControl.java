@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import f3.nsu.com.habit.RealmDataBase.TaskData.CustomTask;
+import f3.nsu.com.habit.RealmDataBase.TaskData.MyHabitTask;
+import f3.nsu.com.habit.RealmDataBase.TaskData.MyIntegralList;
 import f3.nsu.com.habit.RealmDataBase.TaskData.SystemTask;
 import f3.nsu.com.habit.RealmDataBase.TaskData.TaskList;
 import f3.nsu.com.habit.acitvity.MainActivity;
@@ -101,8 +103,7 @@ public class DBControl {
     /**
      * 保存添加的自定义习惯列表
      */
-
-    public void addCustomTask(final String name, final int expectDay, final String word, final String color,final String clockTime) {
+    public void addCustomTask(final String name, final int expectDay, final String word, final String color, final String clockTime) {
 
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
@@ -148,18 +149,63 @@ public class DBControl {
 
     /**
      * 更改自定义习惯预计坚持天数
-     * @param name    键值  唯一的
-     * @param amendDay     修改后的预计天数
+     *
+     * @param name     键值  唯一的
+     * @param amendDay 修改后的预计天数
      */
-    public void amendData(final String name,final int amendDay){
+    public void amendData(final String name, final int amendDay) {
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                CustomTask customTasks = mRealm.where(CustomTask.class).equalTo("name",name).findFirst();
+                CustomTask customTasks = mRealm.where(CustomTask.class).equalTo("name", name).findFirst();
                 customTasks.setExpectDay(amendDay);
             }
         });
     }
+
+
+    public List<MyHabitTask> showMyHabitEveyTask() {
+        final List<MyHabitTask> i = new ArrayList<>();
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                List<MyHabitTask> myHabitTask = mRealm.where(MyHabitTask.class).findAll();
+                i.addAll(myHabitTask);
+            }
+        });
+        return i;
+    }
+
+    /**
+     * 添加我的习惯列表
+     *
+     * @param data      日期
+     * @param name      习惯名字
+     * @param modify    积分分数
+     * @param expectDay 坚持的天数
+     * @param clockTime 提醒的时间
+     */
+    public void addMyHabitTask(final String data, final String name, final int modify, final int expectDay, final String clockTime) {
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                MyHabitTask m = realm.where(MyHabitTask.class).equalTo("data",data).findFirst();
+                MyIntegralList myIntegralList = realm.createObject(MyIntegralList.class,name);
+                myIntegralList.setModify(modify);
+                myIntegralList.setExpectDay(expectDay);
+                myIntegralList.setClockTime(clockTime);
+                myIntegralList.setStart(false);
+                if(m == null){
+                    MyHabitTask myHabitTask = realm.createObject(MyHabitTask.class, data);
+                    myHabitTask.getMyIntegralList().add(myIntegralList);
+                }else {
+                    m.getMyIntegralList().add(myIntegralList);
+                }
+            }
+        });
+    }
+
+    ;
 
 
 //

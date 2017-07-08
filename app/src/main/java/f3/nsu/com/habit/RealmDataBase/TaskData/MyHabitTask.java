@@ -1,7 +1,7 @@
 package f3.nsu.com.habit.RealmDataBase.TaskData;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
-import io.realm.annotations.Index;
 import io.realm.annotations.PrimaryKey;
 
 /**
@@ -12,18 +12,38 @@ public class MyHabitTask  extends RealmObject{
     @PrimaryKey
     private String data;    //主键   日期：20170706     储存为某天完成的习惯
 
-    @Index
-    private String name;    // 选中的习惯名字
+    private RealmList<MyIntegralList> myIntegralList;
+    private int todayIntegral; //当天积累的分数
 
-    private int modify;     //该习惯的积分
 
-    private String completeTime;    //完成的时间     02：05
-    private int expectDay;    //预设计的天数
-    private int  insistDay;     //已经坚持的天数
-    private String clockTime;   //提醒时间
-    private int degreeOfHistory;    //历史完成次数
-    private int optimumDegree;  //最佳次数
-    private int monthFinishDegree;  //本月完成次数
+    public MyHabitTask(){}
+    public MyHabitTask(String data,RealmList<MyIntegralList> myIntegralList,int todayIntegral){
+        this.data = data;
+        this.myIntegralList = myIntegralList;
+        this.todayIntegral = todayIntegral;
+    }
 
-    private boolean isStart;    //是否当天已经完成
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    public RealmList<MyIntegralList> getMyIntegralList() {
+        return myIntegralList;
+    }
+
+    public void setMyIntegralList(RealmList<MyIntegralList> myIntegralList) {
+        this.myIntegralList = myIntegralList;
+    }
+
+    public int getTodayIntegral() {
+        return todayIntegral;
+    }
+
+    public void setTodayIntegral(int todayIntegral) {
+        this.todayIntegral = todayIntegral;
+    }
 }
