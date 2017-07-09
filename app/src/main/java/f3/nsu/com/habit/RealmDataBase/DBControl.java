@@ -6,6 +6,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import f3.nsu.com.habit.GetTime.GetTime;
 import f3.nsu.com.habit.RealmDataBase.TaskData.CustomTask;
 import f3.nsu.com.habit.RealmDataBase.TaskData.MyHabitTask;
 import f3.nsu.com.habit.RealmDataBase.TaskData.MyIntegralList;
@@ -204,8 +205,21 @@ public class DBControl {
             }
         });
     }
+    public void amendMyHabitIsStart(final String data, final String name){
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                MyHabitTask myHabitTask = mRealm.where(MyHabitTask.class).equalTo("data",data).findFirst();
+                RealmList<MyIntegralList> myIntegralLists = myHabitTask.getMyIntegralList();
+                for (int i = 0;i < myIntegralLists.size();i++){
+                    if(myIntegralLists.get(i).getName().equals(name)){
+                        myIntegralLists.get(i).setStart(true);
+                    }
+                }
+            }
+        });
+    }
 
-    ;
 
 
 //

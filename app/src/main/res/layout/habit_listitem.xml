@@ -6,11 +6,16 @@
     android:layout_height="77dp"
     android:elevation="4dp"
     android:background="@mipmap/mask">
-    <Button
-        android:id="@+id/color_button"
+    <!--<Button-->
+        <!--android:id="@+id/color_button"-->
+        <!--android:layout_width="8dp"-->
+        <!--android:layout_height="8dp"-->
+        <!--android:background="@drawable/round_button_color3"-->
+        <!--android:layout_marginTop="13dp"-->
+        <!--android:layout_marginLeft="10dp"/>-->
+    <f3.nsu.com.habit.ui.DrawCircle
         android:layout_width="8dp"
         android:layout_height="8dp"
-        android:background="@drawable/round_button_color3"
         android:layout_marginTop="13dp"
         android:layout_marginLeft="10dp"/>
     <TextView
@@ -62,7 +67,7 @@
         android:id="@+id/complete_button"
         android:layout_width="33dp"
         android:layout_height="33dp"
-        android:background="@drawable/icon_right_selected"
+        android:background="@drawable/icon_right_default"
         android:layout_marginTop="22dp"
         android:layout_marginRight="20dp"
         android:layout_alignParentRight="true"/>

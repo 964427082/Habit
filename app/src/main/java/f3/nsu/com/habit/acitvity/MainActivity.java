@@ -1,6 +1,7 @@
 package f3.nsu.com.habit.acitvity;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -30,6 +31,7 @@ import f3.nsu.com.habit.RealmDataBase.TaskData.TaskList;
 import f3.nsu.com.habit.fragment.HomeFragment;
 import f3.nsu.com.habit.fragment.PersonalFragment;
 import f3.nsu.com.habit.fragment.PetFragment;
+import f3.nsu.com.habit.ui.DrawCircle;
 import f3.nsu.com.habit.ui.ExpandLayout;
 import f3.nsu.com.habit.ui.HabitList;
 import f3.nsu.com.habit.ui.MonthDateView;
@@ -41,7 +43,8 @@ import static f3.nsu.com.habit.RealmDataBase.DBControl.createRealm;
 /**
  * 主界面
  */
-public class MainActivity extends FragmentActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class MainActivity extends FragmentActivity implements View.OnClickListener,
+        AdapterView.OnItemClickListener{
     private static final String TAG = "MainActivity";
 
     HomeFragment mHomeFragment;
@@ -60,6 +63,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public static boolean firstIn = true;
     private MonthDateView monthDateView;
 
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +71,22 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setContentView(R.layout.activity_main);
         Realm.init(this);
         realm = Realm.getDefaultInstance();
-        initView();
         //添加自定义习惯方式
 //        showCustomTask();
 //        addCustomTask("ok1", 5, "加油1", "#00000","12:06");
-//        showCustomTask();
+////        showCustomTask();
+//        addMyHabitTask(new GetTime().getData(),"oo1",3,20,"12:10");
+//        addMyHabitTask(new GetTime().getData(),"oo2",3,20,"12:10");
+//        addMyHabitTask(new GetTime().getData(),"oo3",3,20,"12:10");
+//
+//        addMyHabitTask(new GetTime().getData(),"oo4",3,20,"12:10");
+//        addMyHabitTask(new GetTime().getData(),"oo5",3,20,"12:10");
+//        addMyHabitTask(new GetTime().getData(),"oo6",3,20,"12:10");
+//
+//        addMyHabitTask(new GetTime().getData(),"oo7",3,20,"12:10");
+//        addMyHabitTask(new GetTime().getData(),"oo8",3,20,"12:10");
+
+        initView();
     }
 
     /**
@@ -81,20 +96,32 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mContext = MainActivity.this;
         habitListView = (ListView) findViewById(R.id.habit_ListView);
         habitDate = new LinkedList<HabitList>();
-        habitDate.add(new HabitList("早起","13:00","21/45天",R.drawable.round_button_color1,R.drawable.icon_right_default));
-        habitDate.add(new HabitList("记单词","14:00","15/30天",R.drawable.round_button_color2,R.drawable.icon_right_selected));
-        habitDate.add(new HabitList("喝水","15:00","17/20天",R.drawable.round_button_color3,R.drawable.icon_right_default));
-        habitDate.add(new HabitList("早睡","10:00","12/30天",R.drawable.round_button_color2,R.drawable.icon_right_default));
-        habitDate.add(new HabitList("装逼","15:30","50/50天",R.drawable.round_button_color1,R.drawable.icon_right_selected));
-        habitDate.add(new HabitList("撩妹","0:00","50/50天",R.drawable.round_button_color2,R.drawable.icon_right_selected));
-        habitDate.add(new HabitList("去召唤师峡谷","0:00","50/50天",R.drawable.round_button_color2,R.drawable.icon_right_default));
-        habitDate.add(new HabitList("喝水","15:00","17/20天",R.drawable.round_button_color3,R.drawable.icon_right_selected));
-        habitDate.add(new HabitList("装逼","15:30","50/50天",R.drawable.round_button_color1,R.drawable.icon_right_default));
-        habitDate.add(new HabitList("早起","13:00","21/45天",R.drawable.round_button_color1,R.drawable.icon_right_default));
-        habitAdapter = new HabitAdapter((LinkedList<HabitList>)habitDate,mContext);
+        List<MyHabitTask> myHabitTasks = showMyHabitTask();
+        for(MyHabitTask s : myHabitTasks){
+            int i = 0;
+            List<MyIntegralList> myIntegralLists = s.getMyIntegralList();
+            for(MyIntegralList m : myIntegralLists){
+                if(m.getInsistDay() == 0){
+                    habitDate.add(new HabitList(m.getName(),m.getClockTime(),0 ,m.getExpectDay(),m.isStart()));
+                }else
+                    habitDate.add(new HabitList(m.getName(),m.getClockTime(),m.getInsistDay(),m.getExpectDay(),m.isStart()));
+
+            }
+        }
+
+//        habitDate.add(new HabitList("早起","13:00","21天/","45天",false));
+//        habitDate.add(new HabitList("记单词","14:00","15天/","30天",false));
+//        habitDate.add(new HabitList("喝水","15:00","17天/","20天",false));
+//        habitDate.add(new HabitList("早睡","10:00","12天/","30天",false));
+//        habitDate.add(new HabitList("装逼","15:30","50天/","50天",false));
+//        habitDate.add(new HabitList("撩妹","0:00","50天/","50天",false));
+//        habitDate.add(new HabitList("去召唤师峡谷","0:00","50天/","50天",false));
+//        habitDate.add(new HabitList("喝水","15:00","17天/","20天",false));
+//        habitDate.add(new HabitList("装逼","15:30","50天/","50天",false));
+//        habitDate.add(new HabitList("早起","13:00","21天/","45天",false));
+        habitAdapter = new HabitAdapter((LinkedList<HabitList>) habitDate,mContext);
         habitListView.setAdapter(habitAdapter);
         habitListView.setOnItemClickListener(this);
-
     }
 
     /**
@@ -139,8 +166,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         button_home.setOnClickListener(this);
         button_pet.setOnClickListener(this);
         button_personal.setOnClickListener(this);
-
-
 
         button_home.performClick();//主动调用button_home点击事件,进入时，显示home界面。
 
@@ -281,22 +306,23 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
 
-    private void showMyHabitTask() {
+    private List<MyHabitTask> showMyHabitTask() {
         List<MyHabitTask> myHabitTask = DBControl.createRealm(this).showMyHabitEveyTask();
 
-        Log.i(TAG, "showMyHabitEveyTask: 我创建的天数 = " + myHabitTask.size());
-//        for(int i = 0;i < myHabitTask.size();i++){
-//            myIntegralList.add(myHabitTask.get(i).getMyIntegralList());
+//        Log.i(TAG, "showMyHabitEveyTask: 我创建的天数 = " + myHabitTask.size());
+////        for(int i = 0;i < myHabitTask.size();i++){
+////            myIntegralList.add(myHabitTask.get(i).getMyIntegralList());
+////        }
+//        int i = 0;
+//        for (MyHabitTask s : myHabitTask) {
+//            Log.i(TAG, "initView:  创建的日期= " + s.getData());
+//            //遍历某一天的习惯名称
+//            for(MyIntegralList l : myHabitTask.get(i).getMyIntegralList()){
+//                Log.i(TAG, "showMyHabitTask: name = " + l.getName());
+//            }
+//            i++;
 //        }
-        int i = 0;
-        for (MyHabitTask s : myHabitTask) {
-            Log.i(TAG, "initView:  创建的日期= " + s.getData());
-            //遍历某一天的习惯名称
-            for(MyIntegralList l : myHabitTask.get(i).getMyIntegralList()){
-                Log.i(TAG, "showMyHabitTask: name = " + l.getName());
-            }
-            i++;
-        }
+        return myHabitTask;
     }
 
     private void addMyHabitTask(String data, String name, int modify, int expectDay, String clockTime) {

@@ -1,7 +1,5 @@
 package f3.nsu.com.habit.ui;
 
-
-
 /**
  * 习惯listView内容
  * Created by zhy on 2017/6/30.
@@ -10,18 +8,17 @@ package f3.nsu.com.habit.ui;
 public class HabitList {
     private String HabitName;
     private String HabitTime;
-    private String HabitDay;
-    private int HabitButtonColor;
-    private int CompleteButton;
-
+    private int goalDay;
+    private int completeDay;
+    private boolean isComplete;
     public HabitList(){}
 
-    public HabitList(String HabitName,String HabitTime,String HabitDay,int HabitButtonColor,int CompleteButton){
+    public HabitList(String HabitName,String HabitTime,int goalDay,int completeDay,boolean isComplete ){
         this.HabitName = HabitName;
         this.HabitTime = HabitTime;
-        this.HabitDay = HabitDay;
-        this.HabitButtonColor = HabitButtonColor;
-        this.CompleteButton = CompleteButton;
+        this.goalDay = goalDay;
+        this.completeDay = completeDay;
+        this.isComplete = isComplete;
     }
     public void setHabitName(String HabitName){
         this.HabitName = HabitName;
@@ -29,28 +26,40 @@ public class HabitList {
     public void setHabitTime(String HabitTime){
         this.HabitTime = HabitTime;
     }
-    public void setHabitDay(String HabitDay){
-        this.HabitDay = HabitDay;
+
+    public void setGoalDay(int goalDay) {
+        this.goalDay = goalDay;
     }
-    public void setHabitButtonColor(int HabitButtonColor){
-        this.HabitButtonColor = HabitButtonColor;
+
+    public void setCompleteDay(int completeDay) {
+        this.completeDay = completeDay;
     }
-    public void setCompleteButton(int CompleteButton){
-        this.CompleteButton = CompleteButton;
+
+    public void setComplete(boolean complete) {
+        isComplete = complete;
     }
+
+    //    public void setHabitDay(String HabitDay){
+//        this.HabitDay = HabitDay;
+//    }
     public String getHabitName(){
         return HabitName;
     }
     public String getHabitTime(){
         return HabitTime;
     }
-    public String getHabitDay(){
-        return HabitDay;
+
+    public int getGoalDay() {
+        return goalDay;
     }
-    public int getHabitButtonColor(){
-        return HabitButtonColor;
+
+    public int getCompleteDay() {
+        return completeDay;
     }
-    public int getCompleteButton(){
-        return CompleteButton;
+    public boolean getComplete(){
+        return isComplete;
     }
+    //    public String getHabitDay(){
+//        return HabitDay;
+//    }
 }
