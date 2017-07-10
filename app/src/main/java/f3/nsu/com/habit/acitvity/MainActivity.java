@@ -1,7 +1,6 @@
 package f3.nsu.com.habit.acitvity;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -9,7 +8,6 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -31,28 +29,26 @@ import f3.nsu.com.habit.RealmDataBase.TaskData.TaskList;
 import f3.nsu.com.habit.fragment.HomeFragment;
 import f3.nsu.com.habit.fragment.PersonalFragment;
 import f3.nsu.com.habit.fragment.PetFragment;
-import f3.nsu.com.habit.ui.DrawCircle;
 import f3.nsu.com.habit.ui.ExpandLayout;
 import f3.nsu.com.habit.ui.HabitList;
 import f3.nsu.com.habit.ui.MonthDateView;
 import io.realm.Realm;
 
-import static android.content.ContentValues.TAG;
 import static f3.nsu.com.habit.RealmDataBase.DBControl.createRealm;
 
 /**
  * 主界面
  */
 public class MainActivity extends FragmentActivity implements View.OnClickListener,
-        AdapterView.OnItemClickListener{
+        AdapterView.OnItemClickListener {
     private static final String TAG = "MainActivity";
 
     HomeFragment mHomeFragment;
     PersonalFragment mPersonalFragment;
     PetFragment mPetFragment;
-    private ImageButton button_home,button_pet,button_personal;
+    private ImageButton button_home, button_pet, button_personal;
     private ImageButton calendar_ImageButton;
-    private TextView dayTextView,monthTextView;
+    private TextView dayTextView, monthTextView;
     private View currentButton;
     private List<HabitList> habitDate = null;
     private Context mContext;
@@ -79,13 +75,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 //        addMyHabitTask(new GetTime().getData(),"oo2",3,20,"12:10");
 //        addMyHabitTask(new GetTime().getData(),"oo3",3,20,"12:10");
 //
-//        addMyHabitTask(new GetTime().getData(),"oo4",3,20,"12:10");
-//        addMyHabitTask(new GetTime().getData(),"oo5",3,20,"12:10");
-//        addMyHabitTask(new GetTime().getData(),"oo6",3,20,"12:10");
+////        addMyHabitTask(new GetTime().getData(),"oo4",3,20,"12:10");
+//        addMyHabitTask(new GetTime().getData(), "oo5", 3, 20, "12:10", 4);
+//        addMyHabitTask(new GetTime().getData(), "oo6", 3, 20, "12:10", 3);
 //
-//        addMyHabitTask(new GetTime().getData(),"oo7",3,20,"12:10");
-//        addMyHabitTask(new GetTime().getData(),"oo8",3,20,"12:10");
-
+//        addMyHabitTask(new GetTime().getData(), "oo7", 3, 20, "12:10", 1);
+//        addMyHabitTask(new GetTime().getData(), "oo8", 3, 20, "12:10", 4);
+//        addMyHabitTask(new GetTime().getData(), "oo9", 3, 20, "12:10", 3);
+//        addMyHabitTask(new GetTime().getData(), "oo10", 3, 20, "12:10", 1);
+//        addMyHabitTask(new GetTime().getData(), "oo11", 3, 20, "12:10", 2);
         initView();
     }
 
@@ -97,15 +95,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         habitListView = (ListView) findViewById(R.id.habit_ListView);
         habitDate = new LinkedList<HabitList>();
         List<MyHabitTask> myHabitTasks = showMyHabitTask();
-        for(MyHabitTask s : myHabitTasks){
+        for (MyHabitTask s : myHabitTasks) {
             int i = 0;
             List<MyIntegralList> myIntegralLists = s.getMyIntegralList();
-            for(MyIntegralList m : myIntegralLists){
-                if(m.getInsistDay() == 0){
-                    habitDate.add(new HabitList(m.getName(),m.getClockTime(),0 ,m.getExpectDay(),m.isStart()));
-                }else
-                    habitDate.add(new HabitList(m.getName(),m.getClockTime(),m.getInsistDay(),m.getExpectDay(),m.isStart()));
-
+            for (MyIntegralList m : myIntegralLists) {
+                habitDate.add(new HabitList(m.getName(), m.getClockTime(), m.getInsistDay(), m.getExpectDay(), m.isStart(), m.getModify(), m.getColorNumber()));
             }
         }
 
@@ -119,7 +113,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 //        habitDate.add(new HabitList("喝水","15:00","17天/","20天",false));
 //        habitDate.add(new HabitList("装逼","15:30","50天/","50天",false));
 //        habitDate.add(new HabitList("早起","13:00","21天/","45天",false));
-        habitAdapter = new HabitAdapter((LinkedList<HabitList>) habitDate,mContext);
+        habitAdapter = new HabitAdapter((LinkedList<HabitList>) habitDate, mContext);
         habitListView.setAdapter(habitAdapter);
         habitListView.setOnItemClickListener(this);
     }
@@ -193,8 +187,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private void setDay() {
         int day = new GetTime().getDay();
         int month = new GetTime().getMonth();
-        dayTextView.setText(day+"日");
-        monthTextView.setText(month+"月");
+        dayTextView.setText(day + "日");
+        monthTextView.setText(month + "月");
     }
 
     /**
@@ -222,7 +216,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void initExpandView() {
         mExpandLayout = (ExpandLayout) findViewById(R.id.expandLayout);
         mExpandLayout.initExpand(false);//设置初始化状态，false折叠，true展开
-        Log.i("TAG","设置初始化状态为true");
+        Log.i("TAG", "设置初始化状态为true");
         calendar_ImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -230,13 +224,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             }
         });
     }
+
     /**
      * 点击事件
+     *
      * @param v
      */
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.button_home:
                 getSupportFragmentManager().beginTransaction().hide(mPersonalFragment).hide(mPetFragment).show(mHomeFragment).commit();
                 setButton(v);
@@ -256,6 +252,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     /**
      * 判断导航栏按钮
+     *
      * @param v
      */
     public void setButton(View v) {
@@ -267,18 +264,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
 
-
     /**
      * 自定义添加习惯列表并保存
      *
-     * @param name  自定义习惯的名称
-     * @param expectDay   需要坚持的天数
-     * @param word  一段鼓励自己的话
-     * @param color 列表的颜色
+     * @param name      自定义习惯的名称
+     * @param expectDay 需要坚持的天数
+     * @param word      一段鼓励自己的话
+     * @param color     列表的颜色
      * @param clockTime 设置提醒时间
      */
-    public void addCustomTask(String name, int expectDay, String word, String color,String clockTime) {
-        createRealm(this).addCustomTask(name,expectDay,word,color,clockTime);
+    public void addCustomTask(String name, int expectDay, String word, String color, String clockTime) {
+        createRealm(this).addCustomTask(name, expectDay, word, color, clockTime);
     }
 
     /**
@@ -309,23 +305,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private List<MyHabitTask> showMyHabitTask() {
         List<MyHabitTask> myHabitTask = DBControl.createRealm(this).showMyHabitEveyTask();
 
-//        Log.i(TAG, "showMyHabitEveyTask: 我创建的天数 = " + myHabitTask.size());
-////        for(int i = 0;i < myHabitTask.size();i++){
-////            myIntegralList.add(myHabitTask.get(i).getMyIntegralList());
-////        }
-//        int i = 0;
-//        for (MyHabitTask s : myHabitTask) {
-//            Log.i(TAG, "initView:  创建的日期= " + s.getData());
-//            //遍历某一天的习惯名称
-//            for(MyIntegralList l : myHabitTask.get(i).getMyIntegralList()){
-//                Log.i(TAG, "showMyHabitTask: name = " + l.getName());
-//            }
-//            i++;
-//        }
         return myHabitTask;
     }
 
-    private void addMyHabitTask(String data, String name, int modify, int expectDay, String clockTime) {
-        DBControl.createRealm(this).addMyHabitTask(data,name,modify,expectDay,clockTime);
+    private void addMyHabitTask(String data, String name, int modify, int expectDay, String clockTime, int colorNumber) {
+        DBControl.createRealm(this).addMyHabitTask(data, name, modify, expectDay, clockTime, colorNumber);
     }
 }

@@ -20,15 +20,17 @@ public class CustomTask extends RealmObject {
     private String color;   //预设计的颜色
     private boolean isStart; //是否完成
     private String clockTime;   //设置提醒时间
+    private int modify;     //积分
 
     public CustomTask() {
     }
 
-    public CustomTask(String name, int expectDay, String word, String color, boolean isStart,String clockTime) {
+    public CustomTask(String name, int expectDay, String word, String color, boolean isStart,String clockTime,int modify) {
         this.name = name;
         this.expectDay = expectDay;
         this.word = word;
         this.color = color;
+        this.modify = modify;
         this.isStart = isStart;
         this.clockTime = clockTime;
     }
@@ -79,5 +81,13 @@ public class CustomTask extends RealmObject {
 
     public void setClockTime(String clockTime) {
         this.clockTime = clockTime;
+    }
+
+    public int getModify() {
+        return modify;
+    }
+
+    public void setModify(int modify) {
+        this.modify = modify;
     }
 }

@@ -20,9 +20,10 @@ public class MyIntegralList extends RealmObject {
     private int optimumDegree;  //最佳次数
     private int monthFinishDegree;  //本月完成次数
     private boolean isStart;    //是否当天已经完成
+    private int colorNumber;    //颜色序号
     public MyIntegralList (){}
     public MyIntegralList(String name,int modify,String completeTime,int expectDay,int insistDay,String clockTime,
-                          int degreeOfHistory,int optimumDegree,int monthFinishDegree,boolean isStart
+                          int degreeOfHistory,int optimumDegree,int monthFinishDegree,boolean isStart,int colorNumber
     ){
         this.name = name;
         this.modify = modify;
@@ -34,6 +35,7 @@ public class MyIntegralList extends RealmObject {
         this.optimumDegree = optimumDegree;
         this.monthFinishDegree = monthFinishDegree;
         this.isStart = isStart;
+        this.colorNumber = colorNumber;
     }
 
     public String getName() {
@@ -114,5 +116,13 @@ public class MyIntegralList extends RealmObject {
 
     public void setStart(boolean start) {
         isStart = start;
+    }
+
+    public int getColorNumber() {
+        return colorNumber;
+    }
+
+    public void setColorNumber(int colorNumber) {
+        this.colorNumber = colorNumber;
     }
 }

@@ -1,35 +1,24 @@
 package f3.nsu.com.habit.Adapter;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.util.Log;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.RelativeLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import f3.nsu.com.habit.GetTime.GetTime;
 import f3.nsu.com.habit.R;
 import f3.nsu.com.habit.RealmDataBase.DBControl;
-import f3.nsu.com.habit.RealmDataBase.TaskData.MyHabitTask;
-import f3.nsu.com.habit.RealmDataBase.TaskData.MyIntegralList;
-import f3.nsu.com.habit.acitvity.MainActivity;
-import f3.nsu.com.habit.ui.DrawCircle;
 import f3.nsu.com.habit.ui.HabitList;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * 习惯item适配器
@@ -39,11 +28,16 @@ import static android.content.ContentValues.TAG;
 public class HabitAdapter extends BaseAdapter {
     private LinkedList<HabitList> habitDate;
     private Context mContext;
+    private boolean[] isCheck;
     private Map<Integer, View> map = new HashMap<Integer, View>();
 
-    public HabitAdapter(LinkedList<HabitList> HabitDate, Context mContext) {
-        this.habitDate = HabitDate;
+    public HabitAdapter(LinkedList<HabitList> habitDate, Context mContext) {
+        this.habitDate = habitDate;
         this.mContext = mContext;
+        isCheck = new boolean[habitDate.size()];
+        for (int i = 0; i < habitDate.size() - 1; i++) {
+            isCheck[i] = false;
+        }
     }
 
     @Override
@@ -53,7 +47,7 @@ public class HabitAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return habitDate.get(position);
     }
 
     @Override
@@ -63,64 +57,88 @@ public class HabitAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (map.size() < habitDate.size()) {
-                if (!map.containsKey(position)) {
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.habit_listitem, parent, false);
-                viewHolder viewHolder = new viewHolder();
-                viewHolder.habitText = (TextView) convertView.findViewById(R.id.habit_text);
-                viewHolder.timeText = (TextView) convertView.findViewById(R.id.time_text);
-                viewHolder.dayText = (TextView) convertView.findViewById(R.id.day_time);
-                viewHolder.completeButton = (Button) convertView.findViewById(R.id.complete_button);
-
-                String date = new GetTime().getData();
-                String name = habitDate.get(position).getHabitName();
-                viewHolder.completeButton.setOnClickListener(new ListButtonListener(position, mContext, viewHolder.completeButton, date, name));
-                if (habitDate.get(position).getComplete()){
-                    viewHolder.completeButton.setBackgroundResource(R.drawable.icon_right_selected);
-                }
-
-                viewHolder.habitText.setText(habitDate.get(position).getHabitName());
-                viewHolder.timeText.setText(habitDate.get(position).getHabitTime());
-                viewHolder.dayText.setText(habitDate.get(position).getCompleteDay() + "天/" + habitDate.get(position).getGoalDay() + "天");
-                map.put(position, convertView);
-            } else {
-                convertView = map.get(position);
-            }
+        ViewHolder viewHolder = null;
+        if (convertView == null) {
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.habit_listitem, parent, false);
+            viewHolder = new ViewHolder();
+            viewHolder.habitText = (TextView) convertView.findViewById(R.id.habit_text);
+            viewHolder.timeText = (TextView) convertView.findViewById(R.id.time_text);
+            viewHolder.dayText = (TextView) convertView.findViewById(R.id.day_time);
+            viewHolder.completeButton = (Button) convertView.findViewById(R.id.complete_button);
+            viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.progressBar);
+            viewHolder.colorButton = (Button) convertView.findViewById(R.id.color_button);
+            convertView.setTag(viewHolder);
         } else {
-            convertView = map.get(position);
+            viewHolder = (ViewHolder) convertView.getTag();
         }
+        switch (habitDate.get(position).getColorNumber()){
+            case 1:
+                viewHolder.colorButton.setBackgroundResource(R.drawable.round_button_color1);
+                break;
+            case 2:
+                viewHolder.colorButton.setBackgroundResource(R.drawable.round_button_color2);
+                break;
+            case 3:
+                viewHolder.colorButton.setBackgroundResource(R.drawable.round_button_color3);
+                break;
+            case 4:
+                viewHolder.colorButton.setBackgroundResource(R.drawable.round_button_color4);
+                break;
+            default:
+                break;
+        }
+        String date = new GetTime().getData();
+        String name = habitDate.get(position).getHabitName();
+//        Log.i(TAG, "getView: po = " + position + " 已经坚持的天数" + habitDate.get(position).getGoalDay());
+        if (habitDate.get(position).getComplete() || isCheck[position]) {
+            viewHolder.completeButton.setBackgroundResource(R.drawable.icon_right_selected);
+        } else {
+            viewHolder.completeButton.setBackgroundResource(R.drawable.icon_right_default);
+            viewHolder.completeButton.setOnClickListener(new ListButtonListener(position, mContext, viewHolder.completeButton, date, name,  viewHolder.dayText));
+        }
+        habitDate.get(position).getColorNumber();
+        viewHolder.progressBar.setProgress(habitDate.get(position).getGoalDay());
+        viewHolder.progressBar.setMax(habitDate.get(position).getCompleteDay());
+        viewHolder.habitText.setText(habitDate.get(position).getHabitName());
+        viewHolder.timeText.setText(habitDate.get(position).getHabitTime());
+        viewHolder.dayText.setText(habitDate.get(position).getGoalDay() + "天/" + habitDate.get(position).getCompleteDay() + "天");
         return convertView;
     }
 
-    public class viewHolder {
+    class ViewHolder {
         private TextView habitText;
         private TextView timeText;
         private TextView dayText;
         private Button completeButton;
+        private ProgressBar progressBar;
+        private Button colorButton;
     }
 
     public class ListButtonListener implements View.OnClickListener {
-
+        TextView dayText;
         int mPosition;
         Context mContext;
         Button button1;
         String name;
         String date;
 
-        public ListButtonListener(int position, Context context, Button button, String date, String name) {
+
+        public ListButtonListener(int position, Context context, Button button, String date, String name, TextView dayText) {
             this.mPosition = position;
             this.mContext = context;
             this.button1 = button;
             this.date = date;
             this.name = name;
+            this.dayText = dayText;
         }
 
         @Override
         public void onClick(View v) {
-            Toast.makeText(mContext, "您完成了此项任务！", Toast.LENGTH_LONG).show();
-            button1.setBackgroundResource(R.drawable.icon_right_selected);
             DBControl.createRealm(mContext).amendMyHabitIsStart(date, name);
-//            button1.setBackgroundResource(R.drawable.icon_right_selected);
+            Toast.makeText(mContext, "您完成了此项任务！", Toast.LENGTH_LONG).show();
+            habitDate.get(mPosition).setGoalDay(habitDate.get(mPosition).getGoalDay() + 1);
+            isCheck[mPosition] = true;
+            notifyDataSetChanged();
         }
     }
 }

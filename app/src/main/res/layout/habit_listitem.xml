@@ -6,18 +6,13 @@
     android:layout_height="77dp"
     android:elevation="4dp"
     android:background="@mipmap/mask">
-    <!--<Button-->
-        <!--android:id="@+id/color_button"-->
-        <!--android:layout_width="8dp"-->
-        <!--android:layout_height="8dp"-->
-        <!--android:background="@drawable/round_button_color3"-->
-        <!--android:layout_marginTop="13dp"-->
-        <!--android:layout_marginLeft="10dp"/>-->
-    <f3.nsu.com.habit.ui.DrawCircle
+    <Button
+        android:id="@+id/color_button"
         android:layout_width="8dp"
         android:layout_height="8dp"
         android:layout_marginTop="13dp"
-        android:layout_marginLeft="10dp"/>
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/round_button_color1"/>
     <TextView
         android:id="@+id/habit_text"
         android:layout_width="wrap_content"
@@ -52,17 +47,24 @@
         android:id="@+id/day_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="5天/40天"
         android:textSize="11sp"
         android:textColor="#434343"
         android:layout_marginTop="47dp"
         android:layout_marginLeft="44dp"/>
-    <View
+    <!--<View-->
+        <!--android:layout_width="207dp"-->
+        <!--android:layout_height="5dp"-->
+        <!--android:layout_marginLeft="27dp"-->
+        <!--android:layout_marginTop="62dp"-->
+        <!--android:background="#50cfde"/>-->
+    <ProgressBar
         android:layout_width="207dp"
         android:layout_height="5dp"
         android:layout_marginLeft="27dp"
         android:layout_marginTop="62dp"
-        android:background="#50cfde"/>
+        style="?android:attr/progressBarStyleHorizontal"
+        android:id="@+id/progressBar"
+        android:progressDrawable="@drawable/progress_bar"/>
     <Button
         android:id="@+id/complete_button"
         android:layout_width="33dp"

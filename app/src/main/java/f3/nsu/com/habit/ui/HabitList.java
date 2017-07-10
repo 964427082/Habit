@@ -11,19 +11,27 @@ public class HabitList {
     private int goalDay;
     private int completeDay;
     private boolean isComplete;
-    public HabitList(){}
+    private int modify;     //该习惯的积分
+    private int colorNumber;    //颜色序号
 
-    public HabitList(String HabitName,String HabitTime,int goalDay,int completeDay,boolean isComplete ){
+    public HabitList() {
+    }
+
+    public HabitList(String HabitName, String HabitTime, int goalDay, int completeDay, boolean isComplete,int modify,int colorNumber) {
         this.HabitName = HabitName;
         this.HabitTime = HabitTime;
+        this.modify = modify;
         this.goalDay = goalDay;
         this.completeDay = completeDay;
         this.isComplete = isComplete;
+        this.colorNumber = colorNumber;
     }
-    public void setHabitName(String HabitName){
+
+    public void setHabitName(String HabitName) {
         this.HabitName = HabitName;
     }
-    public void setHabitTime(String HabitTime){
+
+    public void setHabitTime(String HabitTime) {
         this.HabitTime = HabitTime;
     }
 
@@ -39,13 +47,11 @@ public class HabitList {
         isComplete = complete;
     }
 
-    //    public void setHabitDay(String HabitDay){
-//        this.HabitDay = HabitDay;
-//    }
-    public String getHabitName(){
+    public String getHabitName() {
         return HabitName;
     }
-    public String getHabitTime(){
+
+    public String getHabitTime() {
         return HabitTime;
     }
 
@@ -56,10 +62,24 @@ public class HabitList {
     public int getCompleteDay() {
         return completeDay;
     }
-    public boolean getComplete(){
+
+    public boolean getComplete() {
         return isComplete;
     }
-    //    public String getHabitDay(){
-//        return HabitDay;
-//    }
+
+    public int getModify() {
+        return modify;
+    }
+
+    public void setModify(int modify) {
+        this.modify = modify;
+    }
+
+    public int getColorNumber() {
+        return colorNumber;
+    }
+
+    public void setColorNumber(int colorNumber) {
+        this.colorNumber = colorNumber;
+    }
 }
