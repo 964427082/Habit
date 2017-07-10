@@ -184,7 +184,6 @@ public class DBControl {
 
     /**
      * 修改是否完成
-     *
      * @param data 日期
      * @param name 名字
      */
@@ -199,13 +198,17 @@ public class DBControl {
                         myIntegralLists.get(i).setStart(true);
                         int j = myIntegralLists.get(i).getInsistDay() + 1;
                         myIntegralLists.get(i).setInsistDay(j);
-                        Log.i(TAG, "execute: 天数  = " + j);
                     }
                 }
             }
         });
     }
 
+    /**
+     * 修改进度条
+     * @param date  日期
+     * @return
+     */
     public List<MyIntegralList> amendProgress(String date) {
         MyHabitTask myHabitTask = mRealm.where(MyHabitTask.class).equalTo("data", date).findFirst();
         List<MyIntegralList> myIntegralLists = new ArrayList<>();

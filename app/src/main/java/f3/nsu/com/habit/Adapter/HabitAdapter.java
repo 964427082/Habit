@@ -1,7 +1,7 @@
 package f3.nsu.com.habit.Adapter;
 
 import android.content.Context;
-import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +11,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
+import java.util.List;
 
 import f3.nsu.com.habit.GetTime.GetTime;
 import f3.nsu.com.habit.R;
 import f3.nsu.com.habit.RealmDataBase.DBControl;
+import f3.nsu.com.habit.RealmDataBase.TaskData.MyIntegralList;
 import f3.nsu.com.habit.ui.HabitList;
 
 /**
@@ -26,10 +26,10 @@ import f3.nsu.com.habit.ui.HabitList;
  */
 
 public class HabitAdapter extends BaseAdapter {
+    private static final String TAG = "HabitAdapter";
     private LinkedList<HabitList> habitDate;
     private Context mContext;
     private boolean[] isCheck;
-    private Map<Integer, View> map = new HashMap<Integer, View>();
 
     public HabitAdapter(LinkedList<HabitList> habitDate, Context mContext) {
         this.habitDate = habitDate;
@@ -71,7 +71,7 @@ public class HabitAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        switch (habitDate.get(position).getColorNumber()){
+        switch (habitDate.get(position).getColorNumber()) {
             case 1:
                 viewHolder.colorButton.setBackgroundResource(R.drawable.round_button_color1);
                 break;
@@ -89,12 +89,11 @@ public class HabitAdapter extends BaseAdapter {
         }
         String date = new GetTime().getData();
         String name = habitDate.get(position).getHabitName();
-//        Log.i(TAG, "getView: po = " + position + " 已经坚持的天数" + habitDate.get(position).getGoalDay());
         if (habitDate.get(position).getComplete() || isCheck[position]) {
             viewHolder.completeButton.setBackgroundResource(R.drawable.icon_right_selected);
         } else {
+            viewHolder.completeButton.setOnClickListener(new ListButtonListener(position, mContext, viewHolder.completeButton, date, name, viewHolder.dayText));
             viewHolder.completeButton.setBackgroundResource(R.drawable.icon_right_default);
-            viewHolder.completeButton.setOnClickListener(new ListButtonListener(position, mContext, viewHolder.completeButton, date, name,  viewHolder.dayText));
         }
         habitDate.get(position).getColorNumber();
         viewHolder.progressBar.setProgress(habitDate.get(position).getGoalDay());
@@ -134,9 +133,18 @@ public class HabitAdapter extends BaseAdapter {
 
         @Override
         public void onClick(View v) {
-            DBControl.createRealm(mContext).amendMyHabitIsStart(date, name);
-            Toast.makeText(mContext, "您完成了此项任务！", Toast.LENGTH_LONG).show();
-            habitDate.get(mPosition).setGoalDay(habitDate.get(mPosition).getGoalDay() + 1);
+            List<MyIntegralList> myIntegralList = DBControl.createRealm(mContext).amendProgress(date);
+            boolean is = false;
+            for (MyIntegralList m : myIntegralList) {
+                if (m.getName().equals(name)) {
+                    is = m.isStart();
+                }
+            }
+            if (!is) {
+                Toast.makeText(mContext, "您完成了此项任务！", Toast.LENGTH_LONG).show();
+                habitDate.get(mPosition).setGoalDay(habitDate.get(mPosition).getGoalDay() + 1);
+                DBControl.createRealm(mContext).amendMyHabitIsStart(date, name);
+            }
             isCheck[mPosition] = true;
             notifyDataSetChanged();
         }

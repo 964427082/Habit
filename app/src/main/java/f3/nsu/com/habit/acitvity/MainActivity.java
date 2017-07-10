@@ -43,12 +43,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         AdapterView.OnItemClickListener {
     private static final String TAG = "MainActivity";
 
-    HomeFragment mHomeFragment;
-    PersonalFragment mPersonalFragment;
-    PetFragment mPetFragment;
-    private ImageButton button_home, button_pet, button_personal;
-    private ImageButton calendar_ImageButton;
-    private TextView dayTextView, monthTextView;
+    HomeFragment mHomeFragment;//主界面
+    PersonalFragment mPersonalFragment;//个人界面
+    PetFragment mPetFragment;//宠物界面
+    private ImageButton button_home, button_pet, button_personal;//底部导航栏按钮
+    private ImageButton calendar_ImageButton;//左上角日历按钮
+    private TextView dayTextView, monthTextView;//日历展开界面日期
     private View currentButton;
     private List<HabitList> habitDate = null;
     private Context mContext;
@@ -71,19 +71,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 //        showCustomTask();
 //        addCustomTask("ok1", 5, "加油1", "#00000","12:06");
 ////        showCustomTask();
-//        addMyHabitTask(new GetTime().getData(),"oo1",3,20,"12:10");
-//        addMyHabitTask(new GetTime().getData(),"oo2",3,20,"12:10");
-//        addMyHabitTask(new GetTime().getData(),"oo3",3,20,"12:10");
-//
-////        addMyHabitTask(new GetTime().getData(),"oo4",3,20,"12:10");
 //        addMyHabitTask(new GetTime().getData(), "oo5", 3, 20, "12:10", 4);
 //        addMyHabitTask(new GetTime().getData(), "oo6", 3, 20, "12:10", 3);
 //
 //        addMyHabitTask(new GetTime().getData(), "oo7", 3, 20, "12:10", 1);
-//        addMyHabitTask(new GetTime().getData(), "oo8", 3, 20, "12:10", 4);
-//        addMyHabitTask(new GetTime().getData(), "oo9", 3, 20, "12:10", 3);
-//        addMyHabitTask(new GetTime().getData(), "oo10", 3, 20, "12:10", 1);
-//        addMyHabitTask(new GetTime().getData(), "oo11", 3, 20, "12:10", 2);
+        addMyHabitTask(new GetTime().getData(), "oo8", 3, 20, "12:10", 4);
+        addMyHabitTask(new GetTime().getData(), "oo9", 3, 20, "12:10", 3);
+        addMyHabitTask(new GetTime().getData(), "oo10", 3, 20, "12:10", 1);
+        addMyHabitTask(new GetTime().getData(), "oo15", 3, 20, "12:10", 2);
         initView();
     }
 
@@ -102,17 +97,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 habitDate.add(new HabitList(m.getName(), m.getClockTime(), m.getInsistDay(), m.getExpectDay(), m.isStart(), m.getModify(), m.getColorNumber()));
             }
         }
-
-//        habitDate.add(new HabitList("早起","13:00","21天/","45天",false));
-//        habitDate.add(new HabitList("记单词","14:00","15天/","30天",false));
-//        habitDate.add(new HabitList("喝水","15:00","17天/","20天",false));
-//        habitDate.add(new HabitList("早睡","10:00","12天/","30天",false));
-//        habitDate.add(new HabitList("装逼","15:30","50天/","50天",false));
-//        habitDate.add(new HabitList("撩妹","0:00","50天/","50天",false));
-//        habitDate.add(new HabitList("去召唤师峡谷","0:00","50天/","50天",false));
-//        habitDate.add(new HabitList("喝水","15:00","17天/","20天",false));
-//        habitDate.add(new HabitList("装逼","15:30","50天/","50天",false));
-//        habitDate.add(new HabitList("早起","13:00","21天/","45天",false));
         habitAdapter = new HabitAdapter((LinkedList<HabitList>) habitDate, mContext);
         habitListView.setAdapter(habitAdapter);
         habitListView.setOnItemClickListener(this);
@@ -300,7 +284,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         super.onDestroy();
         realm.close();
     }
-
 
     private List<MyHabitTask> showMyHabitTask() {
         List<MyHabitTask> myHabitTask = DBControl.createRealm(this).showMyHabitEveyTask();
