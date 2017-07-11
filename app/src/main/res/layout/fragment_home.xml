@@ -26,6 +26,7 @@
             android:textColor="#ffffff"
             android:layout_centerInParent="true"/>
         <ImageButton
+            android:id="@+id/insert_imageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/icon_insert"
@@ -45,7 +46,7 @@
         <RelativeLayout
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:background="@drawable/round_button_color4"
+            android:background="@drawable/round_button_color0"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="19dp">
             <TextView

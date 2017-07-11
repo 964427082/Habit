@@ -29,4 +29,9 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <!--新习惯，编辑框-->
+    <style name="MyEditText" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">#c6c6c6</item>
+        <item name="colorControlActivated">#8c8c8c</item>
+    </style>
 </resources>

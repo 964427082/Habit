@@ -1,6 +1,7 @@
 package f3.nsu.com.habit.acitvity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -49,6 +50,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private ImageButton button_home, button_pet, button_personal;//底部导航栏按钮
     private ImageButton calendar_ImageButton;//左上角日历按钮
     private TextView dayTextView, monthTextView;//日历展开界面日期
+    private ImageButton insert_imageButton;//右上角添加习惯按钮
     private View currentButton;
     private List<HabitList> habitDate = null;
     private Context mContext;
@@ -138,6 +140,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         setDay();
         calendar_ImageButton = (ImageButton) findViewById(R.id.calendar_ImageButton);
+        insert_imageButton = (ImageButton) findViewById(R.id.insert_imageButton);
+        insert_imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,AddHabitActivity.class);
+                startActivity(intent);
+            }
+        });
+
         button_home = (ImageButton) findViewById(R.id.button_home);
         button_personal = (ImageButton) findViewById(R.id.button_personal);
         button_pet = (ImageButton) findViewById(R.id.button_pet);
