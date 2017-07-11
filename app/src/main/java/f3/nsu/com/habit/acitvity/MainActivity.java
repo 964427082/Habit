@@ -75,10 +75,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 //        addMyHabitTask(new GetTime().getData(), "oo6", 3, 20, "12:10", 3);
 //
 //        addMyHabitTask(new GetTime().getData(), "oo7", 3, 20, "12:10", 1);
-        addMyHabitTask(new GetTime().getData(), "oo8", 3, 20, "12:10", 4);
-        addMyHabitTask(new GetTime().getData(), "oo9", 3, 20, "12:10", 3);
-        addMyHabitTask(new GetTime().getData(), "oo10", 3, 20, "12:10", 1);
-        addMyHabitTask(new GetTime().getData(), "oo15", 3, 20, "12:10", 2);
+//        addMyHabitTask(new GetTime().getData(), "oo8", 3, 20, "12:10", 4);
+//        addMyHabitTask(new GetTime().getData(), "oo9", 3, 20, "12:10", 3);
+//        addMyHabitTask(new GetTime().getData(), "oo10", 3, 20, "12:10", 1);
+//        addMyHabitTask(new GetTime().getData(), "oo15", 3, 20, "12:10", 2);
         initView();
     }
 
