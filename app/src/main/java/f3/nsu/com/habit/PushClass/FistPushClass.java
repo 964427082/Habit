@@ -18,6 +18,7 @@ import f3.nsu.com.habit.RealmDataBase.TaskData.TaskList;
  * 第一个推送类   变的更加专注
  */
 public class FistPushClass {
+
     private Context context;
     private String data = new GetTime().getData();
     public List<TaskList> FistPushList = new ArrayList<>();

@@ -14,6 +14,7 @@ import android.view.View;
 
 public class DrawCircle extends View {
 
+
     private int color1 = Color.parseColor("#ff0000");
     private int color2 = Color.parseColor("#000000");
     private int color3 = Color.parseColor("#7ed321");

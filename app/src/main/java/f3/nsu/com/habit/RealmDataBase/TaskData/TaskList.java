@@ -7,6 +7,7 @@ import io.realm.RealmObject;
  */
 
 public class TaskList extends RealmObject {
+
     private String name;    //系统习惯任务名字
 
     private int modify;     //系统给定积分

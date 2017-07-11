@@ -14,7 +14,6 @@ public class CustomTask extends RealmObject {
 
     @PrimaryKey
     private String name;     //名称
-
     private int expectDay;         //坚持的天数
     private String word;     //一段鼓励的话
     private String color;   //预设计的颜色

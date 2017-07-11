@@ -22,6 +22,7 @@ public class MonthDateView extends View {
 
     private static final int NUM_COLUMNS = 7;//7列
     private static final int NUM_ROWS = 6;//6行
+
     private Paint mPaint;
     private int mDayColor = Color.parseColor("#ffffff");//每一天数字的颜色
     private int mSelectDayColor = Color.parseColor("#ffffff");//被选中的数字的颜色

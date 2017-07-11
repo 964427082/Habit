@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
  */
 
 public class ExpandLayout extends RelativeLayout {
+
     public ExpandLayout(Context context) {
         this(context, null);
     }

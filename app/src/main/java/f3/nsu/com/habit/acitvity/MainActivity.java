@@ -47,6 +47,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     HomeFragment mHomeFragment;//主界面
     PersonalFragment mPersonalFragment;//个人界面
     PetFragment mPetFragment;//宠物界面
+
     private ImageButton button_home, button_pet, button_personal;//底部导航栏按钮
     private ImageButton calendar_ImageButton;//左上角日历按钮
     private TextView dayTextView, monthTextView;//日历展开界面日期

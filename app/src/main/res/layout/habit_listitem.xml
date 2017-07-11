@@ -6,6 +6,7 @@
     android:layout_height="77dp"
     android:elevation="4dp"
     android:background="@mipmap/mask">
+
     <Button
         android:id="@+id/color_button"
         android:layout_width="8dp"

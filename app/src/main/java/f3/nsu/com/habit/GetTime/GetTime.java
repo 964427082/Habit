@@ -11,6 +11,7 @@ import java.util.Calendar;
 public class GetTime {
     private static final String TAG = "GetTime";
     private String data;
+
     private int year;
     private int month;
     private int day;

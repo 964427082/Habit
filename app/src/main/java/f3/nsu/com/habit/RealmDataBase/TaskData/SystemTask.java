@@ -11,6 +11,7 @@ import io.realm.annotations.PrimaryKey;
  */
 
 public class SystemTask extends RealmObject {
+
     @PrimaryKey
     private String systemTask = "systemTask";      //主键   系统提供的习惯任务
 

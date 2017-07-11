@@ -52,6 +52,7 @@ public class AddHabitActivity extends FragmentActivity implements View.OnClickLi
         newHabitFragment = (NewHabitFragment) getSupportFragmentManager().findFragmentById(R.id.new_habit_fragment);
         addHabitFragment = (AddHabitFragment) getSupportFragmentManager().findFragmentById(R.id.add_habit_fragment);
         createHabit_button.setOnClickListener(this);
+
         return_imageButton.setOnClickListener(this);
 
         exit_imageButton.setOnClickListener(new View.OnClickListener() {

@@ -15,7 +15,6 @@ public class MyHabitTask  extends RealmObject{
     private RealmList<MyIntegralList> myIntegralList;
     private int todayIntegral; //当天积累的分数
 
-
     public MyHabitTask(){}
     public MyHabitTask(String data,RealmList<MyIntegralList> myIntegralList,int todayIntegral){
         this.data = data;

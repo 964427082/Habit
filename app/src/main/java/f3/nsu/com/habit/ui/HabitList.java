@@ -6,6 +6,7 @@ package f3.nsu.com.habit.ui;
  */
 
 public class HabitList {
+
     private String HabitName;
     private String HabitTime;
     private int goalDay;

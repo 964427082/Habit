@@ -16,7 +16,9 @@ import f3.nsu.com.habit.RealmDataBase.TaskData.TaskList;
  */
 
 public class SecondPushClass {
+
     private Context context;
+
     private String data = new GetTime().getData();
     public List<TaskList> SecondPushList = new ArrayList<>();
 

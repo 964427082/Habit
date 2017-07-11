@@ -10,6 +10,7 @@ import io.realm.RealmConfiguration;
  * Created by 爸爸你好 on 2017/6/27.
  */
 public class MyApplication extends Application {
+
     private static Context context;
 
     @Override

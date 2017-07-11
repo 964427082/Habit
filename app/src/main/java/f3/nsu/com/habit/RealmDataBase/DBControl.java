@@ -21,6 +21,7 @@ import io.realm.RealmResults;
  * 封装对Realm数据库的操作
  */
 public class DBControl {
+
     private static final String TAG = "DBControl";
     private static Realm mRealm;
     private static DBControl db;

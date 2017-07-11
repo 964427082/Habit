@@ -117,6 +117,7 @@ public class HabitAdapter extends BaseAdapter {
         TextView dayText;
         int mPosition;
         Context mContext;
+
         Button button1;
         String name;
         String date;
