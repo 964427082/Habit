@@ -10,6 +10,8 @@ import f3.nsu.com.habit.RealmDataBase.TaskData.CustomTask;
 import f3.nsu.com.habit.RealmDataBase.TaskData.MyHabitTask;
 import f3.nsu.com.habit.RealmDataBase.TaskData.MyIntegralList;
 import f3.nsu.com.habit.RealmDataBase.TaskData.SystemTask;
+import f3.nsu.com.habit.RealmDataBase.TaskData.TaskList;
+import f3.nsu.com.habit.acitvity.MainActivity;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
@@ -52,6 +54,34 @@ public class DBControl {
      *           该方法只执行一次
      */
     public void addSystemTask(final SystemTask st) {
+        RealmList<TaskList> systemTaskList = st.getSystemTaskList();
+        if (MainActivity.firstIn) {
+            Log.i("add", "SystemTask: ");
+            systemTaskList.add(new TaskList("按时起床", 6, false, 30, 2,"07:20"));
+            systemTaskList.add(new TaskList("记单词", 6, false, 30, 3,"08:00"));
+            systemTaskList.add(new TaskList("看书一小时", 6, false, 30, 2,"10:00"));
+            systemTaskList.add(new TaskList("不乱花钱", 5, false, 30, 4,"19:00"));
+            systemTaskList.add(new TaskList("存梦想基金", 7, false, 30, 5,"20:10"));
+
+            systemTaskList.add(new TaskList("早上空腹喝杯水", 4, false, 30, 2,"07:50"));
+            systemTaskList.add(new TaskList("晨跑",6,false,30,1,"07:00"));
+            systemTaskList.add(new TaskList("吃早餐", 3, false, 30, 2,"08:10"));
+            systemTaskList.add(new TaskList("喝上5杯水", 4, false, 30, 1,"19:50"));
+            systemTaskList.add(new TaskList("按时睡觉", 6, false, 30, 1,"22:00"));
+            systemTaskList.add(new TaskList("睡午觉", 5, false, 30, 1,"13:00"));
+
+            systemTaskList.add(new TaskList("30个俯卧撑",4,false,30,5,"20:40"));
+            systemTaskList.add(new TaskList("称体重", 2, false, 30, 5,"20:00"));
+            systemTaskList.add(new TaskList("戒烟", 4, false, 30, 3,"08:15"));
+            systemTaskList.add(new TaskList("不玩游戏", 6, false, 30, 2,"09:00"));
+            systemTaskList.add(new TaskList("静下来听歌",7,false,30,4,"17:05"));
+
+            systemTaskList.add(new TaskList("不说脏话", 5, false, 30, 1,"08:16"));
+
+            systemTaskList.add(new TaskList("拍一张照片", 8, false, 30, 4,"10:40"));
+            systemTaskList.add(new TaskList("写下今天的总结", 7, false, 30, 5,"21:30"));
+            systemTaskList.add(new TaskList("Call你想念的人", 8, false, 30, 4,"18:00"));
+        }
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -139,6 +169,11 @@ public class DBControl {
     }
 
 
+    /**
+     * 查看我的所有习惯列表
+     *
+     * @return
+     */
     public List<MyHabitTask> showMyHabitEveyTask() {
         final List<MyHabitTask> i = new ArrayList<>();
         mRealm.executeTransaction(new Realm.Transaction() {
@@ -160,11 +195,12 @@ public class DBControl {
      * @param expectDay 坚持的天数
      * @param clockTime 提醒的时间
      */
-    public void addMyHabitTask(final String data, final String name, final int modify, final int expectDay, final String clockTime,final int colorNumber) {
+    public void addMyHabitTask(final String data, final String name, final int modify, final int expectDay, final String clockTime, final int colorNumber) {
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 MyHabitTask m = realm.where(MyHabitTask.class).equalTo("data", data).findFirst();
+
                 MyIntegralList myIntegralList = realm.createObject(MyIntegralList.class, name);
                 myIntegralList.setModify(modify);
                 myIntegralList.setExpectDay(expectDay);
@@ -172,6 +208,7 @@ public class DBControl {
                 myIntegralList.setInsistDay(0);
                 myIntegralList.setColorNumber(colorNumber);
                 myIntegralList.setStart(false);
+
                 if (m == null) {
                     MyHabitTask myHabitTask = realm.createObject(MyHabitTask.class, data);
                     myHabitTask.getMyIntegralList().add(myIntegralList);
@@ -184,6 +221,7 @@ public class DBControl {
 
     /**
      * 修改是否完成
+     *
      * @param data 日期
      * @param name 名字
      */
@@ -206,7 +244,8 @@ public class DBControl {
 
     /**
      * 修改进度条
-     * @param date  日期
+     *
+     * @param date 日期
      * @return
      */
     public List<MyIntegralList> amendProgress(String date) {

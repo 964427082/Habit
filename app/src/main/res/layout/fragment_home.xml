@@ -142,7 +142,6 @@
     </f3.nsu.com.habit.ui.ExpandLayout>
     <!--listView-->
     <ListView
-
         android:id="@+id/habit_ListView"
         android:layout_width="347dp"
         android:layout_height="wrap_content"
