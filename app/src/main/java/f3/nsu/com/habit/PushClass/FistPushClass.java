@@ -11,7 +11,6 @@ import java.util.List;
 
 import f3.nsu.com.habit.GetTime.GetTime;
 import f3.nsu.com.habit.RealmDataBase.DBControl;
-import f3.nsu.com.habit.RealmDataBase.TaskData.SystemTask;
 import f3.nsu.com.habit.RealmDataBase.TaskData.TaskList;
 
 /**
@@ -21,32 +20,26 @@ public class FistPushClass {
 
     private Context context;
     private String data = new GetTime().getData();
-    public List<TaskList> FistPushList = new ArrayList<>();
+    public List<TaskList> fistPushList = new ArrayList<>();
 
     public FistPushClass(Context context) {
         this.context = context;
     }
+    public FistPushClass(){}
 
-    public FistPushClass() {
+
+    public List<TaskList> showMyFistPush() {
+        fistPushList.add(new TaskList("联系亲朋好友",4,false,100,1,"20:00"));
+        fistPushList.add(new TaskList("每天坚持读书",5,false,100,2,"12:00"));
+        fistPushList.add(new TaskList("清洁整理房间",4,false,100,4,"08:30"));
+        fistPushList.add(new TaskList("每天写一篇日记",5,false,100,5,"19:00"));
+        fistPushList.add(new TaskList("睡前回顾当天",4,false,100,3,"22:00"));
+        return fistPushList;
     }
 
-    public void addMyFistPush() {
-        List<SystemTask> systemTask = DBControl.createRealm(context).showSystemTask();
-        List<TaskList> taskLists = systemTask.get(0).getSystemTaskList();
-        for (TaskList t : taskLists) {
-            if (t.getName().equals("按时起床") || t.getName().equals("记单词") || t.getName().equals("看书一小时") ||
-                    t.getName().equals("不乱花钱") || t.getName().equals("存梦想基金")) {
-                FistPushList.add(t);
-                addMyFistPushToMyHabitTask(t.getName(), t.getModify(), t.getExpectDay(), t.getColorNumber(), t.getIsStart(), t.getTime());
-            }
+    private void addMyFistPushToMyHabitTask(List<TaskList> fpl) {
+        for(TaskList t : fpl){
+            DBControl.createRealm(context).addMyHabitTask(data,t.getName(),t.getModify(),t.getExpectDay(),t.getTime(),t.getColorNumber());
         }
-    }
-
-    private void addMyFistPushToMyHabitTask(String name, int modify, int expectDay, int colorNumber, Boolean isStart, String time) {
-        DBControl.createRealm(context).addMyHabitTask(data, name, modify, expectDay, time, colorNumber);
-    }
-
-    public List<TaskList> getFistPushList() {
-        return FistPushList;
     }
 }

@@ -7,7 +7,6 @@ import java.util.List;
 
 import f3.nsu.com.habit.GetTime.GetTime;
 import f3.nsu.com.habit.RealmDataBase.DBControl;
-import f3.nsu.com.habit.RealmDataBase.TaskData.SystemTask;
 import f3.nsu.com.habit.RealmDataBase.TaskData.TaskList;
 
 /**
@@ -19,7 +18,7 @@ public class ThirdPushClass {
     private Context context;
 
     private String data = new GetTime().getData();
-    public List<TaskList> ThirdPushList = new ArrayList<>();
+    public List<TaskList> thirdPushList = new ArrayList<>();
 
     public ThirdPushClass(Context context) {
         this.context = context;
@@ -28,23 +27,18 @@ public class ThirdPushClass {
     public ThirdPushClass() {
     }
 
-    public void addMyThirdPush() {
-        List<SystemTask> systemTask = DBControl.createRealm(context).showSystemTask();
-        List<TaskList> taskLists = systemTask.get(0).getSystemTaskList();
-        for (TaskList t : taskLists) {
-            if (t.getName().equals("30个俯卧撑") || t.getName().equals("晨跑") || t.getName().equals("称体重") ||
-                    t.getName().equals("戒烟") || t.getName().equals("不玩游戏") || t.getName().equals("静下来听歌")) {
-                ThirdPushList.add(t);
-                addMyThirdPushToMyHabitTask(t.getName(), t.getModify(), t.getExpectDay(), t.getColorNumber(), t.getIsStart(), t.getTime());
-            }
+    public List<TaskList> showMyThirdPush() {
+        thirdPushList.add(new TaskList("不喝碳酸饮料",4,false,100,1,"09:00"));
+        thirdPushList.add(new TaskList("多吃蔬菜和水果",5,false,100,2,"11:30"));
+        thirdPushList.add(new TaskList("进行高效率运动",6,false,100,4,"15:30"));
+        thirdPushList.add(new TaskList("完成腹部的燃烧脂肪",5,false,100,5,"19:30"));
+        thirdPushList.add(new TaskList("坚持有氧运动",4,false,100,3,"21:30"));
+        return thirdPushList;
+    }
+
+    private void addMySecondPushToMyHabitTask(List<TaskList> tpl) {
+        for(TaskList t : tpl){
+            DBControl.createRealm(context).addMyHabitTask(data,t.getName(),t.getModify(),t.getExpectDay(),t.getTime(),t.getColorNumber());
         }
-    }
-
-    private void addMyThirdPushToMyHabitTask(String name, int modify, int expectDay, int colorNumber, Boolean isStart, String time) {
-        DBControl.createRealm(context).addMyHabitTask(data, name, modify, expectDay, time, colorNumber);
-    }
-
-    public List<TaskList> getThirdPushList() {
-        return ThirdPushList;
     }
 }

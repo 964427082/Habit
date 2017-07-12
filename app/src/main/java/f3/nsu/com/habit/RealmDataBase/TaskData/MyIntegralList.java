@@ -10,6 +10,7 @@ import io.realm.annotations.PrimaryKey;
 public class MyIntegralList extends RealmObject {
     @PrimaryKey
     private String name;    //该习惯名字
+
     private int modify;     //该习惯的积分
     private String completeTime;    //完成的时间     02：05
     private int expectDay;    //预设计的天数
