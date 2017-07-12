@@ -7,7 +7,6 @@ import java.util.List;
 
 import f3.nsu.com.habit.GetTime.GetTime;
 import f3.nsu.com.habit.RealmDataBase.DBControl;
-import f3.nsu.com.habit.RealmDataBase.TaskData.SystemTask;
 import f3.nsu.com.habit.RealmDataBase.TaskData.TaskList;
 
 /**
@@ -20,7 +19,7 @@ public class SecondPushClass {
     private Context context;
 
     private String data = new GetTime().getData();
-    public List<TaskList> SecondPushList = new ArrayList<>();
+    public List<TaskList> secondPushList = new ArrayList<>();
 
     public SecondPushClass(Context context) {
         this.context = context;
@@ -29,23 +28,19 @@ public class SecondPushClass {
     public SecondPushClass() {
     }
 
-    public void addMySecondPush() {
-        List<SystemTask> systemTask = DBControl.createRealm(context).showSystemTask();
-        List<TaskList> taskLists = systemTask.get(0).getSystemTaskList();
-        for (TaskList t : taskLists) {
-            if (t.getName().equals("早上空腹喝杯水") || t.getName().equals("晨跑") || t.getName().equals("吃早餐") ||
-                    t.getName().equals("喝上5杯水") || t.getName().equals("按时睡觉") || t.getName().equals("睡午觉")) {
-                SecondPushList.add(t);
-                addMySecondPushToMyHabitTask(t.getName(), t.getModify(), t.getExpectDay(), t.getColorNumber(), t.getIsStart(), t.getTime());
-            }
+
+    public List<TaskList> showMySecondPush() {
+        secondPushList.add(new TaskList("早起",4,false,100,1,"08:00"));
+        secondPushList.add(new TaskList("早上空腹喝杯水",5,false,100,2,"08:10"));
+        secondPushList.add(new TaskList("坚持午觉",6,false,100,4,"13:00"));
+        secondPushList.add(new TaskList("每天运动半小时",5,false,100,5,"18:00"));
+        secondPushList.add(new TaskList("睡前不玩手机",4,false,100,3,"22:00"));
+        return secondPushList;
+    }
+
+    private void addMySecondPushToMyHabitTask(List<TaskList> spl) {
+        for(TaskList t : spl){
+            DBControl.createRealm(context).addMyHabitTask(data,t.getName(),t.getModify(),t.getExpectDay(),t.getTime(),t.getColorNumber());
         }
-    }
-
-    private void addMySecondPushToMyHabitTask(String name, int modify, int expectDay, int colorNumber, Boolean isStart, String time) {
-        DBControl.createRealm(context).addMyHabitTask(data, name, modify, expectDay, time, colorNumber);
-    }
-
-    public List<TaskList> getSecondPushList() {
-        return SecondPushList;
     }
 }

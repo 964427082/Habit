@@ -1,7 +1,6 @@
 package f3.nsu.com.habit.Adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,7 +91,8 @@ public class HabitAdapter extends BaseAdapter {
         if (habitDate.get(position).getComplete() || isCheck[position]) {
             viewHolder.completeButton.setBackgroundResource(R.drawable.icon_right_selected);
         } else {
-            viewHolder.completeButton.setOnClickListener(new ListButtonListener(position, mContext, viewHolder.completeButton, date, name, viewHolder.dayText));
+            viewHolder.completeButton.setOnClickListener(new ListButtonListener(position, mContext, viewHolder.completeButton,
+                    date, name, habitDate.get(position).getModify()));
             viewHolder.completeButton.setBackgroundResource(R.drawable.icon_right_default);
         }
         habitDate.get(position).getColorNumber();
@@ -111,25 +111,26 @@ public class HabitAdapter extends BaseAdapter {
         private Button completeButton;
         private ProgressBar progressBar;
         private Button colorButton;
+        private int modify; //积分
     }
 
     public class ListButtonListener implements View.OnClickListener {
-        TextView dayText;
         int mPosition;
         Context mContext;
 
         Button button1;
         String name;
         String date;
+        int modify;
 
 
-        public ListButtonListener(int position, Context context, Button button, String date, String name, TextView dayText) {
+        public ListButtonListener(int position, Context context, Button button, String date, String name, int modify) {
             this.mPosition = position;
             this.mContext = context;
             this.button1 = button;
             this.date = date;
             this.name = name;
-            this.dayText = dayText;
+            this.modify = modify;
         }
 
         @Override
@@ -144,7 +145,7 @@ public class HabitAdapter extends BaseAdapter {
             if (!is) {
                 Toast.makeText(mContext, "您完成了此项任务！", Toast.LENGTH_LONG).show();
                 habitDate.get(mPosition).setGoalDay(habitDate.get(mPosition).getGoalDay() + 1);
-                DBControl.createRealm(mContext).amendMyHabitIsStart(date, name);
+                DBControl.createRealm(mContext).amendMyHabitIsStart(date, name,modify);
             }
             isCheck[mPosition] = true;
             notifyDataSetChanged();
