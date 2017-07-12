@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     tools:context="f3.nsu.com.habit.acitvity.AddHabitActivity"
     android:background="#f9f9f9">
-
     <!--标题栏-->
     <RelativeLayout
         android:layout_width="match_parent"
@@ -80,7 +79,7 @@
             android:textColor="#434343"/>
         <LinearLayout
             android:layout_width="310dp"
-            android:layout_height="wrap_content"
+            android:layout_height="32dp"
             android:orientation="horizontal"
             android:layout_marginTop="120dp"
             android:layout_marginLeft="17dp">
@@ -88,8 +87,10 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:gravity="center">
                 <Button
+                    android:id="@+id/color_button1"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:background="@drawable/round_button_color1">
@@ -99,8 +100,10 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:gravity="center">
                 <Button
+                    android:id="@+id/color_button2"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:background="@drawable/round_button_color2">
@@ -111,8 +114,10 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:gravity="center">
                 <Button
+                    android:id="@+id/color_button3"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:background="@drawable/round_button_color3">
@@ -123,8 +128,10 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:gravity="center">
                 <Button
+                    android:id="@+id/color_button4"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:background="@drawable/round_button_color4">
@@ -137,6 +144,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center">
                 <Button
+                    android:id="@+id/color_button5"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:background="@drawable/round_button_color5">
@@ -144,6 +152,53 @@
                 </Button>
             </RelativeLayout>
         </LinearLayout>
+        <LinearLayout
+        android:layout_width="310dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="155dp"
+        android:layout_marginLeft="17dp">
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="310dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RadioButton
+                android:id="@+id/radioButton1"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:layout_marginLeft="29dp"
+                android:background="@drawable/radio_background"
+                android:button="@null"/>
+            <RadioButton
+                android:id="@+id/radioButton2"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:layout_marginLeft="57dp"
+                android:background="@drawable/radio_background"
+                android:button="@null"/>
+            <RadioButton
+                android:id="@+id/radioButton3"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:layout_marginLeft="57dp"
+                android:background="@drawable/radio_background"
+                android:button="@null"/>
+            <RadioButton
+                android:id="@+id/radioButton4"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:layout_marginLeft="57dp"
+                android:background="@drawable/radio_background"
+                android:button="@null"/>
+            <RadioButton
+                android:id="@+id/radioButton5"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:layout_marginLeft="57dp"
+                android:background="@drawable/radio_background"
+                android:button="@null"/>
+        </RadioGroup>
+    </LinearLayout>
     </RelativeLayout>
     <!--习惯天数-->
     <RelativeLayout

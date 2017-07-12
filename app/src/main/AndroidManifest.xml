@@ -17,7 +17,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".acitvity.AddHabitActivity"></activity>
+        <activity android:name=".acitvity.AddHabitActivity" android:theme="@style/TranslucentTheme"></activity>
     </application>
 
 </manifest>
