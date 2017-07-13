@@ -15,8 +15,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import f3.nsu.com.habit.Adapter.HabitAdapter;
 import f3.nsu.com.habit.GetTime.GetTime;
@@ -82,6 +84,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 //        addMyHabitTask(new GetTime().getData(), "oo9", 3, 20, "12:10", 3);
 //        addMyHabitTask(new GetTime().getData(), "oo10", 3, 20, "12:10", 1);
 //        addMyHabitTask(new GetTime().getData(), "oo15", 3, 20, "12:10", 2);
+
         initView();
     }
 
@@ -302,11 +305,26 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private List<MyHabitTask> showMyHabitTask() {
         List<MyHabitTask> myHabitTask = DBControl.createRealm(this).showMyHabitEveyTask();
-
         return myHabitTask;
     }
 
     private void addMyHabitTask(String data, String name, int modify, int expectDay, String clockTime, int colorNumber) {
         DBControl.createRealm(this).addMyHabitTask(data, name, modify, expectDay, clockTime, colorNumber);
+    }
+
+
+    private void generateRandomNumber(int number) {
+        HashSet integerHashSet = new HashSet();
+        Random random = new Random();
+        for (int i = 0; i < 10; i++) {
+            int randomInt = random.nextInt(13);
+            Log.i(TAG, "onCreate: 生成的randomInt=" + randomInt);
+            if (!integerHashSet.contains(randomInt)) {
+                integerHashSet.add(randomInt);
+                Log.i(TAG, "onCreate: 添加进HashSet的randomInt=" + randomInt);
+            } else {
+                Log.i(TAG, "onCreate: 该数字已经被添加,不能重复添加");
+            }
+        }
     }
 }
