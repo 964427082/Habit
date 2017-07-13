@@ -1,4 +1,4 @@
-package f3.nsu.com.habit.acitvity;
+package f3.nsu.com.habit.actvity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -112,6 +112,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onItemClick(AdapterView<?> arg0, View v, int position, long id) {
         Toast.makeText(this, "listview的item被点击了！，点击的位置是-->" + position,
                 Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(MainActivity.this,SituationActivity.class);
+        startActivity(intent);
+
     }
 
     /**

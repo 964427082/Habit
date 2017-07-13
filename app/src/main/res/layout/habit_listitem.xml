@@ -5,7 +5,8 @@
     android:id="@+id/item_layout"
     android:layout_height="77dp"
     android:elevation="4dp"
-    android:background="@mipmap/mask">
+    android:background="@mipmap/mask"
+    android:descendantFocusability="blocksDescendants">
 
     <Button
         android:id="@+id/color_button"

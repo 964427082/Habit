@@ -15,16 +15,14 @@ import android.view.View;
 public class DrawCircle extends View {
 
 
-    private int color1 = Color.parseColor("#ff0000");
-    private int color2 = Color.parseColor("#000000");
-    private int color3 = Color.parseColor("#7ed321");
+    private int color1 = Color.parseColor("#7ed321");
     public DrawCircle(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
     protected void onDraw(Canvas canvas){
         Paint p = new Paint();
-        p.setColor(color1);// 设置红色
+        p.setColor(color1);
         p.setAntiAlias(true);// 设置画笔的锯齿效果。 true是去除
         canvas.drawCircle(12, 12, 12, p);
     }
