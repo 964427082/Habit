@@ -47,52 +47,51 @@ public class Histogram extends View {
         titlePaint.setColor(Color.BLACK);
     }
     public void  setHabitData(int[] data){
-//        habitData = Data;
-//        this.postInvalidate();
         this.habitData = data;
     }
     protected void onDraw(Canvas canvas){
         super.onDraw(canvas);
+
         int width = getWidth();
         int height = getHeight();
         //绘制坐标线：
         canvas.drawLine(50, 0, 50, 250, axisLinePaint);
         canvas.drawLine(50, 250, 900, 250, axisLinePaint);
         //绘制坐标内部的水平线
-        int leftHeight = 100;// 左侧外周的 需要划分的高度：
+        int leftHeight = 250;// 左侧外周的 需要划分的高度：
         int hPerHeight = leftHeight / 4;
         hLinePaint.setTextAlign(Paint.Align.CENTER);
         for (int i = 0; i < 4; i++) {
-            canvas.drawLine(100, 20 + i * hPerHeight, width - 10, 20 + i * hPerHeight, hLinePaint);
+            canvas.drawLine(50,  i * hPerHeight, 900,  i * hPerHeight, hLinePaint);
         }
         //绘制Y轴坐标
         Paint.FontMetrics metrics = titlePaint.getFontMetrics();
         int descent = (int) metrics.descent;
         titlePaint.setTextAlign(Paint.Align.RIGHT);
         for (int i = 0; i < yTitlesStrings.length; i++) {
-            canvas.drawText(yTitlesStrings[i], 80, 20 + i * hPerHeight + descent, titlePaint);
+            canvas.drawText(yTitlesStrings[i], 45, i * hPerHeight + descent, titlePaint);
         }
         //绘制X轴做坐标
-        int xAxisLength = width - 110;
+        int xAxisLength = 850;
         int columCount = xTitlesStrings.length + 1;
         int step = xAxisLength / columCount;
         for (int i = 0; i < columCount - 1; i++) {
-            canvas.drawText(xTitlesStrings[i], 100 + step * (i + 1), 360, titlePaint);
+            canvas.drawText(xTitlesStrings[i], 50 + step * (i + 1), 750, titlePaint);
         }
         //绘制矩形
         if (habitData != null && habitData.length > 0) {
             int thisCount = habitData.length;
             for (int i = 0; i < thisCount; i++) {
                 int value = habitData[i];
-                int num = 8 - value / 10000;
+                int num = 5 - value / 5000;
                 recPaint.setColor(0xFF1078CF);
                 Rect rect = new Rect();
-                rect.left = 100 + step * (i + 1) - 10;
-                rect.right = 100 + step * (i + 1) + 10;
+                rect.left = 50 + step * (i + 1) - 10;
+                rect.right = 50 + step * (i + 1) + 10;
 //              当前的相对高度：
-                int rh = (leftHeight * num) / 8;
+                int rh = (leftHeight * num) / 4;
                 rect.top = rh + 20;
-                rect.bottom = 320;
+                rect.bottom = 250;
                 canvas.drawRect(rect, recPaint);
             }
         }
