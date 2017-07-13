@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="f3.nsu.com.habit.acitvity.AddHabitActivity"
+    tools:context="f3.nsu.com.habit.actvity.AddHabitActivity"
     android:background="#f9f9f9">
     <!--标题栏-->
     <RelativeLayout

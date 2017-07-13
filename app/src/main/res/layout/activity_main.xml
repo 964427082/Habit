@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="f3.nsu.com.habit.acitvity.MainActivity">
+    tools:context="f3.nsu.com.habit.actvity.MainActivity">
 
     <!--状态栏-->
     <ImageView
