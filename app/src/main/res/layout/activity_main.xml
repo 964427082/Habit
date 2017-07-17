@@ -30,13 +30,17 @@
             <ImageButton
                 style="@style/BottomBarImgBtn"
                 android:id="@+id/button_pet"
-                android:background="@drawable/button_pet_state"/>
+                android:background="@drawable/button_pet_state"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
         </RelativeLayout>
+
         <RelativeLayout style="@style/BottomBar">
+
             <ImageButton
-                style="@style/BottomBarImgBtn"
                 android:id="@+id/button_personal"
-                android:background="@drawable/button_personal_state"/>
+                style="@style/BottomBarImgBtn"
+                android:background="@drawable/button_personal_state" />
         </RelativeLayout>
 
     </LinearLayout>
@@ -66,11 +70,12 @@
             android:name="f3.nsu.com.habit.fragment.PetFragment">
 
         </fragment>
+
         <fragment
             android:id="@+id/fragment_personal"
+            android:name="f3.nsu.com.habit.fragment.PersonalFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:name="f3.nsu.com.habit.fragment.PersonalFragment">
+            android:layout_height="match_parent">
 
         </fragment>
 

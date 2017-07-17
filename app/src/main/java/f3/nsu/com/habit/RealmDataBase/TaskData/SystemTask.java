@@ -6,7 +6,7 @@ import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by 爸爸你好 on 2017/7/3.
- * 系统推荐习惯任务列表
+ * 系统推荐习惯任务列表.
  * 唯一的一张表   不可进行增删查改的操作！
  */
 

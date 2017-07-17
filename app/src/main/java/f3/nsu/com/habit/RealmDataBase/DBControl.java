@@ -15,7 +15,6 @@ import f3.nsu.com.habit.RealmDataBase.TaskData.TaskList;
 import f3.nsu.com.habit.actvity.MainActivity;
 import io.realm.Realm;
 import io.realm.RealmList;
-import io.realm.RealmResults;
 
 /**
  * Created by 爸爸你好 on 2017/6/27.
@@ -96,32 +95,44 @@ public class DBControl {
     /**
      * 查看系统习惯任务列表
      */
-    public List<SystemTask> showSystemTask() {
-        final List<SystemTask> s = new ArrayList<>();
+    public List<TaskList> showSystemTask() {
+        final List<TaskList> s = new ArrayList<>();
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                RealmResults<SystemTask> systemTask = mRealm.where((SystemTask.class)).findAll();
-                s.addAll(systemTask);
+                SystemTask systemTaskList = mRealm.where((SystemTask.class)).findFirst();
+                if (systemTaskList == null)
+                    return;
+                else
+                    s.addAll(systemTaskList.getSystemTaskList());
             }
         });
+        Log.i(TAG, "showSystemTask: 系统 = " + s.size());
         return s;
     }
+
 
     /**
      * 保存添加的自定义习惯列表
      */
-    public void addCustomTask(final String name, final int expectDay, final String word, final String color, final String clockTime) {
+    public void addCustomTask(final String name, final int expectDay, final int color, final String clockTime) {
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                CustomTask customTask = realm.createObject(CustomTask.class, name);
-                customTask.setExpectDay(expectDay);
-                customTask.setWord(word);
-                customTask.setColor(color);
-                customTask.setModify(5);
-                customTask.setClockTime(clockTime);
-                customTask.setStart(false);
+                CustomTask c = realm.where(CustomTask.class).findFirst();
+                TaskList taskList = realm.createObject(TaskList.class);
+                taskList.setName(name);
+                taskList.setExpectDay(expectDay);
+                taskList.setColorNumber(color);
+                taskList.setModify(5);
+                taskList.setTime(clockTime);
+                taskList.setStart(false);
+                if (c == null) {
+                    CustomTask customTask = realm.createObject(CustomTask.class, "customTask");
+                    customTask.getCustomTaskList().add(taskList);
+                } else {
+                    c.getCustomTaskList().add(taskList);
+                }
             }
         });
     }
@@ -129,37 +140,40 @@ public class DBControl {
     /**
      * 查看自定义习惯列表
      */
-    public List<CustomTask> showCustomTask() {
-        final List<CustomTask> c = new ArrayList<>();
+    public List<TaskList> showCustomTask() {
+        final List<TaskList> c = new ArrayList<>();
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                RealmResults<CustomTask> customTasks = mRealm.where((CustomTask.class)).findAll();
-                c.addAll(customTasks);
+                CustomTask customTasks = mRealm.where((CustomTask.class)).findFirst();
+                if (customTasks == null)
+                    return;
+                else
+                    c.addAll(customTasks.getCustomTaskList());
             }
         });
-        Log.i(TAG, "showCustomTask: TaskSize = " + c.size());
+        Log.i(TAG, "showCustomTask: 自定义 = " + c.size());
         return c;
     }
 
     /**
      * 删除自定义列表中的某项
      */
-    public void deleteCustomTask(final String name) {
-        final RealmResults<CustomTask> customTasks = mRealm.where(CustomTask.class).findAll();
-        mRealm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                int j = -1;
-                for (int i = 0; i < customTasks.size(); i++) {
-                    if (name.equals(customTasks.get(i).getName())) {
-                        j = i;
-                    }
-                }
-                customTasks.deleteFromRealm(j);
-            }
-        });
-    }
+//    public void deleteCustomTask(final String name) {
+//        final RealmResults<CustomTask> customTasks = mRealm.where(CustomTask.class).findAll();
+//        mRealm.executeTransaction(new Realm.Transaction() {
+//            @Override
+//            public void execute(Realm realm) {
+//                int j = -1;
+//                for (int i = 0; i < customTasks.size(); i++) {
+//                    if (name.equals(customTasks.get(i).getName())) {
+//                        j = i;
+//                    }
+//                }
+//                customTasks.deleteFromRealm(j);
+//            }
+//        });
+//    }
 
 
     /**
@@ -183,6 +197,25 @@ public class DBControl {
         });
     }
 
+    /**
+     * 查看当天我要完成的习惯列表
+     *
+     * @return
+     */
+    public List<MyIntegralList> showTodayMyHabitIntegralList() {
+        final List<MyIntegralList> i = new ArrayList<>();
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                MyHabitTask myHabitTask = mRealm.where(MyHabitTask.class).equalTo("data", data).findFirst();
+                if(myHabitTask == null)
+                    return;
+                i.addAll(myHabitTask.getMyIntegralList());
+            }
+        });
+        Log.i(TAG, "showTodayMyHabitIntegralList: 当天的 = " + i.size());
+        return i;
+    }
 
     /**
      * 查看我的所有习惯列表
@@ -198,7 +231,6 @@ public class DBControl {
                 i.addAll(myHabitTask);
             }
         });
-        Log.i(TAG, "showMyHabitEveyTask: 我的所有习惯列表个数 = " + i.size());
         return i;
     }
 
@@ -224,7 +256,6 @@ public class DBControl {
                 myIntegralList.setInsistDay(0);
                 myIntegralList.setColorNumber(colorNumber);
                 myIntegralList.setStart(false);
-
                 if (m == null) {
                     MyHabitTask myHabitTask = realm.createObject(MyHabitTask.class, data);
                     myHabitTask.setTodayIntegral(0);

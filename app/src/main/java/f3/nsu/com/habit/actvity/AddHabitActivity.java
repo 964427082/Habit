@@ -1,11 +1,13 @@
 package f3.nsu.com.habit.actvity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -14,8 +16,12 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import java.util.List;
+
+import f3.nsu.com.habit.GetTime.GetTime;
 import f3.nsu.com.habit.R;
-import f3.nsu.com.habit.fragment.AddHabitFragment;
+import f3.nsu.com.habit.RealmDataBase.DBControl;
+import f3.nsu.com.habit.RealmDataBase.TaskData.TaskList;
 import f3.nsu.com.habit.fragment.NewHabitFragment;
 
 /**
@@ -24,14 +30,17 @@ import f3.nsu.com.habit.fragment.NewHabitFragment;
 
 public class AddHabitActivity extends FragmentActivity implements View.OnClickListener {
     private static final String TAG = "AddHabitActivity";
-    private Button createHabit_button;//创建习惯按钮
-    private ImageButton exit_imageButton;//添加习惯界面退出按钮
-    private ImageButton return_imageButton;//新习惯界面返回到添加习惯界面按钮
     NewHabitFragment newHabitFragment;//新习惯界面
-    AddHabitFragment addHabitFragment;//添加习惯界面
-    private EditText nameEditText,dayEditText,wordsEditText;//新习惯界面名称、天数、语录的编辑框
-    private Button color_button1,color_button2,color_button3,color_button4,color_button5;//五个颜色选择按钮
-    private RadioButton radioButton1,radioButton2,radioButton3,radioButton4,radioButton5;//五个颜色单选按钮
+    private EditText nameEditText, dayEditText;//新习惯界面名称、天数、语录的编辑框
+    private Button color_button1, color_button2, color_button3, color_button4, color_button5;//五个颜色选择按钮
+    private RadioButton radioButton1, radioButton2, radioButton3, radioButton4, radioButton5;//五个颜色单选按钮
+    private ImageButton returnImgBtn, completeImgBtn;
+    private Context context = this;
+    private List<TaskList> systemList = DBControl.createRealm(this).showSystemTask();
+    private List<TaskList> customList = DBControl.createRealm(this).showCustomTask();
+    private int colorNumber = 1;
+    private boolean is = false;
+    private String data = new GetTime().getData();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,9 +54,6 @@ public class AddHabitActivity extends FragmentActivity implements View.OnClickLi
      * 初始化界面
      */
     private void init() {
-        createHabit_button = (Button) findViewById(R.id.createHabit_button);
-        exit_imageButton = (ImageButton) findViewById(R.id.exit_imageButton);
-        return_imageButton = (ImageButton) findViewById(R.id.return_imageButton);
 
         radioButton1 = (RadioButton) findViewById(R.id.radioButton1);
         radioButton2 = (RadioButton) findViewById(R.id.radioButton2);
@@ -66,68 +72,81 @@ public class AddHabitActivity extends FragmentActivity implements View.OnClickLi
         color_button5.setOnClickListener(this);
 
 
-        nameEditText  = (EditText) findViewById(R.id.name_editText);
+        nameEditText = (EditText) findViewById(R.id.name_editText);
         dayEditText = (EditText) findViewById(R.id.day_editText);
-        wordsEditText = (EditText) findViewById(R.id.words_editText);
         newHabitFragment = (NewHabitFragment) getSupportFragmentManager().findFragmentById(R.id.new_habit_fragment);
-        addHabitFragment = (AddHabitFragment) getSupportFragmentManager().findFragmentById(R.id.add_habit_fragment);
-        createHabit_button.setOnClickListener(this);
+        returnImgBtn = (ImageButton) newHabitFragment.getActivity().findViewById(R.id.return_imageButton);
+        completeImgBtn = (ImageButton) newHabitFragment.getActivity().findViewById(R.id.complete_img_btn);
+        returnImgBtn.setOnClickListener(this);
+        completeImgBtn.setOnClickListener(this);
+        radioButton1.setChecked(true);
 
-        return_imageButton.setOnClickListener(this);
 
-        exit_imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AddHabitActivity.this,MainActivity.class);
-                startActivity(intent);
-            }
-        });
-        //设置默认点击事件，一进入AddHabitActivity就显示添加习惯界面。
-        return_imageButton.performClick();
         //设置编辑框限定字符数的监听。
-        nameEditText.addTextChangedListener(nameTextWatcher);
-        dayEditText.addTextChangedListener(dayTextWatcher);
-        wordsEditText.addTextChangedListener(wordsTextWatcher);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                nameEditText.addTextChangedListener(nameTextWatcher);
+                dayEditText.addTextChangedListener(dayTextWatcher);
+            }
+        }).start();
     }
 
     /**
      * 点击事件
+     *
      * @param v
      */
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.createHabit_button:
-                getSupportFragmentManager().beginTransaction().hide(addHabitFragment).show(newHabitFragment).commit();
-                break;
-            case R.id.return_imageButton:
-                getSupportFragmentManager().beginTransaction().hide(newHabitFragment).show(addHabitFragment).commit();
+        switch (v.getId()) {
             case R.id.color_button1:
                 radioButton1.setChecked(true);
+                colorNumber = 1;
                 break;
             case R.id.color_button2:
                 radioButton2.setChecked(true);
+                colorNumber = 2;
                 break;
             case R.id.color_button3:
                 radioButton3.setChecked(true);
+                colorNumber = 3;
                 break;
             case R.id.color_button4:
                 radioButton4.setChecked(true);
+                colorNumber = 4;
                 break;
             case R.id.color_button5:
                 radioButton5.setChecked(true);
+                colorNumber = 5;
+                break;
+            //返回
+            case R.id.return_imageButton:
+                finish();
+                break;
+            //完成
+            case R.id.complete_img_btn:
+                is = isComplete();
+                if (is == true) {
+                    DBControl.createRealm(context).addCustomTask(nameEditText.getText().toString(),
+                            Integer.valueOf(dayEditText.getText().toString()), colorNumber, "12:00");
+                    startActivity(new Intent(AddHabitActivity.this, MyAddHabitActivity.class));
+                    finish();
+                }
                 break;
             default:
                 break;
         }
     }
+
     /**
      * 为nameEditText添加监听，超过限定字符数，弹出提示。
      */
     private TextWatcher nameTextWatcher = new TextWatcher() {
+        boolean isSystem = false;
+
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
         }
 
         @Override
@@ -138,9 +157,32 @@ public class AddHabitActivity extends FragmentActivity implements View.OnClickLi
         @Override
         public void afterTextChanged(Editable s) {
             int len = s.toString().length();
-            if (len>=10){
-                Toast.makeText(getApplicationContext(),"习惯名称最多10个字！",Toast.LENGTH_LONG).show();
+            if (len >= 10) {
+                Toast.makeText(context, "习惯名称最多10个字！", Toast.LENGTH_SHORT).show();
             }
+            Log.i(TAG, "afterTextChanged: 1111");
+            for (TaskList system : systemList) {
+                if (s.toString().equals(system.getName())) {
+                    Toast.makeText(context, "该习惯已经存在，请重新输入！", Toast.LENGTH_SHORT).show();
+                    is = false;
+                    isSystem = true;
+                    break;
+                } else
+                    is = true;
+            }
+
+            if (!isSystem) {
+                Log.i(TAG, "afterTextChanged: 2222");
+                for (TaskList custom : customList) {
+                    if (s.toString().equals(custom.getName())) {
+                        Toast.makeText(context, "该习惯已经存在，请重新输入！", Toast.LENGTH_SHORT).show();
+                        is = false;
+                        break;
+                    } else
+                        is = true;
+                }
+            }
+            isSystem = false;
         }
     };
     /**
@@ -149,42 +191,39 @@ public class AddHabitActivity extends FragmentActivity implements View.OnClickLi
     private TextWatcher dayTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
         }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-
         }
 
         @Override
         public void afterTextChanged(Editable s) {
             int len = s.toString().length();
-            if (len>=3){
-                Toast.makeText(getApplicationContext(),"目标天数最多3位数！",Toast.LENGTH_LONG).show();
+            if (len >= 3) {
+                Toast.makeText(context, "目标天数最多3位数！", Toast.LENGTH_SHORT).show();
             }
         }
     };
+
     /**
-     * 为wordsEditText添加监听，超过限定字符数，弹出提示。
+     * 禁用back键
      */
-    private TextWatcher wordsTextWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+//    @Override
+//    public boolean dispatchKeyEvent(android.view.KeyEvent event) {
+//        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK)
+//            return false;
+//        return true;
+//    }
+    public boolean isComplete() {
+        if (nameEditText.getText().toString().equals("")) {
+            Toast.makeText(context, "习惯名字不能为空！", Toast.LENGTH_SHORT).show();
+            return false;
         }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+        if (dayEditText.getText().toString().equals("")) {
+            Toast.makeText(context, "坚持天数不能为空！", Toast.LENGTH_SHORT).show();
+            return false;
         }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            int len = s.toString().length();
-            if (len>=25){
-                Toast.makeText(getApplicationContext(),"励志语录不能超过25个字！",Toast.LENGTH_LONG).show();
-            }
-        }
-    };
+        return true;
+    }
 }
