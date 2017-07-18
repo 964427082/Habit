@@ -53,12 +53,6 @@
         android:textColor="#434343"
         android:layout_marginTop="47dp"
         android:layout_marginLeft="44dp"/>
-    <!--<View-->
-        <!--android:layout_width="207dp"-->
-        <!--android:layout_height="5dp"-->
-        <!--android:layout_marginLeft="27dp"-->
-        <!--android:layout_marginTop="62dp"-->
-        <!--android:background="#50cfde"/>-->
     <ProgressBar
         android:layout_width="207dp"
         android:layout_height="5dp"

@@ -1,4 +1,4 @@
-package f3.nsu.com.habit.actvity;
+package f3.nsu.com.habit.activity;
 
 import android.content.Context;
 import android.content.Intent;

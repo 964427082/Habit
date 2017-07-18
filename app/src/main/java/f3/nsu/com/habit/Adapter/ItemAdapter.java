@@ -24,7 +24,8 @@ import java.util.ArrayList;
 
 import f3.nsu.com.habit.R;
 import f3.nsu.com.habit.RealmDataBase.TaskData.TaskList;
-import f3.nsu.com.habit.actvity.AddHabitActivity;
+import f3.nsu.com.habit.activity.AddHabitActivity;
+import f3.nsu.com.habit.activity.MyAddHabitActivity;
 import f3.nsu.com.habit.tool.OnDragVHListener;
 import f3.nsu.com.habit.tool.OnItemMoveListener;
 
@@ -214,6 +215,7 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                         Intent intent = new Intent(context, AddHabitActivity.class);
                         Activity activity = (Activity) context;
                         context.startActivity(intent);
+                        Log.i(TAG, "onClick: " +" ssssssssssssss");
                         activity.finish();
                     }
                 });
@@ -239,7 +241,7 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                         // 如果在屏幕内,则添加一个位移动画
                         if (recyclerView.indexOfChild(preTargetView) >= 0) {
                             int targetX = preTargetView.getLeft();
-                            int targetY = preTargetView.getTop() + 130;
+                            int targetY = preTargetView.getTop() + 190;
 
                             int targetPosition = mMyChannelItems.size() - 1 + COUNT_PRE_OTHER_HEADER;
 

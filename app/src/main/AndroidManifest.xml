@@ -10,16 +10,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".actvity.MainActivity" android:theme="@style/TranslucentTheme">
+        <activity android:name=".activity.MainActivity" android:theme="@style/TranslucentTheme">
+
+        </activity>
+        <activity android:name=".activity.AddHabitActivity" android:theme="@style/TranslucentTheme"></activity>
+        <activity android:name=".activity.SituationActivity" android:theme="@style/TranslucentTheme"></activity>
+        <activity android:name=".activity.MyAddHabitActivity" android:theme="@style/TranslucentTheme"/>
+        <activity android:name=".activity.StartActivity" android:theme="@style/Theme.AppStartLoadTranslucent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".actvity.AddHabitActivity" android:theme="@style/TranslucentTheme"></activity>
-        <activity android:name=".actvity.SituationActivity"></activity>
-        <activity android:name=".actvity.MyAddHabitActivity"/>
     </application>
 
 </manifest>

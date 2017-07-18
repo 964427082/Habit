@@ -1,4 +1,4 @@
-package f3.nsu.com.habit.actvity;
+package f3.nsu.com.habit.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import f3.nsu.com.habit.Adapter.HabitAdapter;
+import f3.nsu.com.habit.Adapter.IntegralAdapter;
 import f3.nsu.com.habit.GetTime.GetTime;
 import f3.nsu.com.habit.R;
 import f3.nsu.com.habit.RealmDataBase.DBControl;
@@ -26,11 +28,13 @@ import f3.nsu.com.habit.RealmDataBase.TaskData.MyHabitTask;
 import f3.nsu.com.habit.RealmDataBase.TaskData.MyIntegralList;
 import f3.nsu.com.habit.RealmDataBase.TaskData.SystemTask;
 import f3.nsu.com.habit.RealmDataBase.TaskData.TaskList;
+import f3.nsu.com.habit.fragment.AddRewardFragment;
 import f3.nsu.com.habit.fragment.HomeFragment;
+import f3.nsu.com.habit.fragment.IntegralFragment;
 import f3.nsu.com.habit.fragment.PersonalFragment;
-import f3.nsu.com.habit.fragment.PetFragment;
 import f3.nsu.com.habit.ui.ExpandLayout;
 import f3.nsu.com.habit.ui.HabitList;
+import f3.nsu.com.habit.ui.IntegralList;
 import f3.nsu.com.habit.ui.MonthDateView;
 import io.realm.Realm;
 
@@ -45,7 +49,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     HomeFragment mHomeFragment;//主界面
     PersonalFragment mPersonalFragment;//个人界面
-    PetFragment mPetFragment;//宠物界面
+    IntegralFragment mIntegralFragment;//宠物界面
+    AddRewardFragment mAddRewardFragment;//添加奖励
 
     private ImageButton button_home, button_pet, button_personal;//底部导航栏按钮
     private ImageButton calendar_ImageButton;//左上角日历按钮
@@ -53,13 +58,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private ImageButton insert_imageButton;//右上角添加习惯按钮
     private View currentButton;
     private List<HabitList> habitDate = null;
+    private LinkedList<IntegralList> integralData = null;
     private Context mContext;
     private HabitAdapter habitAdapter = null;
+    private IntegralAdapter integralAdapter =null;
     private ListView habitListView;
     private ExpandLayout mExpandLayout;
     public Realm realm;
     public static boolean firstIn = true;
     private MonthDateView monthDateView;
+    private ListView integralListView;
+    private ImageButton add_reward,return_Integral;
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -130,7 +139,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         habitDate = new LinkedList<HabitList>();
         //绑定控件
         mHomeFragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_home);
-        mPetFragment = (PetFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_pet);
+        mIntegralFragment = (IntegralFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_pet);
+        mAddRewardFragment = (AddRewardFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_add_reward);
         mPersonalFragment = (PersonalFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_personal);
 
         habitListView = (ListView) findViewById(R.id.habit_ListView);
@@ -161,16 +171,30 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         button_home = (ImageButton) findViewById(R.id.button_home);
         button_personal = (ImageButton) findViewById(R.id.button_personal);
         button_pet = (ImageButton) findViewById(R.id.button_pet);
+        add_reward = (ImageButton) findViewById(R.id.add_reward);
+        return_Integral = (ImageButton) findViewById(R.id.return_integral);
         button_home.setOnClickListener(this);
         button_pet.setOnClickListener(this);
         button_personal.setOnClickListener(this);
+        add_reward.setOnClickListener(this);
+        return_Integral.setOnClickListener(this);
 
         button_home.performClick();//主动调用button_home点击事件,进入时，显示home界面。
 
         initExpandView();
+        addIntegral();
 
     }
-
+    private void addIntegral() {
+        mContext = MainActivity.this;
+        integralListView = (ListView) findViewById(R.id.integral_ListView);
+        integralData = new LinkedList<IntegralList>();
+        integralData.add(new IntegralList("蝙蝠侠战车一辆","原因","200"));
+        integralData.add(new IntegralList("蝙蝠侠战车一辆","原因","200"));
+        integralData.add(new IntegralList("蝙蝠侠战车一辆","原因","200"));
+        integralAdapter = new IntegralAdapter(integralData,mContext);
+        integralListView.setAdapter(integralAdapter);
+    }
     /**
      * 为完成的日期在日历中添加标记
      */
@@ -233,16 +257,42 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_home:
-                getSupportFragmentManager().beginTransaction().hide(mPersonalFragment).hide(mPetFragment).show(mHomeFragment).commit();
+                getSupportFragmentManager().beginTransaction().
+                        hide(mPersonalFragment).
+                        hide(mIntegralFragment).
+                        hide(mAddRewardFragment).
+                        show(mHomeFragment).commit();
                 setButton(v);
                 break;
             case R.id.button_pet:
-                getSupportFragmentManager().beginTransaction().hide(mHomeFragment).hide(mPersonalFragment).show(mPetFragment).commit();
+                getSupportFragmentManager().beginTransaction().
+                        hide(mHomeFragment).
+                        hide(mAddRewardFragment).
+                        hide(mPersonalFragment).
+                        show(mIntegralFragment).commit();
                 setButton(v);
                 break;
             case R.id.button_personal:
-                getSupportFragmentManager().beginTransaction().hide(mHomeFragment).hide(mPetFragment).show(mPersonalFragment).commit();
+                getSupportFragmentManager().beginTransaction().
+                        hide(mHomeFragment).
+                        hide(mIntegralFragment).
+                        hide(mAddRewardFragment).
+                        show(mPersonalFragment).commit();
                 setButton(v);
+                break;
+            case R.id.add_reward:
+                getSupportFragmentManager().beginTransaction().
+                        hide(mHomeFragment).
+                        hide(mIntegralFragment).
+                        hide(mPersonalFragment).
+                        show(mAddRewardFragment).commit();
+                break;
+            case R.id.return_integral:
+                getSupportFragmentManager().beginTransaction().
+                        hide(mHomeFragment).
+                        hide(mAddRewardFragment).
+                        hide(mPersonalFragment).
+                        show(mIntegralFragment).commit();
                 break;
             default:
                 break;

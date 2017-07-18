@@ -24,18 +24,14 @@ public class NewMonthDateView extends View {
 
     private Paint mPaint;
     private int mDayColor = Color.parseColor("#434343");//每一天数字的颜色
-    private int mSelectDayColor = Color.parseColor("#ffffff");//被选中的数字的颜色
-    private int mSelectBGColor = Color.parseColor("#1FC2F3");//被选中数字的背景颜色
-    private int mCurrentColor = Color.parseColor("#ff0000");//当天数字的颜色
     private int mCurrYear,mCurrMonth,mCurrDay;//当前年月日
     private int mSelYear,mSelMonth,mSelDay;//被选中年月日
     private int mColumnSize,mRowSize;
     private DisplayMetrics mDisplayMetrics;
     private int mDaySize = 11;
     private int [][] daysString;
-    private int mCircleRadius = 6;
-    private MonthDateView.DateClick dateClick;
-    private int mCircleColor = Color.parseColor("#ff0000");//被标记数字颜色
+    private int mCircleRadius = 30;
+    private int mCircleColor = Color.parseColor("#2fa8e7");//被标记数字颜色
     private List<Integer> daysHasThingList;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -44,6 +40,7 @@ public class NewMonthDateView extends View {
         mDisplayMetrics = getResources().getDisplayMetrics();
         Calendar calendar = Calendar.getInstance();
         mPaint = new Paint();
+        mPaint.setAntiAlias(true);//抗锯齿
         mCurrYear = calendar.get(Calendar.YEAR);
         mCurrMonth = calendar.get(Calendar.MONTH);
         mCurrDay = calendar.get(Calendar.DATE);
@@ -69,25 +66,9 @@ public class NewMonthDateView extends View {
             daysString[row][column]=day + 1;
             int startX = (int) (mColumnSize * column + (mColumnSize - mPaint.measureText(dayString))/2);
             int startY = (int) (mRowSize * row + mRowSize/2 - (mPaint.ascent() + mPaint.descent())/2);
-            if(dayString.equals(mSelDay+"")){
-                //绘制背景色矩形
-                int startRecX = mColumnSize * column;
-                int startRecY = mRowSize * row;
-                int endRecX = startRecX + mColumnSize;
-                int endRecY = startRecY + mRowSize;
-                mPaint.setColor(mSelectBGColor);
-                canvas.drawRect(startRecX, startRecY, endRecX, endRecY, mPaint);
-            }
             //绘制事务圆形标志
             drawCircle(row,column,day + 1,canvas);
-            if(dayString.equals(mSelDay+"")){
-                mPaint.setColor(mSelectDayColor);
-            }else if(dayString.equals(mCurrDay+"") && mCurrDay != mSelDay && mCurrMonth == mSelMonth){
-                //正常月，选中其他日期，则今日为红色
-                mPaint.setColor(mCurrentColor);
-            }else{
-                mPaint.setColor(mDayColor);
-            }
+            mPaint.setColor(mDayColor);
             canvas.drawText(dayString, startX, startY, mPaint);
         }
     }
@@ -95,37 +76,12 @@ public class NewMonthDateView extends View {
         if(daysHasThingList != null && daysHasThingList.size() >0){
             if(!daysHasThingList.contains(day))return;
             mPaint.setColor(mCircleColor);
-            float circleX = (float) (mColumnSize * column +	mColumnSize*0.8);
-            float circley = (float) (mRowSize * row + mRowSize*0.2);
+            float circleX = (float) (mColumnSize * column +	mColumnSize*0.5);
+            float circley = (float) (mRowSize * row + mRowSize*0.5);
             canvas.drawCircle(circleX, circley, mCircleRadius, mPaint);
         }
     }
-    @Override
-    public boolean performClick() {
-        return super.performClick();
-    }
-    private int downX = 0,downY = 0;
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        int eventCode=  event.getAction();
-        switch(eventCode){
-            case MotionEvent.ACTION_DOWN:
-                downX = (int) event.getX();
-                downY = (int) event.getY();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                break;
-            case MotionEvent.ACTION_UP:
-                int upX = (int) event.getX();
-                int upY = (int) event.getY();
-                if(Math.abs(upX-downX) < 10 && Math.abs(upY - downY) < 10){//点击事件
-                    performClick();
-                    doClickAction((upX + downX)/2,(upY + downY)/2);
-                }
-                break;
-        }
-        return true;
-    }
+
     /**
      * 初始化列宽行高
      */
@@ -145,57 +101,11 @@ public class NewMonthDateView extends View {
         mSelDay = day;
     }
     /**
-     * 执行点击事件
-     * @param x
-     * @param y
-     */
-    private void doClickAction(int x,int y){
-        int row = y / mRowSize;
-        int column = x / mColumnSize;
-        setSelectYearMonth(mSelYear,mSelMonth,daysString[row][column]);
-        invalidate();
-        //执行activity发送过来的点击处理事件
-        if(dateClick != null){
-            dateClick.onClickOnDate();
-        }
-    }
-
-    /**
-     * 获取选择的日期
-     * @param
-     */
-    public int getmSelDay() {
-        return this.mSelDay;
-    }
-    /**
      * 普通日期的字体颜色，默认黑色
      * @param mDayColor
      */
     public void setmDayColor(int mDayColor) {
         this.mDayColor = mDayColor;
-    }
-
-    /**
-     * 选择日期的颜色，默认为白色
-     * @param mSelectDayColor
-     */
-    public void setmSelectDayColor(int mSelectDayColor) {
-        this.mSelectDayColor = mSelectDayColor;
-    }
-
-    /**
-     * 选中日期的背景颜色，默认蓝色
-     * @param mSelectBGColor
-     */
-    public void setmSelectBGColor(int mSelectBGColor) {
-        this.mSelectBGColor = mSelectBGColor;
-    }
-    /**
-     * 当前日期不是选中的颜色，默认红色
-     * @param mCurrentColor
-     */
-    public void setmCurrentColor(int mCurrentColor) {
-        this.mCurrentColor = mCurrentColor;
     }
 
     /**
@@ -228,22 +138,5 @@ public class NewMonthDateView extends View {
      */
     public void setmCircleColor(int mCircleColor) {
         this.mCircleColor = mCircleColor;
-    }
-
-    /**
-     * 设置日期的点击回调事件
-     * @author shiwei.deng
-     *
-     */
-    public interface DateClick{
-        public void onClickOnDate();
-    }
-
-    /**
-     * 设置日期点击事件
-     * @param dateClick
-     */
-    public void setDateClick(MonthDateView.DateClick dateClick) {
-        this.dateClick = dateClick;
     }
 }

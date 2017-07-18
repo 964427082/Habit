@@ -19,7 +19,6 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerInParent">true</item>
-        <item name="android:padding">10dp</item>
     </style>
     <!--状态栏透明-->
     <style name="TranslucentTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -32,5 +31,9 @@
     <style name="MyEditText" parent="Theme.AppCompat.Light">
         <item name="colorControlNormal">#c6c6c6</item>
         <item name="colorControlActivated">#8c8c8c</item>
+    </style>
+    <style name="Theme.AppStartLoadTranslucent" parent="AppTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 </resources>

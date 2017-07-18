@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--integralFragment-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/blue_card"
+        android:layout_marginTop="22dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="积分详情"
+            android:textSize="21sp"
+            android:textColor="#ffffff"
+            android:layout_marginTop="22dp"
+            android:layout_centerHorizontal="true"/>
+        <ImageButton
+            android:id="@+id/add_reward"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_insert"
+            android:background="@null"
+            android:layout_marginTop="25dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="17dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="666"
+            android:textSize="48sp"
+            android:textColor="#ffffff"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="91dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="我的积分"
+            android:textSize="24sp"
+            android:textColor="#ffffff"
+            android:layout_marginTop="153dp"
+            android:layout_centerHorizontal="true"/>
+        <View
+            android:layout_width="97dp"
+            android:layout_height="0.5dp"
+            android:background="#d2d2d2"
+            android:layout_marginTop="171dp"
+            android:layout_marginLeft="28dp"/>
+        <View
+            android:layout_width="97dp"
+            android:layout_height="0.5dp"
+            android:background="#d2d2d2"
+            android:layout_marginTop="171dp"
+            android:layout_marginRight="28dp"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+    <ListView
+        android:id="@+id/integral_ListView"
+        android:layout_width="320dp"
+        android:layout_height="352dp"
+        android:layout_centerHorizontal="true"
+        android:background="@mipmap/card_bg"
+        android:layout_marginTop="227dp"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        android:divider="#00000000">
+
+    </ListView>
+</RelativeLayout>

@@ -24,7 +24,7 @@
             android:background="@null"/>
     </RelativeLayout>
     <RelativeLayout
-        android:layout_width="350dp"
+        android:layout_width="wrap_content"
         android:layout_height="136dp"
         android:background="@mipmap/card_1_bg"
         android:layout_marginTop="64dp"
@@ -64,8 +64,8 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="34dp"/>
         <TextView
-            android:layout_width="63dp"
-            android:layout_height="63dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:background="@mipmap/circle_1_bg"
             android:text="13"
             android:textSize="21sp"
@@ -74,8 +74,8 @@
             android:layout_marginLeft="31dp"
             android:layout_marginTop="45dp"/>
         <TextView
-            android:layout_width="63dp"
-            android:layout_height="63dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:background="@mipmap/circle_2_bg"
             android:text="5"
             android:textSize="21sp"
@@ -84,8 +84,8 @@
             android:layout_marginLeft="144dp"
             android:layout_marginTop="45dp"/>
         <TextView
-            android:layout_width="63dp"
-            android:layout_height="63dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:background="@mipmap/circle_3_bg"
             android:text="23"
             android:textSize="21sp"
@@ -114,7 +114,7 @@
             android:layout_height="wrap_content"
             android:text="历史坚持次数"
             android:textSize="12sp"
-            android:layout_marginLeft="252dp"
+            android:layout_marginLeft="260dp"
             android:layout_marginTop="112dp"
             android:textColor="#262626"/>
 
@@ -141,10 +141,24 @@
             android:textColor="#262626"/>
         <f3.nsu.com.habit.ui.Histogram
             android:id="@+id/histogram"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="288dp"
+            android:layout_height="95dp"
             android:layout_marginLeft="14dp"
             android:layout_marginTop="37dp"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_arrow"
+            android:layout_marginTop="119.18dp"
+            android:layout_marginLeft="295dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="305dp"
+            android:layout_marginTop="114dp"
+            android:text="周数"
+            android:textSize="8sp"
+            android:textColor="#434343"/>
 
     </RelativeLayout>
     <RelativeLayout
@@ -237,12 +251,8 @@
                 android:textSize="12sp"
                 android:textColor="#555555"/>
         </LinearLayout>
-        <!--<f3.nsu.com.habit.ui.MonthDateView-->
-            <!--android:layout_width="315dp"-->
-            <!--android:layout_height="152dp"-->
-            <!--android:layout_marginTop="55dp"-->
-            <!--android:layout_marginLeft="20dp" />-->
         <f3.nsu.com.habit.ui.NewMonthDateView
+            android:id="@+id/newMonthDateView"
             android:layout_width="315dp"
             android:layout_height="152dp"
             android:layout_marginTop="58dp"

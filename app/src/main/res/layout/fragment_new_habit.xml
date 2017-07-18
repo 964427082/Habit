@@ -5,12 +5,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="f3.nsu.com.habit.actvity.AddHabitActivity"
+    tools:context="f3.nsu.com.habit.activity.AddHabitActivity"
     android:background="#f9f9f9">
     <!--标题栏-->
-    <RelativeLayout
+
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="58dp"
+        android:layout_height="22dp"
+        android:background="@mipmap/clander_bg_top"
+        android:layout_alignParentTop="true"/>
+    <RelativeLayout
+        android:layout_marginTop="22dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:background="#ffffff">
 
         <ImageButton
@@ -46,7 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="63dp"
+        android:layout_marginTop="77dp"
         android:background="@mipmap/rectangle_2"
         android:elevation="4dp">
 
@@ -206,7 +213,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="253dp"
+        android:layout_marginTop="267dp"
         android:background="@mipmap/rectangle_2"
         android:elevation="4dp">
         <TextView

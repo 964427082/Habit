@@ -12,7 +12,7 @@ import f3.nsu.com.habit.RealmDataBase.TaskData.MyHabitTask;
 import f3.nsu.com.habit.RealmDataBase.TaskData.MyIntegralList;
 import f3.nsu.com.habit.RealmDataBase.TaskData.SystemTask;
 import f3.nsu.com.habit.RealmDataBase.TaskData.TaskList;
-import f3.nsu.com.habit.actvity.MainActivity;
+import f3.nsu.com.habit.activity.MainActivity;
 import io.realm.Realm;
 import io.realm.RealmList;
 

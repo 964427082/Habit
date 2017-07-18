@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="f3.nsu.com.habit.actvity.MainActivity">
+    tools:context="f3.nsu.com.habit.activity.MainActivity">
 
     <!--状态栏-->
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="22dp"
         android:background="@mipmap/clander_bg_top"
         android:layout_alignParentTop="true"/>
     <!--底部导航栏-->
@@ -24,15 +24,15 @@
             <ImageButton
                 style="@style/BottomBarImgBtn"
                 android:id="@+id/button_home"
-                android:background="@drawable/button_home_state" />
+                android:background="@drawable/button_home_state"
+                android:padding="10dp"/>
         </RelativeLayout>
         <RelativeLayout style="@style/BottomBar">
             <ImageButton
                 style="@style/BottomBarImgBtn"
                 android:id="@+id/button_pet"
                 android:background="@drawable/button_pet_state"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true" />
+                android:padding="10dp"/>
         </RelativeLayout>
 
         <RelativeLayout style="@style/BottomBar">
@@ -40,7 +40,8 @@
             <ImageButton
                 android:id="@+id/button_personal"
                 style="@style/BottomBarImgBtn"
-                android:background="@drawable/button_personal_state" />
+                android:background="@drawable/button_personal_state"
+                android:padding="10dp"/>
         </RelativeLayout>
 
     </LinearLayout>
@@ -50,7 +51,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_above="@id/bottom_bar_group"/>
-    <!--3个fragment-->
+    <!--fragment-->
     <FrameLayout
         android:id="@+id/fragment_content"
         android:layout_width="match_parent"
@@ -67,7 +68,7 @@
             android:id="@+id/fragment_pet"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:name="f3.nsu.com.habit.fragment.PetFragment">
+            android:name="f3.nsu.com.habit.fragment.IntegralFragment">
 
         </fragment>
 
@@ -76,6 +77,13 @@
             android:name="f3.nsu.com.habit.fragment.PersonalFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+        </fragment>
+        <fragment
+            android:id="@+id/fragment_add_reward"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="f3.nsu.com.habit.fragment.AddRewardFragment">
 
         </fragment>
 

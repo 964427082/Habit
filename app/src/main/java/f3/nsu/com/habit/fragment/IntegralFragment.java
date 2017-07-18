@@ -14,11 +14,11 @@ import f3.nsu.com.habit.R;
  * Created by zhy on 2017/6/29.
  */
 
-public class PetFragment extends Fragment {
+public class IntegralFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_pet,null);
+        return inflater.inflate(R.layout.fragment_integral,null);
     }
 }
