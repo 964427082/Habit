@@ -9,13 +9,23 @@
         android:background="#ffffff">
 
         <ImageButton
+            android:id="@+id/habit_back_adapter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="15dp"
-            android:background="@null"
-            android:src="@mipmap/exit" />
+            android:padding="12dp"
+            android:src="@mipmap/arrow_left"
+            android:background="@null"/>
+
+        <ImageButton
+            android:id="@+id/habit_save_adapter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="13dp"
+            android:src="@mipmap/invalid_name"
+            android:background="@null"/>
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView

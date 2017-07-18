@@ -9,11 +9,17 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import f3.nsu.com.habit.Adapter.ItemAdapter;
 import f3.nsu.com.habit.R;
 import f3.nsu.com.habit.RealmDataBase.DBControl;
@@ -28,36 +34,46 @@ import static com.wx.wheelview.common.WheelConstants.TAG;
  */
 
 public class MyAddHabitActivity extends Activity {
+    @BindView(R.id.habit_back_adapter)
+    ImageButton habitBackAdapter;
+    @BindView(R.id.habit_save_adapter)
+    ImageButton habitSaveAdapter;
     private RecyclerView mRecyclerView;
+    private ItemAdapter adapter;
+    public ArrayList<TaskList> myHabitItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.my_add_habit_activity);
+        ButterKnife.bind(this);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler);
         init();
     }
 
-    private void init() {
+
+    public void init() {
         //已经选中的习惯
         final List<MyIntegralList> myIntegralLists = DBControl.createRealm(this).showTodayMyHabitIntegralList();
         //系统中的习惯
         final List<TaskList> systemList = DBControl.createRealm(this).showSystemTask();
         //自定义中的习惯
         final List<TaskList> customTasks = DBControl.createRealm(this).showCustomTask();
-        final List<TaskList> myIntegral = new ArrayList<>();
+
+        int number[] = generateRandomNumber();
+        final ArrayList<TaskList> myIntegral = new ArrayList<>();
         for (MyIntegralList m : myIntegralLists)
             myIntegral.add(new TaskList(m.getName(), m.getModify(), m.isStart(), m.getExpectDay(), m.getColorNumber(), m.getClockTime()));
 
         List<TaskList> everList = new ArrayList<>();
-        everList.addAll(systemList);
+        for(int i = 0;i < number.length;i++){
+            everList.add(systemList.get(number[i]));
+        }
         everList.addAll(customTasks);
-        Log.i(TAG, "init: everListSize = " + everList.size());
 
         //添加到推荐里面    需要筛选出已经选中的习惯
-        final List<TaskList> recommendedTaskLists = new ArrayList<>();
-        Log.i(TAG, "init: size1 = " + recommendedTaskLists.size());
+        final ArrayList<TaskList> recommendedTaskLists = new ArrayList<>();
         for (TaskList t2 : everList) {
             boolean is = false;
             for (TaskList t1 : myIntegral) {
@@ -77,7 +93,7 @@ public class MyAddHabitActivity extends Activity {
         final ItemTouchHelper helper = new ItemTouchHelper(callback);
         helper.attachToRecyclerView(mRecyclerView);
 
-        final ItemAdapter adapter = new ItemAdapter(this, helper, myIntegral, recommendedTaskLists);
+        adapter = new ItemAdapter(this, helper, myIntegral, recommendedTaskLists);
         manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
@@ -111,6 +127,7 @@ public class MyAddHabitActivity extends Activity {
             }
         });
         //设置adapter
+        Log.i(TAG, "init: myIntegral  size = " + myIntegral.size());
         mRecyclerView.setAdapter(adapter);
         adapter.setOnMyChannelItemClickListener(new ItemAdapter.OnMyChannelItemClickListener() {
             @Override
@@ -118,5 +135,47 @@ public class MyAddHabitActivity extends Activity {
                 Toast.makeText(MyAddHabitActivity.this, myIntegral.get(position).getName(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @OnClick({R.id.habit_back_adapter, R.id.habit_save_adapter})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.habit_back_adapter:
+                finish();
+                break;
+            case R.id.habit_save_adapter:
+                if (adapter != null){
+                    myHabitItems = adapter.getMyHabitItems();
+                    changeMyHabitTask(myHabitItems);
+                }
+                finish();
+                break;
+        }
+    }
+
+    private void changeMyHabitTask(ArrayList<TaskList> myHabitItems) {
+        if(myHabitItems.size() == 0){
+            //删除我的所有任务  保留积分
+            DBControl.createRealm(this).deleteAllMyHabitTask();
+//            DBControl.createRealm(this).showTodayMyHabitIntegralList();
+        }else {
+            //先删除再添加
+
+        }
+    }
+
+    //获取随机数
+    private int[] generateRandomNumber() {
+        HashSet integerHashSet = new HashSet();
+        Random random = new Random();
+        int number[] = new int[4];
+        for (int i = 0; i < 4; i++) {
+            int randomInt = random.nextInt(20);
+            if (!integerHashSet.contains(randomInt)) {
+                integerHashSet.add(randomInt);
+                number[i] = randomInt;
+            }
+        }
+        return number;
     }
 }

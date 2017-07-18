@@ -159,21 +159,22 @@ public class DBControl {
     /**
      * 删除自定义列表中的某项
      */
-//    public void deleteCustomTask(final String name) {
-//        final RealmResults<CustomTask> customTasks = mRealm.where(CustomTask.class).findAll();
-//        mRealm.executeTransaction(new Realm.Transaction() {
-//            @Override
-//            public void execute(Realm realm) {
-//                int j = -1;
-//                for (int i = 0; i < customTasks.size(); i++) {
-//                    if (name.equals(customTasks.get(i).getName())) {
-//                        j = i;
-//                    }
-//                }
-//                customTasks.deleteFromRealm(j);
-//            }
-//        });
-//    }
+    public void deleteCustomTask(final String name) {
+        final CustomTask customTasks = mRealm.where(CustomTask.class).findFirst();
+        final RealmList<TaskList> taskLists = customTasks.getCustomTaskList();
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                int j = -1;
+                for (int i = 0; i < taskLists.size(); i++) {
+                    if (name.equals(taskLists.get(i).getName())) {
+                        j = i;
+                    }
+                }
+                taskLists.deleteFromRealm(j);
+            }
+        });
+    }
 
 
     /**
@@ -332,4 +333,15 @@ public class DBControl {
 //        return mRealm.copyToRealm(realmResults);
 //    }
 
+    public void deleteAllMyHabitTask(){
+        final MyHabitTask myHabitTask = mRealm.where(MyHabitTask.class).equalTo("data",data).findFirst();
+        final RealmList<MyIntegralList> myIntegralLists = myHabitTask.getMyIntegralList();
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                myIntegralLists.deleteAllFromRealm();
+                Log.i(TAG, "execute: 111111111   删除完了");
+            }
+        });
+    }
 }

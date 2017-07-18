@@ -15,16 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 import f3.nsu.com.habit.Adapter.HabitAdapter;
 import f3.nsu.com.habit.GetTime.GetTime;
 import f3.nsu.com.habit.R;
 import f3.nsu.com.habit.RealmDataBase.DBControl;
-import f3.nsu.com.habit.RealmDataBase.TaskData.CustomTask;
 import f3.nsu.com.habit.RealmDataBase.TaskData.MyHabitTask;
 import f3.nsu.com.habit.RealmDataBase.TaskData.MyIntegralList;
 import f3.nsu.com.habit.RealmDataBase.TaskData.SystemTask;
@@ -74,10 +71,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         realm = Realm.getDefaultInstance();
         //添加自定义习惯方式
 //        showCustomTask();
-//        addCustomTask("ok1", 5, "加油1", "#00000","12:06");
-////        showCustomTask();
-//        addMyHabitTask(new GetTime().getData(), "oo5", 3, 20, "12:10", 4);
-//        addMyHabitTask(new GetTime().getData(), "oo6", 3, 20, "12:10", 3);
+//        showCustomTask();
+//        addMyHabitTask(new GetTime().getData(), "按时起床按时起床按时", 3, 20, "12:10", 4);
+//        addMyHabitTask(new GetTime().getData(), "ok2", 3, 20, "12:10", 3);
+//        addMyHabitTask(new GetTime().getData(), "ok3", 3, 20, "12:10", 3);
+//        addMyHabitTask(new GetTime().getData(), "ok5", 3, 20, "12:10", 3);
 //
 //        addMyHabitTask(new GetTime().getData(), "oo7", 3, 20, "12:10", 1);
 //        addMyHabitTask(new GetTime().getData(), "oo8", 3, 20, "12:10", 4);
@@ -85,6 +83,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 //        addMyHabitTask(new GetTime().getData(), "oo10", 3, 20, "12:10", 1);
 //        addMyHabitTask(new GetTime().getData(), "oo15", 3, 20, "12:10", 2);
 
+        initSystemTask();       //初始化系统习惯任务列表
         initView();
     }
 
@@ -92,18 +91,20 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
      * 添加习惯
      */
     private void addHabit() {
-        mContext = MainActivity.this;
-        habitListView = (ListView) findViewById(R.id.habit_ListView);
-        habitDate = new LinkedList<HabitList>();
         List<MyHabitTask> myHabitTasks = showMyHabitTask();
+        habitDate.clear();
         for (MyHabitTask s : myHabitTasks) {
-            int i = 0;
-            List<MyIntegralList> myIntegralLists = s.getMyIntegralList();
-            for (MyIntegralList m : myIntegralLists) {
-                habitDate.add(new HabitList(m.getName(), m.getClockTime(), m.getInsistDay(), m.getExpectDay(), m.isStart(), m.getModify(), m.getColorNumber()));
+            if(s.getData().equals(new GetTime().getData())){
+                Log.i(TAG, "addHabit: 111111111  s.getMyIntegralList.seize = " + s.getMyIntegralList().size());
+                List<MyIntegralList> myIntegralLists = s.getMyIntegralList();
+                for (MyIntegralList m : myIntegralLists) {
+                    habitDate.add(new HabitList(m.getName(), m.getClockTime(), m.getInsistDay(), m.getExpectDay(), m.isStart(), m.getModify(), m.getColorNumber()));
+                }
             }
         }
+        Log.i(TAG, "addHabit: habitData  + " + habitDate.size() ) ;
         habitAdapter = new HabitAdapter((LinkedList<HabitList>) habitDate, mContext);
+        habitAdapter.notifyDataSetChanged();
         habitListView.setAdapter(habitAdapter);
         habitListView.setOnItemClickListener(this);
     }
@@ -125,12 +126,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void initView() {
+        mContext = MainActivity.this;
+        habitDate = new LinkedList<HabitList>();
         //绑定控件
         mHomeFragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_home);
         mPetFragment = (PetFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_pet);
         mPersonalFragment = (PersonalFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_personal);
 
-
+        habitListView = (ListView) findViewById(R.id.habit_ListView);
         monthDateView = (MonthDateView) findViewById(R.id.monthDateView);
         completeTag();
         monthDateView.setDateClick(new MonthDateView.DateClick() {
@@ -141,7 +144,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             }
         });
 
-        addHabit();
         dayTextView = (TextView) findViewById(R.id.day_textView);
         monthTextView = (TextView) findViewById(R.id.month_textView);
 
@@ -151,7 +153,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         insert_imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,AddHabitActivity.class);
+                Intent intent = new Intent(MainActivity.this,MyAddHabitActivity.class);
                 startActivity(intent);
             }
         });
@@ -167,7 +169,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         initExpandView();
 
-//        initSystemTask();       //初始化系统习惯任务列表
     }
 
     /**
@@ -197,17 +198,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
      * 初始化系统习惯任务列表
      */
     private void initSystemTask() {
-        List<SystemTask> st = DBControl.createRealm(this).showSystemTask();
+        List<TaskList> st = DBControl.createRealm(this).showSystemTask();
         int size = st.size();
-        Log.i(TAG, "initView: size = " + size);
         if (size == 0) {
             firstIn = true;
             DBControl.createRealm(this).addSystemTask(new SystemTask());
         } else {
             firstIn = false;
-            for (TaskList s : st.get(0).getSystemTaskList()) {
-                Log.i(TAG, "initView:  = " + s.getName());
-            }
         }
     }
 
@@ -271,21 +268,20 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
      *
      * @param name      自定义习惯的名称
      * @param expectDay 需要坚持的天数
-     * @param word      一段鼓励自己的话
-     * @param color     列表的颜色
+     * @param colorNumber     列表的颜色
      * @param clockTime 设置提醒时间
      */
-    public void addCustomTask(String name, int expectDay, String word, String color, String clockTime) {
-        createRealm(this).addCustomTask(name, expectDay, word, color, clockTime);
+    public void addCustomTask(String name, int expectDay,  int colorNumber, String clockTime) {
+        createRealm(this).addCustomTask(name, expectDay, colorNumber, clockTime);
     }
 
     /**
      * 查看自定义习惯列表
      */
     public void showCustomTask() {
-        List<CustomTask> customTask = createRealm(this).showCustomTask();
-        for (CustomTask s : customTask) {
-            Log.i(TAG, "initView:  = " + s.getColor());
+        List<TaskList> customList= createRealm(this).showCustomTask();
+        for (TaskList s : customList) {
+            Log.i(TAG, "initView:  = " + s.getName());
         }
     }
 
@@ -311,20 +307,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private void addMyHabitTask(String data, String name, int modify, int expectDay, String clockTime, int colorNumber) {
         DBControl.createRealm(this).addMyHabitTask(data, name, modify, expectDay, clockTime, colorNumber);
     }
-
-
-    private void generateRandomNumber(int number) {
-        HashSet integerHashSet = new HashSet();
-        Random random = new Random();
-        for (int i = 0; i < 10; i++) {
-            int randomInt = random.nextInt(13);
-            Log.i(TAG, "onCreate: 生成的randomInt=" + randomInt);
-            if (!integerHashSet.contains(randomInt)) {
-                integerHashSet.add(randomInt);
-                Log.i(TAG, "onCreate: 添加进HashSet的randomInt=" + randomInt);
-            } else {
-                Log.i(TAG, "onCreate: 该数字已经被添加,不能重复添加");
-            }
-        }
+    @Override
+    protected void onResume() {
+        Log.i(TAG, "onResume: 重新加载ListView");
+        addHabit();
+        super.onResume();
     }
 }

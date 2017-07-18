@@ -20,7 +20,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import f3.nsu.com.habit.R;
 import f3.nsu.com.habit.RealmDataBase.TaskData.TaskList;
@@ -64,12 +64,12 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     // 是否为 编辑 模式
     private boolean isEditMode;
 
-    private List<TaskList> mMyChannelItems, mOtherChannelItems;
+    private ArrayList<TaskList> mMyChannelItems, mOtherChannelItems;
 
     // 我的频道点击事件
     private OnMyChannelItemClickListener mChannelItemClickListener;
 
-    public ItemAdapter(Context context, ItemTouchHelper helper, List<TaskList> mMyChannelItems, List<TaskList> mOtherChannelItems) {
+    public ItemAdapter(Context context, ItemTouchHelper helper, ArrayList<TaskList> mMyChannelItems, ArrayList<TaskList> mOtherChannelItems) {
         this.mInflater = LayoutInflater.from(context);
         this.mItemTouchHelper = helper;
         this.mMyChannelItems = mMyChannelItems;
@@ -140,11 +140,9 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                                             + COUNT_PRE_OTHER_HEADER - 1);
                                     targetX = preTargetView.getLeft();
                                     targetY = preTargetView.getTop();
-                                    Log.i(TAG, "onClick: is   第一个 left = " + preTargetView.getTop() + "..top = " + targetY);
                                 } else {
                                     targetX = targetView.getLeft();
                                     targetY = targetView.getTop();
-                                    Log.i(TAG, "onClick: else   第一个 left = " + targetView.getTop() + "..top = " + targetY);
                                 }
 
                                 moveMyToOther(myHolder);
@@ -158,6 +156,7 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                             mChannelItemClickListener.onItemClick(v, position - COUNT_PRE_MY_HEADER);
                         }
                     }
+
                 });
 
                 myHolder.textView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -208,11 +207,11 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             // 其他频道 标题部分
             case TYPE_OTHER_CHANNEL_HEADER:
                 view = mInflater.inflate(R.layout.item_other_header, parent, false);
-                final  MyOtherHeaderViewHolder otherHolderTitle = new MyOtherHeaderViewHolder(view);
+                final MyOtherHeaderViewHolder otherHolderTitle = new MyOtherHeaderViewHolder(view);
                 otherHolderTitle.tvAddEdit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent  = new Intent(context, AddHabitActivity.class);
+                        Intent intent = new Intent(context, AddHabitActivity.class);
                         Activity activity = (Activity) context;
                         context.startActivity(intent);
                         activity.finish();
@@ -251,7 +250,6 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                                 View targetView = manager.findViewByPosition(targetPosition);
                                 targetX = targetView.getLeft();
                                 targetY = targetView.getTop();
-                                Log.i(TAG, "onClick: is   第二个 left = " + targetX + "..top = " + targetY);
                             } else {
                                 targetX += preTargetView.getWidth();
 
@@ -274,7 +272,6 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                                         }
                                     }
                                 }
-                                Log.i(TAG, "onClick: else   第二个 left = " + targetX + "..top = " + targetY);
                             }
 
                             // 如果当前位置是otherChannel可见的最后一个
@@ -350,6 +347,7 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             @Override
             public void onAnimationStart(Animation animation) {
             }
+
             @Override
             public void onAnimationEnd(Animation animation) {
                 viewGroup.removeView(mirrorView);
@@ -357,6 +355,7 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     currentView.setVisibility(View.VISIBLE);
                 }
             }
+
             @Override
             public void onAnimationRepeat(Animation animation) {
 
@@ -526,6 +525,11 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         this.mChannelItemClickListener = listener;
     }
 
+    public ArrayList<TaskList> getMyHabitItems() {
+        Log.i(TAG, "getMyHabitItems: 111111111 .size = ... " + mMyChannelItems.size());
+        return mMyChannelItems;
+    }
+
     /**
      * 我的频道
      */
@@ -583,8 +587,9 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     /**
      * 其他习惯   标题部分
      */
-    class MyOtherHeaderViewHolder extends RecyclerView.ViewHolder{
+    class MyOtherHeaderViewHolder extends RecyclerView.ViewHolder {
         private TextView tvAddEdit;
+
         public MyOtherHeaderViewHolder(View itemView) {
             super(itemView);
             tvAddEdit = (TextView) itemView.findViewById(R.id.tv_add_edit);
