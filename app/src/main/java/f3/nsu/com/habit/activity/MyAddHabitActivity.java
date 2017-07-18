@@ -1,39 +1,43 @@
 package f3.nsu.com.habit.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import f3.nsu.com.habit.Adapter.ItemAdapter;
+import f3.nsu.com.habit.GetTime.GetTime;
 import f3.nsu.com.habit.R;
 import f3.nsu.com.habit.RealmDataBase.DBControl;
 import f3.nsu.com.habit.RealmDataBase.TaskData.MyIntegralList;
 import f3.nsu.com.habit.RealmDataBase.TaskData.TaskList;
 import f3.nsu.com.habit.tool.ItemDragHelperCallback;
 
-import static com.wx.wheelview.common.WheelConstants.TAG;
+import static f3.nsu.com.habit.RealmDataBase.DBControl.createRealm;
 
 /**
  * Created by 爸爸你好 on 2017/7/13.
  */
 
 public class MyAddHabitActivity extends Activity {
+    private static final String TAG = "MyAddHabitActivity";
     @BindView(R.id.habit_back_adapter)
     ImageButton habitBackAdapter;
     @BindView(R.id.habit_save_adapter)
@@ -41,6 +45,8 @@ public class MyAddHabitActivity extends Activity {
     private RecyclerView mRecyclerView;
     private ItemAdapter adapter;
     public ArrayList<TaskList> myHabitItems;
+    private String data = new GetTime().getData();
+    private Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +61,11 @@ public class MyAddHabitActivity extends Activity {
 
     public void init() {
         //已经选中的习惯
-        final List<MyIntegralList> myIntegralLists = DBControl.createRealm(this).showTodayMyHabitIntegralList();
+        final List<MyIntegralList> myIntegralLists = createRealm(this).showTodayMyHabitIntegralList();
         //系统中的习惯
-        final List<TaskList> systemList = DBControl.createRealm(this).showSystemTask();
+        final List<TaskList> systemList = createRealm(this).showSystemTask();
         //自定义中的习惯
-        final List<TaskList> customTasks = DBControl.createRealm(this).showCustomTask();
+        final List<TaskList> customTasks = createRealm(this).showCustomTask();
 
         int number[] = generateRandomNumber();
         final ArrayList<TaskList> myIntegral = new ArrayList<>();
@@ -67,7 +73,7 @@ public class MyAddHabitActivity extends Activity {
             myIntegral.add(new TaskList(m.getName(), m.getModify(), m.isStart(), m.getExpectDay(), m.getColorNumber(), m.getClockTime()));
 
         List<TaskList> everList = new ArrayList<>();
-        for(int i = 0;i < number.length;i++){
+        for (int i = 0; i < number.length; i++) {
             everList.add(systemList.get(number[i]));
         }
         everList.addAll(customTasks);
@@ -122,12 +128,9 @@ public class MyAddHabitActivity extends Activity {
                     } else
                         return 3;
                 }
-//                int viewType = adapter.getItemViewType(position);
-//                return viewType == ChannelAdapter.TYPE_MY || viewType == ChannelAdapter.TYPE_OTHER ? 1 : 4;
             }
         });
         //设置adapter
-        Log.i(TAG, "init: myIntegral  size = " + myIntegral.size());
         mRecyclerView.setAdapter(adapter);
         adapter.setOnMyChannelItemClickListener(new ItemAdapter.OnMyChannelItemClickListener() {
             @Override
@@ -144,23 +147,55 @@ public class MyAddHabitActivity extends Activity {
                 finish();
                 break;
             case R.id.habit_save_adapter:
-                if (adapter != null){
+                if (ItemAdapter.isAdd) {
                     myHabitItems = adapter.getMyHabitItems();
                     changeMyHabitTask(myHabitItems);
-                }
-                finish();
+                    ItemAdapter.isAdd = false;
+                    finish();
+                }else
+                    Toast.makeText(context,"未做修改，无法保存！",Toast.LENGTH_SHORT).show();
                 break;
         }
     }
 
     private void changeMyHabitTask(ArrayList<TaskList> myHabitItems) {
-        if(myHabitItems.size() == 0){
+        if (myHabitItems.size() == 0) {
             //删除我的所有任务  保留积分
-            DBControl.createRealm(this).deleteAllMyHabitTask();
-//            DBControl.createRealm(this).showTodayMyHabitIntegralList();
-        }else {
+            createRealm(this).deleteAllMyHabitTask();
+        } else {
             //先删除再添加
+            List<MyIntegralList> myIntegralLists = DBControl.createRealm(this).showTodayMyHabitIntegralList();
+            getNoDifferent(myIntegralLists, myHabitItems);
+        }
+    }
 
+    //筛选习惯 进行添加  删除操作
+    private void getNoDifferent(List<MyIntegralList> myIntegralLists, List<TaskList> myHabitItems) {
+        List<TaskList> myIntegralTaskList = new ArrayList<>();
+        for (MyIntegralList m : myIntegralLists) {
+            myIntegralTaskList.add(new TaskList(m.getName(), m.getModify(), m.isStart(), m.getExpectDay(), m.getColorNumber(), m.getClockTime()));
+        }
+        Map<String, Integer> map = new HashMap<String, Integer>(myIntegralTaskList.size() + myHabitItems.size());
+        for (TaskList m : myIntegralTaskList) {
+            map.put(m.getName(), 1);
+        }
+        for (TaskList t : myHabitItems) {
+            Integer c = map.get(t.getName());
+            if (c != null) {
+                map.put(t.getName(), ++c);
+                continue;
+            } else {
+                DBControl.createRealm(this).addMyHabitTask(data, t.getName(), t.getModify(), t.getExpectDay(), t.getTime(), t.getColorNumber());
+            }
+        }
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            if (entry.getValue() == 1) {
+                for (TaskList m : myIntegralTaskList) {
+                    if (m.getName().equals(entry.getKey())) {
+                        DBControl.createRealm(this).deleteMyHabitTaskList(m.getName());
+                    }
+                }
+            }
         }
     }
 

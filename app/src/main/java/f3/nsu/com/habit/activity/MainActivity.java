@@ -9,9 +9,10 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ import f3.nsu.com.habit.R;
 import f3.nsu.com.habit.RealmDataBase.DBControl;
 import f3.nsu.com.habit.RealmDataBase.TaskData.MyHabitTask;
 import f3.nsu.com.habit.RealmDataBase.TaskData.MyIntegralList;
+import f3.nsu.com.habit.RealmDataBase.TaskData.RewardList;
 import f3.nsu.com.habit.RealmDataBase.TaskData.SystemTask;
 import f3.nsu.com.habit.RealmDataBase.TaskData.TaskList;
 import f3.nsu.com.habit.fragment.AddRewardFragment;
@@ -61,14 +63,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private LinkedList<IntegralList> integralData = null;
     private Context mContext;
     private HabitAdapter habitAdapter = null;
-    private IntegralAdapter integralAdapter =null;
+    private IntegralAdapter integralAdapter = null;
     private ListView habitListView;
     private ExpandLayout mExpandLayout;
     public Realm realm;
     public static boolean firstIn = true;
     private MonthDateView monthDateView;
     private ListView integralListView;
-    private ImageButton add_reward,return_Integral;
+    private ImageButton add_reward, return_Integral, imageBtnSaveIntegral;
+    private EditText rewardNameEditText, rewardReasonEditText;
+    private NumberPicker numberPicker;
+    private TextView myIntegralTextView;
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -78,19 +83,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setContentView(R.layout.activity_main);
         Realm.init(this);
         realm = Realm.getDefaultInstance();
-        //添加自定义习惯方式
-//        showCustomTask();
-//        showCustomTask();
-//        addMyHabitTask(new GetTime().getData(), "按时起床按时起床按时", 3, 20, "12:10", 4);
-//        addMyHabitTask(new GetTime().getData(), "ok2", 3, 20, "12:10", 3);
-//        addMyHabitTask(new GetTime().getData(), "ok3", 3, 20, "12:10", 3);
-//        addMyHabitTask(new GetTime().getData(), "ok5", 3, 20, "12:10", 3);
-//
-//        addMyHabitTask(new GetTime().getData(), "oo7", 3, 20, "12:10", 1);
-//        addMyHabitTask(new GetTime().getData(), "oo8", 3, 20, "12:10", 4);
-//        addMyHabitTask(new GetTime().getData(), "oo9", 3, 20, "12:10", 3);
-//        addMyHabitTask(new GetTime().getData(), "oo10", 3, 20, "12:10", 1);
-//        addMyHabitTask(new GetTime().getData(), "oo15", 3, 20, "12:10", 2);
 
         initSystemTask();       //初始化系统习惯任务列表
         initView();
@@ -103,15 +95,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         List<MyHabitTask> myHabitTasks = showMyHabitTask();
         habitDate.clear();
         for (MyHabitTask s : myHabitTasks) {
-            if(s.getData().equals(new GetTime().getData())){
-                Log.i(TAG, "addHabit: 111111111  s.getMyIntegralList.seize = " + s.getMyIntegralList().size());
+            if (s.getData().equals(new GetTime().getData())) {
                 List<MyIntegralList> myIntegralLists = s.getMyIntegralList();
                 for (MyIntegralList m : myIntegralLists) {
                     habitDate.add(new HabitList(m.getName(), m.getClockTime(), m.getInsistDay(), m.getExpectDay(), m.isStart(), m.getModify(), m.getColorNumber()));
                 }
             }
         }
-        Log.i(TAG, "addHabit: habitData  + " + habitDate.size() ) ;
         habitAdapter = new HabitAdapter((LinkedList<HabitList>) habitDate, mContext);
         habitAdapter.notifyDataSetChanged();
         habitListView.setAdapter(habitAdapter);
@@ -123,9 +113,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
      */
     @Override
     public void onItemClick(AdapterView<?> arg0, View v, int position, long id) {
-        Toast.makeText(this, "listview的item被点击了！，点击的位置是-->" + position,
-                Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(MainActivity.this,SituationActivity.class);
+        Intent intent = new Intent(MainActivity.this, SituationActivity.class);
         startActivity(intent);
 
     }
@@ -146,13 +134,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         habitListView = (ListView) findViewById(R.id.habit_ListView);
         monthDateView = (MonthDateView) findViewById(R.id.monthDateView);
         completeTag();
-        monthDateView.setDateClick(new MonthDateView.DateClick() {
-
-            @Override
-            public void onClickOnDate() {
-                Toast.makeText(getApplication(), "点击了：" + monthDateView.getmSelDay(), Toast.LENGTH_SHORT).show();
-            }
-        });
 
         dayTextView = (TextView) findViewById(R.id.day_textView);
         monthTextView = (TextView) findViewById(R.id.month_textView);
@@ -163,7 +144,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         insert_imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,MyAddHabitActivity.class);
+                Intent intent = new Intent(MainActivity.this, MyAddHabitActivity.class);
                 startActivity(intent);
             }
         });
@@ -173,6 +154,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         button_pet = (ImageButton) findViewById(R.id.button_pet);
         add_reward = (ImageButton) findViewById(R.id.add_reward);
         return_Integral = (ImageButton) findViewById(R.id.return_integral);
+        myIntegralTextView = (TextView) findViewById(R.id.my_integral_textView);
+
+        //积分奖励自定义界面
+        imageBtnSaveIntegral = (ImageButton) findViewById(R.id.image_btn_save_integral);
+        rewardNameEditText = (EditText) findViewById(R.id.rewardName_editText);
+        rewardReasonEditText = (EditText) findViewById(R.id.rewardReason_editText);
+        numberPicker = (NumberPicker) findViewById(R.id.numberPicker);
+        imageBtnSaveIntegral.setOnClickListener(this);
+
         button_home.setOnClickListener(this);
         button_pet.setOnClickListener(this);
         button_personal.setOnClickListener(this);
@@ -185,16 +175,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         addIntegral();
 
     }
+
     private void addIntegral() {
         mContext = MainActivity.this;
         integralListView = (ListView) findViewById(R.id.integral_ListView);
         integralData = new LinkedList<IntegralList>();
-        integralData.add(new IntegralList("蝙蝠侠战车一辆","原因","200"));
-        integralData.add(new IntegralList("蝙蝠侠战车一辆","原因","200"));
-        integralData.add(new IntegralList("蝙蝠侠战车一辆","原因","200"));
-        integralAdapter = new IntegralAdapter(integralData,mContext);
+        integralData.add(new IntegralList("蝙蝠侠战车一辆", "原因", "200"));
+        integralData.add(new IntegralList("蝙蝠侠战车一辆", "原因", "200"));
+        integralData.add(new IntegralList("蝙蝠侠战车一辆", "原因", "200"));
+        integralAdapter = new IntegralAdapter(integralData, mContext);
         integralListView.setAdapter(integralAdapter);
     }
+
     /**
      * 为完成的日期在日历中添加标记
      */
@@ -239,7 +231,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void initExpandView() {
         mExpandLayout = (ExpandLayout) findViewById(R.id.expandLayout);
         mExpandLayout.initExpand(false);//设置初始化状态，false折叠，true展开
-        Log.i("TAG", "设置初始化状态为true");
         calendar_ImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -265,6 +256,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 setButton(v);
                 break;
             case R.id.button_pet:
+                int integralAll = DBControl.createRealm(this).showTotalModify();
+                Log.i(TAG, "onClick: integralAll = " + integralAll);
+                myIntegralTextView.setText(integralAll + "");
                 getSupportFragmentManager().beginTransaction().
                         hide(mHomeFragment).
                         hide(mAddRewardFragment).
@@ -281,6 +275,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 setButton(v);
                 break;
             case R.id.add_reward:
+                rewardNameEditText.setText("");
                 getSupportFragmentManager().beginTransaction().
                         hide(mHomeFragment).
                         hide(mIntegralFragment).
@@ -294,9 +289,39 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         hide(mPersonalFragment).
                         show(mIntegralFragment).commit();
                 break;
+            case R.id.image_btn_save_integral:
+                String name = rewardNameEditText.getText().toString();
+                String why = rewardReasonEditText.getText().toString();
+                int integral = numberPicker.getValue();
+                if (isName(name)) {
+                    if (why.equals(""))
+                        why = "没有原因！";
+                    DBControl.createRealm(this).addRewardList(name, why, integral);
+                    getSupportFragmentManager().beginTransaction().
+                            hide(mHomeFragment).
+                            hide(mAddRewardFragment).
+                            hide(mPersonalFragment).
+                            show(mIntegralFragment).commit();
+                }
+                break;
             default:
                 break;
         }
+    }
+
+    private boolean isName(String name) {
+        if (name.equals("")) {
+            Toast.makeText(this, "名称不能为空！", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        List<RewardList> rewardList = DBControl.createRealm(this).showRewardList();
+        for (RewardList r : rewardList) {
+            if (r.getName().equals(name)) {
+                Toast.makeText(this, "名字不能重复，请重新输入！", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -316,12 +341,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     /**
      * 自定义添加习惯列表并保存
      *
-     * @param name      自定义习惯的名称
-     * @param expectDay 需要坚持的天数
-     * @param colorNumber     列表的颜色
-     * @param clockTime 设置提醒时间
+     * @param name        自定义习惯的名称
+     * @param expectDay   需要坚持的天数
+     * @param colorNumber 列表的颜色
+     * @param clockTime   设置提醒时间
      */
-    public void addCustomTask(String name, int expectDay,  int colorNumber, String clockTime) {
+    public void addCustomTask(String name, int expectDay, int colorNumber, String clockTime) {
         createRealm(this).addCustomTask(name, expectDay, colorNumber, clockTime);
     }
 
@@ -329,7 +354,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
      * 查看自定义习惯列表
      */
     public void showCustomTask() {
-        List<TaskList> customList= createRealm(this).showCustomTask();
+        List<TaskList> customList = createRealm(this).showCustomTask();
         for (TaskList s : customList) {
             Log.i(TAG, "initView:  = " + s.getName());
         }
@@ -357,9 +382,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private void addMyHabitTask(String data, String name, int modify, int expectDay, String clockTime, int colorNumber) {
         DBControl.createRealm(this).addMyHabitTask(data, name, modify, expectDay, clockTime, colorNumber);
     }
+
     @Override
     protected void onResume() {
-        Log.i(TAG, "onResume: 重新加载ListView");
         addHabit();
         super.onResume();
     }

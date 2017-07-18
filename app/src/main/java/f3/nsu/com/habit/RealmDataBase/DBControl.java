@@ -10,11 +10,13 @@ import f3.nsu.com.habit.GetTime.GetTime;
 import f3.nsu.com.habit.RealmDataBase.TaskData.CustomTask;
 import f3.nsu.com.habit.RealmDataBase.TaskData.MyHabitTask;
 import f3.nsu.com.habit.RealmDataBase.TaskData.MyIntegralList;
+import f3.nsu.com.habit.RealmDataBase.TaskData.RewardList;
 import f3.nsu.com.habit.RealmDataBase.TaskData.SystemTask;
 import f3.nsu.com.habit.RealmDataBase.TaskData.TaskList;
 import f3.nsu.com.habit.activity.MainActivity;
 import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.RealmResults;
 
 /**
  * Created by 爸爸你好 on 2017/6/27.
@@ -107,7 +109,6 @@ public class DBControl {
                     s.addAll(systemTaskList.getSystemTaskList());
             }
         });
-        Log.i(TAG, "showSystemTask: 系统 = " + s.size());
         return s;
     }
 
@@ -152,7 +153,6 @@ public class DBControl {
                     c.addAll(customTasks.getCustomTaskList());
             }
         });
-        Log.i(TAG, "showCustomTask: 自定义 = " + c.size());
         return c;
     }
 
@@ -172,6 +172,32 @@ public class DBControl {
                     }
                 }
                 taskLists.deleteFromRealm(j);
+            }
+        });
+    }
+
+    /**
+     * 删除当天习惯时    修改积分
+     * @param name
+     */
+    public void deleteMyHabitTaskList(final String name){
+        final MyHabitTask myHabitTask = mRealm.where(MyHabitTask.class).equalTo("data",data).findFirst();
+        final RealmList<MyIntegralList> myIntegralLists = myHabitTask.getMyIntegralList();
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                int j = -1;
+                for(int i = 0;i < myIntegralLists.size();i++){
+                    if(name.equals(myIntegralLists.get(i).getName())){
+                        j = i;
+                    }
+                }
+                if(myIntegralLists.get(j).isStart()){
+                    int f = myHabitTask.getTodayIntegral() -  myIntegralLists.get(j).getModify();
+                    Log.i(TAG, "execute: 总积分 = " + myHabitTask.getTodayIntegral() + "..该项积分 = " + myIntegralLists.get(j).getModify() + " 修改后的积分 = " + f);
+                    myHabitTask.setTodayIntegral(f);
+                }
+                myIntegralLists.deleteFromRealm(j);
             }
         });
     }
@@ -214,7 +240,6 @@ public class DBControl {
                 i.addAll(myHabitTask.getMyIntegralList());
             }
         });
-        Log.i(TAG, "showTodayMyHabitIntegralList: 当天的 = " + i.size());
         return i;
     }
 
@@ -249,7 +274,6 @@ public class DBControl {
             @Override
             public void execute(Realm realm) {
                 MyHabitTask m = realm.where(MyHabitTask.class).equalTo("data", data).findFirst();
-
                 MyIntegralList myIntegralList = realm.createObject(MyIntegralList.class, name);
                 myIntegralList.setModify(modify);
                 myIntegralList.setExpectDay(expectDay);
@@ -262,7 +286,6 @@ public class DBControl {
                     myHabitTask.setTodayIntegral(0);
                     myHabitTask.getMyIntegralList().add(myIntegralList);
                 } else {
-                    m.setTodayIntegral(0);
                     m.getMyIntegralList().add(myIntegralList);
                 }
             }
@@ -282,7 +305,9 @@ public class DBControl {
             @Override
             public void execute(Realm realm) {
                 MyHabitTask myHabitTask = mRealm.where(MyHabitTask.class).equalTo("data", data).findFirst();
-                myHabitTask.setTodayIntegral(myHabitTask.getTodayIntegral() + modify);
+                int f = myHabitTask.getTodayIntegral() + modify;
+                myHabitTask.setTodayIntegral(f);
+                Log.i(TAG, "execute: 总积分 = " + myHabitTask.getTodayIntegral() + "..该项积分 = " + modify + " 修改后的积分 = " + f);
                 RealmList<MyIntegralList> myIntegralLists = myHabitTask.getMyIntegralList();
                 for (int i = 0; i < myIntegralLists.size(); i++) {
                     if (myIntegralLists.get(i).getName().equals(name)) {
@@ -324,15 +349,10 @@ public class DBControl {
         return sumTodayModify;
     }
 
-//    /**
-//     * 查看积分数据
-//     */
-//    public List<IntegralDataBase> sleDataIntegralDataBase(){
-//        mRealm = Realm.getDefaultInstance();
-//        RealmResults<IntegralDataBase> realmResults = mRealm.where((IntegralDataBase.class)).findAll();
-//        return mRealm.copyToRealm(realmResults);
-//    }
 
+    /**
+     * 删除当天所有习惯
+     */
     public void deleteAllMyHabitTask(){
         final MyHabitTask myHabitTask = mRealm.where(MyHabitTask.class).equalTo("data",data).findFirst();
         final RealmList<MyIntegralList> myIntegralLists = myHabitTask.getMyIntegralList();
@@ -340,8 +360,36 @@ public class DBControl {
             @Override
             public void execute(Realm realm) {
                 myIntegralLists.deleteAllFromRealm();
-                Log.i(TAG, "execute: 111111111   删除完了");
             }
         });
     }
+
+    /**
+     * 添加奖励设置
+     * @param name  奖励名称
+     * @param why   奖励原因
+     * @param integral  奖励需要积分
+     */
+    public void addRewardList(final String name,final String why,final int integral){
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                RewardList rewardList = realm.createObject(RewardList.class,name);
+                rewardList.setWhy(why);
+                rewardList.setIntegral(integral);
+            }
+        });
+    }
+
+    /**
+     * 查看已有奖励选项
+     * @return
+     */
+    public List<RewardList> showRewardList(){
+        final RealmResults<RewardList> rewardList = mRealm.where(RewardList.class).findAll();
+        List<RewardList> r = new ArrayList<>();
+        r.addAll(rewardList);
+        return r;
+    }
+
 }

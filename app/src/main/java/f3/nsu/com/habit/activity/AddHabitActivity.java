@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -41,6 +40,7 @@ public class AddHabitActivity extends FragmentActivity implements View.OnClickLi
     private int colorNumber = 1;
     private boolean is = false;
     private String data = new GetTime().getData();
+    private boolean exist;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -128,15 +128,34 @@ public class AddHabitActivity extends FragmentActivity implements View.OnClickLi
             case R.id.complete_img_btn:
                 is = isComplete();
                 if (is == true) {
-                    DBControl.createRealm(context).addCustomTask(nameEditText.getText().toString(),
-                            Integer.valueOf(dayEditText.getText().toString()), colorNumber, "12:00");
-                    startActivity(new Intent(AddHabitActivity.this, MyAddHabitActivity.class));
-                    finish();
+                    if (isExist()) {
+                        DBControl.createRealm(context).addCustomTask(nameEditText.getText().toString(),
+                                Integer.valueOf(dayEditText.getText().toString()), colorNumber, "12:00");
+                        startActivity(new Intent(AddHabitActivity.this, MyAddHabitActivity.class));
+                        finish();
+                    }
                 }
                 break;
             default:
                 break;
         }
+    }
+
+    public boolean isExist() {
+        String s = nameEditText.getText().toString();
+        for (TaskList system : systemList) {
+            if (s.toString().equals(system.getName())) {
+                Toast.makeText(context, "该习惯已经存在，请重新输入！", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+        for (TaskList custom : customList) {
+            if (s.toString().equals(custom.getName())) {
+                Toast.makeText(context, "该习惯已经存在，请重新输入！", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -160,29 +179,6 @@ public class AddHabitActivity extends FragmentActivity implements View.OnClickLi
             if (len >= 10) {
                 Toast.makeText(context, "习惯名称最多10个字！", Toast.LENGTH_SHORT).show();
             }
-            Log.i(TAG, "afterTextChanged: 1111");
-            for (TaskList system : systemList) {
-                if (s.toString().equals(system.getName())) {
-                    Toast.makeText(context, "该习惯已经存在，请重新输入！", Toast.LENGTH_SHORT).show();
-                    is = false;
-                    isSystem = true;
-                    break;
-                } else
-                    is = true;
-            }
-
-            if (!isSystem) {
-                Log.i(TAG, "afterTextChanged: 2222");
-                for (TaskList custom : customList) {
-                    if (s.toString().equals(custom.getName())) {
-                        Toast.makeText(context, "该习惯已经存在，请重新输入！", Toast.LENGTH_SHORT).show();
-                        is = false;
-                        break;
-                    } else
-                        is = true;
-                }
-            }
-            isSystem = false;
         }
     };
     /**

@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
+import butterknife.Unbinder;
 import f3.nsu.com.habit.R;
 
 /**
@@ -21,15 +22,17 @@ import f3.nsu.com.habit.R;
 public class AddRewardFragment extends Fragment implements NumberPicker.OnValueChangeListener {
 
     private static final String TAG = "AddRewardFragment";
-    private String[] integral = {"500","550","600","650","700","750","800","850","900","950","1000"};
+    Unbinder unbinder;
+    private String[] integral = {"500", "550", "600", "650", "700", "750", "800", "850", "900", "950", "1000"};
 
     private NumberPicker numberPicker;//积分选择器
     private EditText rewardName_editText;//奖励名称
-    private  EditText rewardReason_editText;//奖励原因
+    private EditText rewardReason_editText;//奖励原因
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_add_reward,null);
+        View view = inflater.inflate(R.layout.fragment_add_reward, null);
         numberPicker = (NumberPicker) view.findViewById(R.id.numberPicker);
         rewardName_editText = (EditText) view.findViewById(R.id.rewardName_editText);
         rewardReason_editText = (EditText) view.findViewById(R.id.rewardReason_editText);
@@ -43,7 +46,7 @@ public class AddRewardFragment extends Fragment implements NumberPicker.OnValueC
         numberPicker.setDisplayedValues(integral);
         numberPicker.setOnValueChangedListener(this);
         numberPicker.setMinValue(0);
-        numberPicker.setMaxValue(integral.length-1);
+        numberPicker.setMaxValue(integral.length - 1);
         numberPicker.setValue(5);
         numberPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
         numberPicker.setWrapSelectorWheel(false);
@@ -56,7 +59,7 @@ public class AddRewardFragment extends Fragment implements NumberPicker.OnValueC
 
     @Override
     public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-        Toast.makeText(getActivity(),"您选择的积分是" + integral[newVal],Toast.LENGTH_LONG).show();
+//        Toast.makeText(getActivity(),"您选择的积分是" + integral[newVal],Toast.LENGTH_LONG).show();
     }
 
     private TextWatcher nameTextWatcher = new TextWatcher() {
@@ -73,8 +76,8 @@ public class AddRewardFragment extends Fragment implements NumberPicker.OnValueC
         @Override
         public void afterTextChanged(Editable s) {
             int len = s.toString().length();
-            if (len>=10){
-                Toast.makeText(getActivity(),"奖励名称最多10个字！",Toast.LENGTH_LONG).show();
+            if (len >= 10) {
+                Toast.makeText(getActivity(), "奖励名称最多10个字！", Toast.LENGTH_LONG).show();
             }
         }
     };
@@ -92,9 +95,15 @@ public class AddRewardFragment extends Fragment implements NumberPicker.OnValueC
         @Override
         public void afterTextChanged(Editable s) {
             int len = s.toString().length();
-            if (len>=12){
-                Toast.makeText(getActivity(),"奖励原因最多12个字！",Toast.LENGTH_LONG).show();
+            if (len >= 12) {
+                Toast.makeText(getActivity(), "奖励原因最多12个字！", Toast.LENGTH_LONG).show();
             }
         }
     };
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 }

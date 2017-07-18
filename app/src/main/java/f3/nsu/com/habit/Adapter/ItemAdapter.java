@@ -9,7 +9,6 @@ import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,7 +24,6 @@ import java.util.ArrayList;
 import f3.nsu.com.habit.R;
 import f3.nsu.com.habit.RealmDataBase.TaskData.TaskList;
 import f3.nsu.com.habit.activity.AddHabitActivity;
-import f3.nsu.com.habit.activity.MyAddHabitActivity;
 import f3.nsu.com.habit.tool.OnDragVHListener;
 import f3.nsu.com.habit.tool.OnItemMoveListener;
 
@@ -61,6 +59,7 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     private LayoutInflater mInflater;
     private ItemTouchHelper mItemTouchHelper;
     private Context context;
+    public static boolean isAdd = false;
 
     // 是否为 编辑 模式
     private boolean isEditMode;
@@ -120,6 +119,7 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 myHolder.textView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(final View v) {
+                        isAdd = true;
                         int position = myHolder.getAdapterPosition();
                         if (isEditMode) {
                             RecyclerView recyclerView = ((RecyclerView) parent);
@@ -147,8 +147,7 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                                 }
 
                                 moveMyToOther(myHolder);
-                                int i = targetY + 130;
-                                startAnimation(recyclerView, currentView, targetX, i);
+                                startAnimation(recyclerView, currentView, targetX, targetY);
 
                             } else {
                                 moveMyToOther(myHolder);
@@ -215,7 +214,6 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                         Intent intent = new Intent(context, AddHabitActivity.class);
                         Activity activity = (Activity) context;
                         context.startActivity(intent);
-                        Log.i(TAG, "onClick: " +" ssssssssssssss");
                         activity.finish();
                     }
                 });
@@ -229,6 +227,7 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 otherHolder.textView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        isAdd = true;
                         RecyclerView recyclerView = ((RecyclerView) parent);
                         RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();
                         int currentPiosition = otherHolder.getAdapterPosition();
@@ -422,12 +421,13 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
         int startPosition = position - mMyChannelItems.size() - COUNT_PRE_OTHER_HEADER;
         if (startPosition > mOtherChannelItems.size() - 1) {
-            Log.i(TAG, "processItemRemoveAdd: 出错了");
             return -1;
         }
-        TaskList item = mOtherChannelItems.get(startPosition);
-        mOtherChannelItems.remove(startPosition);
-        mMyChannelItems.add(item);
+        if(startPosition != -1){
+            TaskList item = mOtherChannelItems.get(startPosition);
+            mOtherChannelItems.remove(startPosition);
+            mMyChannelItems.add(item);
+        }
         return position;
     }
 
@@ -528,7 +528,6 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     }
 
     public ArrayList<TaskList> getMyHabitItems() {
-        Log.i(TAG, "getMyHabitItems: 111111111 .size = ... " + mMyChannelItems.size());
         return mMyChannelItems;
     }
 
