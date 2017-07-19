@@ -8,7 +8,6 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import f3.nsu.com.habit.R;
-import f3.nsu.com.habit.activity.MainActivity;
 
 /**
  * Created by zhy on 2017/7/17.

@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import f3.nsu.com.habit.R;
 import f3.nsu.com.habit.ui.IntegralList;
