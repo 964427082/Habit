@@ -5,8 +5,134 @@
     android:layout_height="match_parent">
 
 
-    <TextView
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/blue_card_1"
+        android:layout_marginTop="22dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="个人中心"
+            android:textSize="21sp"
+            android:textColor="#ffffff"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="18dp"/>
+        <ImageView
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="63dp"
+            android:src="@mipmap/icon_man_1"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="积分：666"
+            android:layout_marginTop="161dp"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:layout_centerHorizontal="true"/>
+    </RelativeLayout>
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Personal"/>
+        android:background="@mipmap/card"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="200dp">
+        <LinearLayout
+            android:layout_width="310dp"
+            android:layout_height="73dp"
+            android:layout_centerInParent="true">
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10"
+                    android:textSize="21sp"
+                    android:textColor="#262626"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="16dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="完成习惯"
+                    android:textSize="12sp"
+                    android:textColor="#787878"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="43dp"/>
+
+            </RelativeLayout>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="34dp"
+                android:layout_gravity="center_vertical"
+                android:background="#bfbfbf"/>
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="99"
+                    android:textSize="21sp"
+                    android:textColor="#262626"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="16dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="坚持天数"
+                    android:textSize="12sp"
+                    android:textColor="#787878"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="43dp"/>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="34dp"
+                android:layout_gravity="center_vertical"
+                android:background="#bfbfbf"/>
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="655"
+                    android:textSize="21sp"
+                    android:textColor="#262626"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="16dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="总完成次数"
+                    android:textSize="12sp"
+                    android:textColor="#787878"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="43dp"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/card_1_1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="302dp">
+
+    </RelativeLayout>
 </RelativeLayout>

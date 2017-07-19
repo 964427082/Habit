@@ -211,7 +211,7 @@
     <!--习惯天数-->
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="260dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="267dp"
         android:background="@mipmap/rectangle_2"
@@ -242,20 +242,47 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="88dp"
             android:layout_marginLeft="17dp"
-            android:text="励志语录"
+            android:text="通知时间"
             android:textSize="14sp"
             android:textColor="#434343"/>
-        <EditText
-            android:id="@+id/words_editText"
-            android:layout_width="310dp"
+        <!--<EditText-->
+            <!--android:id="@+id/words_editText"-->
+            <!--android:layout_width="310dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="120dp"-->
+            <!--android:layout_marginLeft="17dp"-->
+            <!--android:hint="你忙吧，我吃柠檬。"-->
+            <!--android:textCursorDrawable="@drawable/color_cursor"-->
+            <!--android:theme="@style/MyEditText"-->
+            <!--android:maxLength="25"-->
+            <!--android:textSize="12sp"-->
+            <!--android:singleLine="true"/>-->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="120dp"
-            android:layout_marginLeft="17dp"
-            android:hint="你忙吧，我吃柠檬。"
-            android:textCursorDrawable="@drawable/color_cursor"
-            android:theme="@style/MyEditText"
-            android:maxLength="25"
-            android:textSize="12sp"
-            android:singleLine="true"/>
+            android:orientation="horizontal"
+            android:layout_marginTop="110dp"
+            android:layout_centerHorizontal="true">
+            <NumberPicker
+                android:id="@+id/hour_numberPicker"
+                android:layout_width="wrap_content"
+                android:layout_height="130dp">
+
+            </NumberPicker>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=":"
+                android:layout_gravity="center_vertical"/>
+            <NumberPicker
+                android:id="@+id/seconds_numberPicker"
+                android:layout_width="wrap_content"
+                android:layout_height="130dp">
+
+            </NumberPicker>
+        </LinearLayout>
+
+
     </RelativeLayout>
 </RelativeLayout>

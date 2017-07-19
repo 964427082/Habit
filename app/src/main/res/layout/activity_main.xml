@@ -19,7 +19,8 @@
         android:layout_height="48.3dp"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:background="#fff">
         <RelativeLayout style="@style/BottomBar">
             <ImageButton
                 style="@style/BottomBarImgBtn"
