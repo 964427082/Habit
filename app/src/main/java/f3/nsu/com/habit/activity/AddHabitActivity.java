@@ -7,11 +7,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
@@ -27,7 +29,8 @@ import f3.nsu.com.habit.fragment.NewHabitFragment;
  * Created by zhy on 2017/7/11.
  */
 
-public class AddHabitActivity extends FragmentActivity implements View.OnClickListener {
+public class AddHabitActivity extends FragmentActivity implements View.OnClickListener,NumberPicker.Formatter,
+        NumberPicker.OnValueChangeListener {
     private static final String TAG = "AddHabitActivity";
     NewHabitFragment newHabitFragment;//新习惯界面
     private EditText nameEditText, dayEditText;//新习惯界面名称、天数、语录的编辑框
@@ -40,7 +43,9 @@ public class AddHabitActivity extends FragmentActivity implements View.OnClickLi
     private int colorNumber = 1;
     private boolean is = false;
     private String data = new GetTime().getData();
-    private boolean exist;
+    private NumberPicker hour_numberPicker;
+    private NumberPicker seconds_numberPicker;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,6 +59,19 @@ public class AddHabitActivity extends FragmentActivity implements View.OnClickLi
      * 初始化界面
      */
     private void init() {
+
+        hour_numberPicker = (NumberPicker) findViewById(R.id.hour_numberPicker);
+        seconds_numberPicker = (NumberPicker) findViewById(R.id.seconds_numberPicker);
+        hour_numberPicker.setFormatter(this);
+        hour_numberPicker.setOnValueChangedListener(this);
+        hour_numberPicker.setMinValue(0);
+        hour_numberPicker.setMaxValue(23);
+        hour_numberPicker.setValue(0);
+        seconds_numberPicker.setFormatter(this);
+        seconds_numberPicker.setOnValueChangedListener(this);
+        seconds_numberPicker.setMinValue(0);
+        seconds_numberPicker.setMaxValue(59);
+        seconds_numberPicker.setValue(0);
 
         radioButton1 = (RadioButton) findViewById(R.id.radioButton1);
         radioButton2 = (RadioButton) findViewById(R.id.radioButton2);
@@ -128,34 +146,15 @@ public class AddHabitActivity extends FragmentActivity implements View.OnClickLi
             case R.id.complete_img_btn:
                 is = isComplete();
                 if (is == true) {
-                    if (isExist()) {
-                        DBControl.createRealm(context).addCustomTask(nameEditText.getText().toString(),
-                                Integer.valueOf(dayEditText.getText().toString()), colorNumber, "12:00");
-                        startActivity(new Intent(AddHabitActivity.this, MyAddHabitActivity.class));
-                        finish();
-                    }
+                    DBControl.createRealm(context).addCustomTask(nameEditText.getText().toString(),
+                            Integer.valueOf(dayEditText.getText().toString()), colorNumber, "12:00");
+                    startActivity(new Intent(AddHabitActivity.this, MyAddHabitActivity.class));
+                    finish();
                 }
                 break;
             default:
                 break;
         }
-    }
-
-    public boolean isExist() {
-        String s = nameEditText.getText().toString();
-        for (TaskList system : systemList) {
-            if (s.toString().equals(system.getName())) {
-                Toast.makeText(context, "该习惯已经存在，请重新输入！", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        }
-        for (TaskList custom : customList) {
-            if (s.toString().equals(custom.getName())) {
-                Toast.makeText(context, "该习惯已经存在，请重新输入！", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        }
-        return true;
     }
 
     /**
@@ -179,6 +178,29 @@ public class AddHabitActivity extends FragmentActivity implements View.OnClickLi
             if (len >= 10) {
                 Toast.makeText(context, "习惯名称最多10个字！", Toast.LENGTH_SHORT).show();
             }
+            Log.i(TAG, "afterTextChanged: 1111");
+            for (TaskList system : systemList) {
+                if (s.toString().equals(system.getName())) {
+                    Toast.makeText(context, "该习惯已经存在，请重新输入！", Toast.LENGTH_SHORT).show();
+                    is = false;
+                    isSystem = true;
+                    break;
+                } else
+                    is = true;
+            }
+
+            if (!isSystem) {
+                Log.i(TAG, "afterTextChanged: 2222");
+                for (TaskList custom : customList) {
+                    if (s.toString().equals(custom.getName())) {
+                        Toast.makeText(context, "该习惯已经存在，请重新输入！", Toast.LENGTH_SHORT).show();
+                        is = false;
+                        break;
+                    } else
+                        is = true;
+                }
+            }
+            isSystem = false;
         }
     };
     /**
@@ -221,5 +243,30 @@ public class AddHabitActivity extends FragmentActivity implements View.OnClickLi
             return false;
         }
         return true;
+    }
+
+    /**
+     * 给NumberPicker设置格式
+     * @param value
+     * @return
+     */
+    @Override
+    public String format(int value) {
+        String tmpStr = String.valueOf(value);
+        if (value < 10) {
+            tmpStr = "0" + tmpStr;
+        }
+        return tmpStr;
+    }
+
+    /**
+     * 监听NumberPicker的值
+     * @param picker
+     * @param oldVal
+     * @param newVal
+     */
+    @Override
+    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+        Toast.makeText(this,"您选择的值是" + newVal,Toast.LENGTH_LONG).show();
     }
 }

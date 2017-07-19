@@ -85,10 +85,8 @@ public class ExpandLayout extends RelativeLayout {
     private void animateToggle(long animationDuration) {
         ValueAnimator heightAnimation = isExpand ?
                 ValueAnimator.ofFloat(0f, viewHeight) : ValueAnimator.ofFloat(viewHeight, 0f);
-
         heightAnimation.setDuration(animationDuration / 2);
         heightAnimation.setStartDelay(animationDuration / 2);
-
         heightAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {

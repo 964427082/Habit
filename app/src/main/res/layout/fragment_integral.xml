@@ -14,10 +14,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="积分详情"
+            android:text="积分商店"
             android:textSize="21sp"
             android:textColor="#ffffff"
-            android:layout_marginTop="22dp"
+            android:layout_marginTop="18dp"
             android:layout_centerHorizontal="true"/>
         <ImageButton
             android:id="@+id/add_reward"
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:src="@mipmap/icon_insert"
             android:background="@null"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="21dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="17dp"/>
         <TextView
