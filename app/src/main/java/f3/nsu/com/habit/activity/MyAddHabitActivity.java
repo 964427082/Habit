@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
@@ -44,9 +45,11 @@ public class MyAddHabitActivity extends Activity {
     ImageButton habitSaveAdapter;
     private RecyclerView mRecyclerView;
     private ItemAdapter adapter;
-    public ArrayList<TaskList> myHabitItems;
+    public ArrayList<TaskList> myHabitItems = null;
     private String data = new GetTime().getData();
     private Context context = this;
+    private boolean isSave = false;
+    private boolean isExit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +65,14 @@ public class MyAddHabitActivity extends Activity {
     public void init() {
         //已经选中的习惯
         final List<MyIntegralList> myIntegralLists = createRealm(this).showTodayMyHabitIntegralList();
+        Log.i(TAG, "onClick: 已经选中的习惯个数 = " + myIntegralLists.size());
         //系统中的习惯
         final List<TaskList> systemList = createRealm(this).showSystemTask();
+        Log.i(TAG, "onClick: 系统中的习惯个数 = " + systemList.size());
         //自定义中的习惯
         final List<TaskList> customTasks = createRealm(this).showCustomTask();
+
+        Log.i(TAG, "onClick: 自定义中的习惯个数 = " + customTasks.size());
 
         int number[] = generateRandomNumber();
         final ArrayList<TaskList> myIntegral = new ArrayList<>();
@@ -119,7 +126,6 @@ public class MyAddHabitActivity extends Activity {
                         return 3;
                 } else {
                     TaskList ce = recommendedTaskLists.get(position - myIntegral.size() - ItemAdapter.TYPE_OTHER_CHANNEL_HEADER);
-//                    Log.i(TAG, "getSpanSize: position = " + position + "name = " + ce.getName());
                     float width = paint.measureText(ce.getName());
                     if (width <= 48.0 && width > 1.0) {
                         return 1;
@@ -144,47 +150,80 @@ public class MyAddHabitActivity extends Activity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.habit_back_adapter:
-                finish();
+                if(isExit)
+                    finish();
+                if (isSave && !isExit){
+                    Toast.makeText(context,"你还没保存习惯,继续点击可退出",Toast.LENGTH_SHORT).show();
+                    isExit = true;
+                }
+                else {
+                    if (myHabitItems == null && !isExit) {
+                        Toast.makeText(context,"你还没保存习惯,继续点击可退出",Toast.LENGTH_SHORT).show();
+                        isExit = true;
+                    }
+                }
                 break;
             case R.id.habit_save_adapter:
-                if (ItemAdapter.isAdd) {
-                    myHabitItems = adapter.getMyHabitItems();
-                    changeMyHabitTask(myHabitItems);
-                    ItemAdapter.isAdd = false;
-                    finish();
-                }else
-                    Toast.makeText(context,"未做修改，无法保存！",Toast.LENGTH_SHORT).show();
+                isSave = true;
+                myHabitItems = adapter.getMyHabitItems();
+                if (myHabitItems.size() == 0) {
+                    Toast.makeText(context, "亲，至少保留一个习惯哟！", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (ItemAdapter.isAdd) {
+                        changeMyHabitTask(myHabitItems);
+                        ItemAdapter.isAdd = false;
+                        finish();
+                        break;
+                    } else {
+                        Toast.makeText(context, "未做修改，无法保存！", Toast.LENGTH_SHORT).show();
+                    }
+                }
                 break;
         }
     }
 
+    /**
+     * 改变习惯的选择    瀑布式
+     *
+     * @param myHabitItems
+     */
     private void changeMyHabitTask(ArrayList<TaskList> myHabitItems) {
-        if (myHabitItems.size() == 0) {
-            //删除我的所有任务  保留积分
-            createRealm(this).deleteAllMyHabitTask();
-        } else {
-            //先删除再添加
-            List<MyIntegralList> myIntegralLists = DBControl.createRealm(this).showTodayMyHabitIntegralList();
-            getNoDifferent(myIntegralLists, myHabitItems);
-        }
+        //先删除再添加
+        /**
+         * myIntegralLists 为未修改之前的习惯列表
+         * myHabitItems  为修改之后的习惯列表
+         */
+        List<MyIntegralList> myIntegralLists = DBControl.createRealm(this).showTodayMyHabitIntegralList();
+        getNoDifferent(myIntegralLists, myHabitItems);
     }
 
-    //筛选习惯 进行添加  删除操作
+    /**
+     * 筛选习惯 进行添加  删除操作
+     * 1.用myIntegralTaskList  来存储未修改之前的我的习惯
+     * 2.采用长度为 修改之前与修改之后的两个列表长度之和 的map
+     * 3.将修改之前的表存入map里，名字唯一，值为1
+     * 4.用修改之后的表与map里面的数据做对比，如果名字存在map里面值就变为2，否则将这条数据存入修改后的习惯表里
+     * 5.找到map中值为1的数据，根据名字去删除修改之前习惯表里的数据
+     */
     private void getNoDifferent(List<MyIntegralList> myIntegralLists, List<TaskList> myHabitItems) {
         List<TaskList> myIntegralTaskList = new ArrayList<>();
         for (MyIntegralList m : myIntegralLists) {
             myIntegralTaskList.add(new TaskList(m.getName(), m.getModify(), m.isStart(), m.getExpectDay(), m.getColorNumber(), m.getClockTime()));
+
         }
         Map<String, Integer> map = new HashMap<String, Integer>(myIntegralTaskList.size() + myHabitItems.size());
         for (TaskList m : myIntegralTaskList) {
             map.put(m.getName(), 1);
+            Log.i(TAG, "getNoDifferent:  已近保存了的习惯 m.getName = " + m.getName());
         }
         for (TaskList t : myHabitItems) {
             Integer c = map.get(t.getName());
             if (c != null) {
+                Log.i(TAG, "getNoDifferent: 将相同的习惯键值改为  2 t.getName = " + t.getName());
                 map.put(t.getName(), ++c);
                 continue;
             } else {
+                Log.i(TAG, "getNoDifferent: 不同的习惯  去存储  t.getName = " + t.getName());
                 DBControl.createRealm(this).addMyHabitTask(data, t.getName(), t.getModify(), t.getExpectDay(), t.getTime(), t.getColorNumber());
             }
         }
@@ -192,6 +231,7 @@ public class MyAddHabitActivity extends Activity {
             if (entry.getValue() == 1) {
                 for (TaskList m : myIntegralTaskList) {
                     if (m.getName().equals(entry.getKey())) {
+                        Log.i(TAG, "getNoDifferent:  删除键值为1的习惯 m.getName = " + m.getName());
                         DBControl.createRealm(this).deleteMyHabitTaskList(m.getName());
                     }
                 }

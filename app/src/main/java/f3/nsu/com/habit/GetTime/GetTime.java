@@ -1,7 +1,5 @@
 package f3.nsu.com.habit.GetTime;
 
-import android.util.Log;
-
 import java.util.Calendar;
 
 /**
@@ -47,7 +45,15 @@ public class GetTime {
     }
 
     public String getData() {
-        data = String.valueOf(year) + String.valueOf(month) + String.valueOf(day);
+        String m = String.valueOf(month);
+        String d = String.valueOf(day);
+        if(month < 10){
+            m = "0" + String.valueOf(month);
+        }
+        if(day < 10){
+            d = "0" + String.valueOf(day);
+        }
+        data = String.valueOf(year) + m + d;
         return data;
     }
 

@@ -1,14 +1,12 @@
 package f3.nsu.com.habit.RealmDataBase.TaskData;
 
 import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by 爸爸你好 on 2017/7/7.
  */
 
 public class MyIntegralList extends RealmObject {
-    @PrimaryKey
     private String name;    //该习惯名字
 
     private int modify;     //该习惯的积分

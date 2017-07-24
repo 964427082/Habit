@@ -1,14 +1,13 @@
 package f3.nsu.com.habit.RealmDataBase.TaskData;
 
 import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by 爸爸你好 on 2017/7/18.
  */
 
 public class RewardList extends RealmObject {
-    @PrimaryKey
+//    @PrimaryKey
     private String name;
 
     private String why;

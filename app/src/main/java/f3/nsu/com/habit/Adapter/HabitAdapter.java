@@ -143,7 +143,7 @@ public class HabitAdapter extends BaseAdapter {
                 }
             }
             if (!is) {
-                Toast.makeText(mContext, "您完成了" + habitDate.get(mPosition).getHabitName() +   "此项任务！", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "您完成了" + habitDate.get(mPosition).getHabitName() +   "此项任务！", Toast.LENGTH_SHORT).show();
                 habitDate.get(mPosition).setGoalDay(habitDate.get(mPosition).getGoalDay() + 1);
                 DBControl.createRealm(mContext).amendMyHabitIsStart(date, name,modify);
             }

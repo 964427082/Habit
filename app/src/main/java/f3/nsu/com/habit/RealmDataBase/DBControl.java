@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import f3.nsu.com.habit.GetTime.GetTime;
+import f3.nsu.com.habit.RealmDataBase.TaskData.ConvertIntegralList;
 import f3.nsu.com.habit.RealmDataBase.TaskData.CustomTask;
 import f3.nsu.com.habit.RealmDataBase.TaskData.MyHabitTask;
 import f3.nsu.com.habit.RealmDataBase.TaskData.MyIntegralList;
@@ -178,23 +179,23 @@ public class DBControl {
 
     /**
      * 删除当天习惯时    修改积分
-     * @param name
+     *
+     * @param name 根据名字   删除   对应分值扣除今天分数
      */
-    public void deleteMyHabitTaskList(final String name){
-        final MyHabitTask myHabitTask = mRealm.where(MyHabitTask.class).equalTo("data",data).findFirst();
+    public void deleteMyHabitTaskList(final String name) {
+        final MyHabitTask myHabitTask = mRealm.where(MyHabitTask.class).equalTo("data", data).findFirst();
         final RealmList<MyIntegralList> myIntegralLists = myHabitTask.getMyIntegralList();
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 int j = -1;
-                for(int i = 0;i < myIntegralLists.size();i++){
-                    if(name.equals(myIntegralLists.get(i).getName())){
+                for (int i = 0; i < myIntegralLists.size(); i++) {
+                    if (name.equals(myIntegralLists.get(i).getName())) {
                         j = i;
                     }
                 }
-                if(myIntegralLists.get(j).isStart()){
-                    int f = myHabitTask.getTodayIntegral() -  myIntegralLists.get(j).getModify();
-                    Log.i(TAG, "execute: 总积分 = " + myHabitTask.getTodayIntegral() + "..该项积分 = " + myIntegralLists.get(j).getModify() + " 修改后的积分 = " + f);
+                if (myIntegralLists.get(j).isStart()) {
+                    int f = myHabitTask.getTodayIntegral() - myIntegralLists.get(j).getModify();
                     myHabitTask.setTodayIntegral(f);
                 }
                 myIntegralLists.deleteFromRealm(j);
@@ -235,7 +236,7 @@ public class DBControl {
             @Override
             public void execute(Realm realm) {
                 MyHabitTask myHabitTask = mRealm.where(MyHabitTask.class).equalTo("data", data).findFirst();
-                if(myHabitTask == null)
+                if (myHabitTask == null)
                     return;
                 i.addAll(myHabitTask.getMyIntegralList());
             }
@@ -244,16 +245,16 @@ public class DBControl {
     }
 
     /**
-     * 查看我的所有习惯列表
+     * 查看我的某一天习惯列表
      *
      * @return
      */
-    public List<MyHabitTask> showMyHabitEveyTask() {
+    public List<MyHabitTask> showMyHabitEveyTask(final String data) {
         final List<MyHabitTask> i = new ArrayList<>();
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                List<MyHabitTask> myHabitTask = mRealm.where(MyHabitTask.class).findAll();
+                List<MyHabitTask> myHabitTask = mRealm.where(MyHabitTask.class).equalTo("data", data).findAll();
                 i.addAll(myHabitTask);
             }
         });
@@ -274,7 +275,8 @@ public class DBControl {
             @Override
             public void execute(Realm realm) {
                 MyHabitTask m = realm.where(MyHabitTask.class).equalTo("data", data).findFirst();
-                MyIntegralList myIntegralList = realm.createObject(MyIntegralList.class, name);
+                MyIntegralList myIntegralList = realm.createObject(MyIntegralList.class);
+                myIntegralList.setName(name);
                 myIntegralList.setModify(modify);
                 myIntegralList.setExpectDay(expectDay);
                 myIntegralList.setClockTime(clockTime);
@@ -287,6 +289,46 @@ public class DBControl {
                     myHabitTask.getMyIntegralList().add(myIntegralList);
                 } else {
                     m.getMyIntegralList().add(myIntegralList);
+                }
+            }
+        });
+    }
+
+
+    /**
+     * 复制我前n天的习惯数据
+     *
+     * @param myHabit
+     */
+    public void copyMyHabitTask(final MyHabitTask myHabit) {
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                boolean is = false;
+                List<MyIntegralList> my = myHabit.getMyIntegralList();
+                MyHabitTask isM = realm.where(MyHabitTask.class).equalTo("data", data).findFirst();
+                if (isM == null) {
+                    is = true;
+                }
+                for (MyIntegralList m : my) {
+                    MyIntegralList myIntegralList = realm.createObject(MyIntegralList.class);
+                    myIntegralList.setName(m.getName());
+                    myIntegralList.setModify(m.getModify());
+                    myIntegralList.setExpectDay(m.getExpectDay());
+                    myIntegralList.setClockTime(m.getClockTime());
+                    myIntegralList.setInsistDay(m.getInsistDay());
+                    myIntegralList.setColorNumber(m.getColorNumber());
+                    myIntegralList.setStart(false);
+                    if (is) {
+                        MyHabitTask myHabitTask = realm.createObject(MyHabitTask.class, data);
+                        myHabitTask.setTodayIntegral(0);
+                        myHabitTask.getMyIntegralList().add(myIntegralList);
+                        isM = realm.where(MyHabitTask.class).equalTo("data", data).findFirst();
+                        is = false;
+                    } else {
+                        //问题：   如果isM = null  不知道是否还能向里面添加数据
+                        isM.getMyIntegralList().add(myIntegralList);
+                    }
                 }
             }
         });
@@ -351,30 +393,36 @@ public class DBControl {
 
 
     /**
-     * 删除当天所有习惯
+     * 删除当天所有习惯  并将当天获取的积分置为0
      */
-    public void deleteAllMyHabitTask(){
-        final MyHabitTask myHabitTask = mRealm.where(MyHabitTask.class).equalTo("data",data).findFirst();
-        final RealmList<MyIntegralList> myIntegralLists = myHabitTask.getMyIntegralList();
-        mRealm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                myIntegralLists.deleteAllFromRealm();
-            }
-        });
+    public void deleteAllMyHabitTask() {
+        final MyHabitTask myHabitTask = mRealm.where(MyHabitTask.class).equalTo("data", data).findFirst();
+        if (myHabitTask != null) {
+            final RealmList<MyIntegralList> myIntegralLists = myHabitTask.getMyIntegralList();
+            mRealm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    myHabitTask.setTodayIntegral(0);
+                    myIntegralLists.deleteAllFromRealm();
+                }
+            });
+        }
     }
 
     /**
      * 添加奖励设置
-     * @param name  奖励名称
-     * @param why   奖励原因
-     * @param integral  奖励需要积分
+     *
+     * @param name     奖励名称
+     * @param why      奖励原因
+     * @param integral 奖励需要积分
      */
-    public void addRewardList(final String name,final String why,final int integral){
+    public void addRewardList(final String name, final String why, final int integral) {
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                RewardList rewardList = realm.createObject(RewardList.class,name);
+//                RewardList rewardList = realm.createObject(RewardList.class,name);
+                RewardList rewardList = realm.createObject(RewardList.class);
+                rewardList.setName(name);
                 rewardList.setWhy(why);
                 rewardList.setIntegral(integral);
             }
@@ -382,14 +430,78 @@ public class DBControl {
     }
 
     /**
+     * 积分兑换后  需要删除他
+     *
+     * @param name
+     */
+    public void deleteRewardOneList(final String name) {
+        final RewardList rewardList = mRealm.where(RewardList.class).equalTo("name", name).findFirst();
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                rewardList.deleteFromRealm();
+            }
+        });
+    }
+
+    /**
      * 查看已有奖励选项
+     *
      * @return
      */
-    public List<RewardList> showRewardList(){
+    public List<RewardList> showRewardList() {
         final RealmResults<RewardList> rewardList = mRealm.where(RewardList.class).findAll();
         List<RewardList> r = new ArrayList<>();
         r.addAll(rewardList);
         return r;
     }
 
+    /**
+     * 记录积分兑换信息
+     *
+     * @param name     奖励名字
+     * @param integral 奖励分值
+     */
+    public void convertIntegral(final String name, final int integral) {
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                ConvertIntegralList convertIntegralList = realm.createObject(ConvertIntegralList.class);
+                convertIntegralList.setName(name);
+                convertIntegralList.setIntegral(integral);
+                convertIntegralList.setData(data);
+            }
+        });
+    }
+
+    /**
+     * 查询共花费了多少积分
+     *
+     * @return 积分数
+     */
+    public int showConvertIntegralAll() {
+        int i = mRealm.where(ConvertIntegralList.class).sum("integral").intValue();
+        return i;
+    }
+
+
+    /**
+     * 查看我的习惯表中最后一条数据
+     *
+     * @return MyHabitTask
+     */
+    public MyHabitTask showMyEndTaskList() {
+        final RealmResults<MyHabitTask> myHabitTasks = mRealm.where(MyHabitTask.class).findAll();
+        if (myHabitTasks.size() == 0) {
+            return null;
+        } else {
+            for (int i = 0; i < myHabitTasks.size(); i++) {
+                Log.i(TAG, "onClick:   i = " + i + "size = " + myHabitTasks.size());
+                if (i == myHabitTasks.size() - 1) {
+                    return myHabitTasks.get(i);
+                }
+            }
+        }
+        return null;
+    }
 }

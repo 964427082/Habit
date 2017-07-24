@@ -146,8 +146,21 @@ public class AddHabitActivity extends FragmentActivity implements View.OnClickLi
             case R.id.complete_img_btn:
                 is = isComplete();
                 if (is == true) {
-                    DBControl.createRealm(context).addCustomTask(nameEditText.getText().toString(),
-                            Integer.valueOf(dayEditText.getText().toString()), colorNumber, "12:00");
+                    String name = nameEditText.getText().toString();
+                    int integer = Integer.valueOf(dayEditText.getText().toString());
+                    int h  = hour_numberPicker.getValue();
+                    int s = seconds_numberPicker.getValue();
+                    String time = null;
+                    if(h < 10){
+                        if(s < 10){
+                            time = "0" + h + ":" + "0" + s;
+                        }else
+                            time = "0" + h + ":" + s;
+                    }else if(s < 10){
+                        time = h + ":" + "0" + s;
+                    }
+                    Log.i(TAG, "onClick: time = " + time);
+                    DBControl.createRealm(context).addCustomTask(name,integer, colorNumber, time);
                     startActivity(new Intent(AddHabitActivity.this, MyAddHabitActivity.class));
                     finish();
                 }
@@ -178,7 +191,6 @@ public class AddHabitActivity extends FragmentActivity implements View.OnClickLi
             if (len >= 10) {
                 Toast.makeText(context, "习惯名称最多10个字！", Toast.LENGTH_SHORT).show();
             }
-            Log.i(TAG, "afterTextChanged: 1111");
             for (TaskList system : systemList) {
                 if (s.toString().equals(system.getName())) {
                     Toast.makeText(context, "该习惯已经存在，请重新输入！", Toast.LENGTH_SHORT).show();
@@ -190,7 +202,6 @@ public class AddHabitActivity extends FragmentActivity implements View.OnClickLi
             }
 
             if (!isSystem) {
-                Log.i(TAG, "afterTextChanged: 2222");
                 for (TaskList custom : customList) {
                     if (s.toString().equals(custom.getName())) {
                         Toast.makeText(context, "该习惯已经存在，请重新输入！", Toast.LENGTH_SHORT).show();
@@ -267,6 +278,6 @@ public class AddHabitActivity extends FragmentActivity implements View.OnClickLi
      */
     @Override
     public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-        Toast.makeText(this,"您选择的值是" + newVal,Toast.LENGTH_LONG).show();
+//        Toast.makeText(this,"您选择的值是" + newVal,Toast.LENGTH_SHORT).show();
     }
 }

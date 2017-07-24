@@ -4,13 +4,16 @@ package f3.nsu.com.habit.ui;
  * Created by zhy on 2017/7/14.
  */
 
+/**
+ * 积分数据类型
+ */
 public class IntegralList {
     private String integralName;
     private String integralReason;
-    private String integral;
+    private int integral;
 
     public IntegralList(){};
-    public IntegralList(String integralName,String integralReason,String integral){
+    public IntegralList(String integralName,String integralReason,int integral){
         this.integralName = integralName;
         this.integralReason = integralReason;
         this.integral = integral;
@@ -32,11 +35,11 @@ public class IntegralList {
         this.integralReason = integralReason;
     }
 
-    public String getIntegral() {
+    public int getIntegral() {
         return integral;
     }
 
-    public void setIntegral(String integral) {
+    public void setIntegral(int integral) {
         this.integral = integral;
     }
 }

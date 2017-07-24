@@ -16,6 +16,7 @@ public class CustomTask extends RealmObject {
     @PrimaryKey
     private String customTask;
     private RealmList<TaskList> customTaskList = new RealmList<TaskList>();
+
     public CustomTask(){}
     public CustomTask(RealmList<TaskList> customTaskList){
         this.customTaskList = customTaskList;

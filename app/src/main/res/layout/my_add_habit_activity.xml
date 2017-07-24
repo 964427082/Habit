@@ -23,6 +23,13 @@
             android:padding="12dp"
             android:src="@mipmap/arrow_left"
             android:background="@null"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="添加习惯"
+            android:textSize="18sp"
+            android:textColor="#262626"/>
 
         <ImageButton
             android:id="@+id/habit_save_adapter"
