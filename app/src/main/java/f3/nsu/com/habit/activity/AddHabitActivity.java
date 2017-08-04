@@ -29,7 +29,7 @@ import f3.nsu.com.habit.fragment.NewHabitFragment;
  * Created by zhy on 2017/7/11.
  */
 
-public class AddHabitActivity extends FragmentActivity implements View.OnClickListener,NumberPicker.Formatter,
+public class AddHabitActivity extends FragmentActivity implements View.OnClickListener, NumberPicker.Formatter,
         NumberPicker.OnValueChangeListener {
     private static final String TAG = "AddHabitActivity";
     NewHabitFragment newHabitFragment;//新习惯界面
@@ -148,19 +148,21 @@ public class AddHabitActivity extends FragmentActivity implements View.OnClickLi
                 if (is == true) {
                     String name = nameEditText.getText().toString();
                     int integer = Integer.valueOf(dayEditText.getText().toString());
-                    int h  = hour_numberPicker.getValue();
+                    int h = hour_numberPicker.getValue();
                     int s = seconds_numberPicker.getValue();
-                    String time = null;
-                    if(h < 10){
-                        if(s < 10){
+                    String time;
+                    if (h < 10) {
+                        if (s < 10) {
                             time = "0" + h + ":" + "0" + s;
-                        }else
+                        } else
                             time = "0" + h + ":" + s;
-                    }else if(s < 10){
-                        time = h + ":" + "0" + s;
+                    } else {
+                        if (s < 10)
+                            time = h + ":" + "0" + s;
+                        else
+                            time = h + ":" + s;
                     }
-                    Log.i(TAG, "onClick: time = " + time);
-                    DBControl.createRealm(context).addCustomTask(name,integer, colorNumber, time);
+                    DBControl.createRealm(context).addCustomTask(name, integer, colorNumber, time);
                     startActivity(new Intent(AddHabitActivity.this, MyAddHabitActivity.class));
                     finish();
                 }
@@ -258,6 +260,7 @@ public class AddHabitActivity extends FragmentActivity implements View.OnClickLi
 
     /**
      * 给NumberPicker设置格式
+     *
      * @param value
      * @return
      */
@@ -272,6 +275,7 @@ public class AddHabitActivity extends FragmentActivity implements View.OnClickLi
 
     /**
      * 监听NumberPicker的值
+     *
      * @param picker
      * @param oldVal
      * @param newVal

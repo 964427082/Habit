@@ -21,4 +21,20 @@ public class PersonalFragment extends Fragment {
 
         return inflater.inflate(R.layout.fragment_personal,null);
     }
+
+//    private TextView tvMyAllIntegral,tvMyOkTask,tvMyHoldDay,tvMyAllOkNumber;
+//    @Override
+//    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+//        super.onCreate(savedInstanceState, persistentState);
+//        setContentView(R.layout.fragment_personal);
+//        init();
+//    }
+//
+//    private void init() {
+//        tvMyAllIntegral = (TextView) findViewById(R.id.tv_my_allIntegral);
+//        tvMyOkTask = (TextView) findViewById(R.id.tv_my_okTask);
+//        tvMyHoldDay = (TextView) findViewById(R.id.tv_my_holdDay);
+//        tvMyAllOkNumber = (TextView) findViewById(R.id.tv_my_allOkNumber);
+//    }
+
 }

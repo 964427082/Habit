@@ -10,9 +10,9 @@ import io.realm.RealmObject;
  * 记录积分兑换奖励的表单
  */
 public class ConvertIntegralList extends RealmObject {
-    String name;
-    int integral;
-    String data;
+    String name;    //习惯名字
+    int integral;   //所消耗积分
+    String data;    //日期
     public ConvertIntegralList(){}
     public ConvertIntegralList(String name,int integral,String data){
         this.name = name;

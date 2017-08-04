@@ -19,6 +19,10 @@ public class GetTime {
         year = c.get(Calendar.YEAR);
         month = c.get(Calendar.MONTH) + 1;
         day = c.get(Calendar.DAY_OF_MONTH);
+        year = 2017;
+        month = 8;
+        day = 23;
+
     }
 
     public String getWeek() {  // 星期
@@ -44,6 +48,7 @@ public class GetTime {
         }
     }
 
+
     public String getData() {
         String m = String.valueOf(month);
         String d = String.valueOf(day);
@@ -54,6 +59,7 @@ public class GetTime {
             d = "0" + String.valueOf(day);
         }
         data = String.valueOf(year) + m + d;
+
         return data;
     }
 

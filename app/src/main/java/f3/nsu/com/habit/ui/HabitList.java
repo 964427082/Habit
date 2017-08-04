@@ -7,11 +7,11 @@ package f3.nsu.com.habit.ui;
 
 public class HabitList {
 
-    private String HabitName;
-    private String HabitTime;
-    private int goalDay;
-    private int completeDay;
-    private boolean isComplete;
+    private String HabitName;   //习惯名称
+    private String HabitTime;   //提醒时间
+    private int goalDay;        //目标天数
+    private int completeDay;    //完成天数
+    private boolean isComplete; //当天是否完成标记
     private int modify;     //该习惯的积分
     private int colorNumber;    //颜色序号
 

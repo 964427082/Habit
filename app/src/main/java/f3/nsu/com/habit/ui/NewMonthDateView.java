@@ -9,7 +9,6 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.List;
@@ -18,6 +17,7 @@ import java.util.List;
  * Created by zhy on 2017/7/13.
  */
 
+//习惯详情里面的日历
 public class NewMonthDateView extends View {
     private static final int NUM_COLUMNS = 7;//7列
     private static final int NUM_ROWS = 6;//6行

@@ -10,6 +10,7 @@ import f3.nsu.com.habit.GetTime.GetTime;
 import f3.nsu.com.habit.RealmDataBase.TaskData.ConvertIntegralList;
 import f3.nsu.com.habit.RealmDataBase.TaskData.CustomTask;
 import f3.nsu.com.habit.RealmDataBase.TaskData.MyHabitTask;
+import f3.nsu.com.habit.RealmDataBase.TaskData.MyHabitTaskIsOk;
 import f3.nsu.com.habit.RealmDataBase.TaskData.MyIntegralList;
 import f3.nsu.com.habit.RealmDataBase.TaskData.RewardList;
 import f3.nsu.com.habit.RealmDataBase.TaskData.SystemTask;
@@ -30,6 +31,8 @@ public class DBControl {
     private static DBControl db;
     private static android.content.Context context;
     private String data = new GetTime().getData();
+    private int month = new GetTime().getMonth();
+    private int year = new GetTime().getYear();
 
     private DBControl() {
     }
@@ -188,17 +191,19 @@ public class DBControl {
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                int j = -1;
                 for (int i = 0; i < myIntegralLists.size(); i++) {
                     if (name.equals(myIntegralLists.get(i).getName())) {
-                        j = i;
+                        if (myIntegralLists.get(i).isStart()) {
+                            int f = myHabitTask.getTodayIntegral() - myIntegralLists.get(i).getModify();
+                            myHabitTask.setTodayIntegral(f);
+                            //需要去减少总次数吗？
+//                    int y = myHabitTask.getOkNumber() - 1;
+//                    myHabitTask.setOkNumber(y);
+                        }
+                        myIntegralLists.deleteFromRealm(i);
+                        break;
                     }
                 }
-                if (myIntegralLists.get(j).isStart()) {
-                    int f = myHabitTask.getTodayIntegral() - myIntegralLists.get(j).getModify();
-                    myHabitTask.setTodayIntegral(f);
-                }
-                myIntegralLists.deleteFromRealm(j);
             }
         });
     }
@@ -269,6 +274,9 @@ public class DBControl {
      * @param modify    积分分数
      * @param expectDay 坚持的天数
      * @param clockTime 提醒的时间
+     *                  需要添加的数据：     本月坚持次数----去遍历历史查询本月最后一天  复制即可！
+     *                  最佳连续坚持次数-----去遍历所有    查询该习惯最大连续坚持次数并复制
+     *                  历史坚持次数！
      */
     public void addMyHabitTask(final String data, final String name, final int modify, final int expectDay, final String clockTime, final int colorNumber) {
         mRealm.executeTransaction(new Realm.Transaction() {
@@ -276,16 +284,25 @@ public class DBControl {
             public void execute(Realm realm) {
                 MyHabitTask m = realm.where(MyHabitTask.class).equalTo("data", data).findFirst();
                 MyIntegralList myIntegralList = realm.createObject(MyIntegralList.class);
-                myIntegralList.setName(name);
-                myIntegralList.setModify(modify);
-                myIntegralList.setExpectDay(expectDay);
-                myIntegralList.setClockTime(clockTime);
-                myIntegralList.setInsistDay(0);
-                myIntegralList.setColorNumber(colorNumber);
+                myIntegralList.setName(name);       //该习惯名字
+                myIntegralList.setModify(modify);       //该习惯的积分
+                myIntegralList.setExpectDay(expectDay);     //预设计的天数
+                myIntegralList.setClockTime(clockTime);     //提醒时间
+                myIntegralList.setInsistDay(0);     //已经坚持的天数
+                myIntegralList.setColorNumber(colorNumber);     //颜色序号
                 myIntegralList.setStart(false);
+
+                int datas[] = showHistory(name, 0);
+
+                myIntegralList.setMonthFinishDegree(datas[0]);     //本月完成次数
+                myIntegralList.setOptimumDegree(datas[1]);         //最佳次数
+                myIntegralList.setDegreeOfHistory(datas[2]);   //历史次数是一直累加的
+
+
                 if (m == null) {
                     MyHabitTask myHabitTask = realm.createObject(MyHabitTask.class, data);
                     myHabitTask.setTodayIntegral(0);
+                    myHabitTask.setMonth(month);
                     myHabitTask.getMyIntegralList().add(myIntegralList);
                 } else {
                     m.getMyIntegralList().add(myIntegralList);
@@ -311,23 +328,47 @@ public class DBControl {
                     is = true;
                 }
                 for (MyIntegralList m : my) {
-                    MyIntegralList myIntegralList = realm.createObject(MyIntegralList.class);
-                    myIntegralList.setName(m.getName());
-                    myIntegralList.setModify(m.getModify());
-                    myIntegralList.setExpectDay(m.getExpectDay());
-                    myIntegralList.setClockTime(m.getClockTime());
-                    myIntegralList.setInsistDay(m.getInsistDay());
-                    myIntegralList.setColorNumber(m.getColorNumber());
-                    myIntegralList.setStart(false);
-                    if (is) {
-                        MyHabitTask myHabitTask = realm.createObject(MyHabitTask.class, data);
-                        myHabitTask.setTodayIntegral(0);
-                        myHabitTask.getMyIntegralList().add(myIntegralList);
-                        isM = realm.where(MyHabitTask.class).equalTo("data", data).findFirst();
-                        is = false;
+                    //如果预计天数等于完成天数   则不去加载
+                    if (m.getInsistDay() == m.getExpectDay()) {
+                        //可以去存储完成了的习惯   日期为 myHabit.getData
+                        int id = DBControl.getId();
+                        MyHabitTaskIsOk myHabitTaskIsOk = realm.createObject(MyHabitTaskIsOk.class, id);
+                        myHabitTaskIsOk.setName(m.getName());
+                        myHabitTaskIsOk.setData(myHabit.getData());
+                        myHabitTaskIsOk.setInsistDay(m.getInsistDay());
+                        Realm.getDefaultInstance().copyToRealmOrUpdate(myHabitTaskIsOk);
                     } else {
-                        //问题：   如果isM = null  不知道是否还能向里面添加数据
-                        isM.getMyIntegralList().add(myIntegralList);
+                        MyIntegralList myIntegralList = realm.createObject(MyIntegralList.class);
+                        myIntegralList.setName(m.getName());
+                        myIntegralList.setModify(m.getModify());
+                        myIntegralList.setExpectDay(m.getExpectDay());
+                        myIntegralList.setClockTime(m.getClockTime());
+                        myIntegralList.setInsistDay(m.getInsistDay());
+                        myIntegralList.setColorNumber(m.getColorNumber());
+                        myIntegralList.setOptimumDegree(m.getOptimumDegree());                  //复制了所有的  连续坚持次数
+                        myIntegralList.setDegreeOfHistory(m.getDegreeOfHistory());              //复制了所有的  历史坚持次数
+                        //如果复制的数据是上一个月的数据    则将本月坚持次数归零
+                        if (myHabit.getMonth() != month) {
+                            myIntegralList.setMonthFinishDegree(0);
+                        } else {
+                            int newYear = Integer.valueOf(myHabit.getData().substring(0, 4));
+                            if (newYear == year) {
+                                myIntegralList.setMonthFinishDegree(m.getMonthFinishDegree());      //复制本月坚持次数
+                            } else
+                                myIntegralList.setMonthFinishDegree(0);
+                        }
+                        myIntegralList.setStart(false);
+                        if (is) {
+                            MyHabitTask myHabitTask = realm.createObject(MyHabitTask.class, data);
+                            myHabitTask.setTodayIntegral(0);
+                            myHabitTask.setOkNumber(0);
+                            myHabitTask.setMonth(month);
+                            myHabitTask.getMyIntegralList().add(myIntegralList);
+                            isM = realm.where(MyHabitTask.class).equalTo("data", data).findFirst();
+                            is = false;
+                        } else {
+                            isM.getMyIntegralList().add(myIntegralList);
+                        }
                     }
                 }
             }
@@ -347,18 +388,101 @@ public class DBControl {
             @Override
             public void execute(Realm realm) {
                 MyHabitTask myHabitTask = mRealm.where(MyHabitTask.class).equalTo("data", data).findFirst();
-                int f = myHabitTask.getTodayIntegral() + modify;
+
+                int f = myHabitTask.getTodayIntegral() + modify;    //当天累计积分
+                int y = myHabitTask.getOkNumber() + 1;              //当天完成次数
                 myHabitTask.setTodayIntegral(f);
-                Log.i(TAG, "execute: 总积分 = " + myHabitTask.getTodayIntegral() + "..该项积分 = " + modify + " 修改后的积分 = " + f);
+                myHabitTask.setOkNumber(y);
+
                 RealmList<MyIntegralList> myIntegralLists = myHabitTask.getMyIntegralList();
-                for (int i = 0; i < myIntegralLists.size(); i++) {
-                    if (myIntegralLists.get(i).getName().equals(name)) {
-                        myIntegralLists.get(i).setStart(true);
-                        myIntegralLists.get(i).setInsistDay(myIntegralLists.get(i).getInsistDay() + 1);
+                for (MyIntegralList m : myIntegralLists) {
+                    if (m.getName().equals(name)) {
+                        m.setStart(true);
+                        m.setInsistDay(m.getInsistDay() + 1);
+
+                        Log.i(TAG, "onClick: amend  本月完成次数 = " + m.getMonthFinishDegree() + "历史完成次数" + m.getDegreeOfHistory());
+                        m.setMonthFinishDegree(m.getMonthFinishDegree() + 1);   //本月完成次数
+                        int optimumDegree = yesterdayOptimumDegreeNumber(data, name);   //最佳连续次数
+                        m.setOptimumDegree(optimumDegree);
+                        m.setDegreeOfHistory(m.getDegreeOfHistory() + 1);       //历史完成次数
+
+                        break;
                     }
                 }
             }
         });
+    }
+
+    /**
+     * 查看昨天的连续次数  是否完成了
+     * @param newData
+     * @return
+     */
+
+    /**
+     * 最佳完成次数
+     * 1.判断昨天是否完成
+     * 注：连续完成是指   连续的日期？ 还是连续的登录完成？
+     */
+    private int yesterdayOptimumDegreeNumber(String newData, String newName) {
+        String oldData = "";
+        String oldDay = "";
+        int optimumDegree = 1;
+        int newDay = Integer.valueOf(newData.substring(6, 8));    //日期
+        if (month == 2 || month == 4 || month == 6 || month == 9 || month == 11) {
+            if (newDay != 1) {
+                if ((newDay - 1) < 10)
+                    oldDay = "0" + String.valueOf(newDay - 1);
+                else
+                    oldDay = String.valueOf(newDay - 1);
+            } else {
+                month = month - 1;
+                oldDay = "31";
+            }
+        } else {
+            if (newDay != 1) {
+                if ((newDay - 1) < 10)
+                    oldDay = "0" + String.valueOf(newDay - 1);
+                else
+                    oldDay = String.valueOf(newDay - 1);
+            } else {
+                oldDay = "31";
+                if (month == 1) {
+                    year = year - 1;
+                    month = 12;
+                } else if (month == 3) {
+                    if ((year % 4) == 0) {
+                        oldDay = "29";
+                    } else
+                        oldDay = "28";
+                    month = month - 1;
+                } else
+                    month = month - 1;
+            }
+        }
+        String mo = null;
+        if (month < 10) {
+            mo = "0" + String.valueOf(month);
+        } else
+            mo = String.valueOf(month);
+        //上一次登录的日期
+        oldData = String.valueOf(year) + mo + oldDay;
+        final MyHabitTask oldMyHabitTask = mRealm.where(MyHabitTask.class).equalTo("data", oldData).findFirst();
+
+        if (oldMyHabitTask != null) {
+            List<MyIntegralList> myIntegralList = oldMyHabitTask.getMyIntegralList();
+            for (MyIntegralList myI : myIntegralList) {
+                //去判断该习惯昨天是否完成
+                if (myI.getName().equals(newName)) {
+                    if (myI.isStart()) {
+                        optimumDegree = myI.getOptimumDegree() + 1;
+                        break;
+                    }
+                    break;
+                }
+            }
+        }
+        return optimumDegree;
     }
 
     /**
@@ -380,6 +504,16 @@ public class DBControl {
     public int showTotalModify() {
         int showTotalModify = mRealm.where(MyHabitTask.class).sum("todayIntegral").intValue();
         return showTotalModify;
+    }
+
+    /**
+     * 查看总完成次数
+     *
+     * @return
+     */
+    public int showTotalOkTaskNumber() {
+        int o = mRealm.where(MyHabitTask.class).sum("okNumber").intValue();
+        return o;
     }
 
     /**
@@ -420,7 +554,6 @@ public class DBControl {
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-//                RewardList rewardList = realm.createObject(RewardList.class,name);
                 RewardList rewardList = realm.createObject(RewardList.class);
                 rewardList.setName(name);
                 rewardList.setWhy(why);
@@ -496,12 +629,211 @@ public class DBControl {
             return null;
         } else {
             for (int i = 0; i < myHabitTasks.size(); i++) {
-                Log.i(TAG, "onClick:   i = " + i + "size = " + myHabitTasks.size());
                 if (i == myHabitTasks.size() - 1) {
                     return myHabitTasks.get(i);
                 }
             }
         }
         return null;
+    }
+
+    /**
+     * 查看该月的日期  当天是否有完成一项习惯
+     * 去判断当天是否有累加积分   不为0则视为有完成习惯
+     *
+     * @return
+     */
+    public List<String> showToMonthEverDayIntegral() {
+        final List<String> l = new ArrayList<>();
+        final RealmResults<MyHabitTask> myHabitTaskList = mRealm.where(MyHabitTask.class).equalTo("month", month).findAll();
+        for (MyHabitTask m : myHabitTaskList) {
+            if (m.getTodayIntegral() > 0) {
+                l.add(m.getData());
+            }
+        }
+        return l;
+    }
+
+    /**
+     * 查看完成习惯   指100%完成
+     *
+     * @return
+     */
+    public List<MyHabitTaskIsOk> showOkTask() {
+        List<MyHabitTaskIsOk> newMy = new ArrayList<>();
+        final RealmResults<MyHabitTaskIsOk> myHabitTaskIsOk = mRealm.where(MyHabitTaskIsOk.class).findAll();
+        newMy.addAll(myHabitTaskIsOk);
+        return newMy;
+    }
+
+    /**
+     * 返回创建用户的id
+     *
+     * @return
+     */
+    public static int getId() {
+        if (mRealm == null) {
+            mRealm = Realm.getDefaultInstance();
+        }
+        int id = (int) mRealm.where(MyHabitTaskIsOk.class).count() + 1;
+        if (id == 1) {
+            return id;
+        } else {
+            return mRealm.where(MyHabitTaskIsOk.class).findAll().max("id").intValue() + 1;
+        }
+    }
+
+    /**
+     * 查看本月某习惯坚持情况
+     *
+     * @param name 该习惯名字
+     * @return 坚持的日期的一个集合
+     */
+    public List<Integer> showToMonthHoldNumber(String name) {
+        List<Integer> number = new ArrayList<>();
+        final RealmResults<MyHabitTask> myHabitTasks = mRealm.where(MyHabitTask.class).equalTo("month", month).findAll();
+        for (MyHabitTask m : myHabitTasks) {
+            List<MyIntegralList> myIntegralList = m.getMyIntegralList();
+            for (MyIntegralList ml : myIntegralList) {
+                if (ml.getName().equals(name)) {
+                    if (ml.isStart()) {
+                        int n = Integer.valueOf(m.getData().substring(6, 8));
+                        number.add(n);
+                        break;
+                    }
+                    break;
+                }
+            }
+        }
+        return number;
+    }
+
+    /**
+     * 查询某习惯历史坚持次数
+     * 本月坚持次数----去遍历历史查询本月最后一天  复制即可！
+     * 最佳连续坚持次数-----去遍历所有    查询该习惯最大连续坚持次数并复制
+     *
+     * @param name
+     * @return
+     */
+    public int[] showHistory(String name, int number) {
+        final RealmResults<MyHabitTask> myHabitTasks = mRealm.where(MyHabitTask.class).equalTo("month", month).findAll();
+
+        final RealmResults<MyIntegralList> myHistoryIntegralLists = mRealm.where(MyIntegralList.class).equalTo("name", name).findAll();
+
+        int toMonthHoldNumber = 0;
+        int historyOkNumber = 0;
+        //在添加的时候将  最佳连续完成次数置0
+        // 在修改时  如果日期连续则复制前一天值
+        // 在查询时去找最大值
+        int optimumDegreeNumber = 0;
+        //遍历查找本月某习惯坚持次数
+        if (myHabitTasks.size() != 0) {
+            //这个是add时
+            int size1 = 0;
+            if (myHabitTasks.size() > 1) {
+                if (number == 0) {
+                    size1 = myHabitTasks.size() - 2;
+                } else
+                    size1 = myHabitTasks.size() - 1;
+            }
+
+//            if(number == 1){
+//                for(int i = 0;i < myHabitTasks.size();i++){
+//                    List<MyIntegralList> mm = myHabitTasks.get(i).getMyIntegralList();
+//                    for(MyIntegralList myiho : mm){
+//                        if(name.equals(myiho.getName()))
+//                        Log.i(TAG, "showHistory: 遍历show时 = " + myHabitTasks.get(i).getData() + " .. name = "
+//                                + myiho.getName() + "..积分 = " + myiho.getMonthFinishDegree());
+//                    }
+//                }
+//            }
+            List<MyIntegralList> myIntegralList = myHabitTasks.get(size1).getMyIntegralList();
+            for (MyIntegralList my : myIntegralList) {
+                if (my.getName().equals(name)) {
+                    toMonthHoldNumber = my.getMonthFinishDegree();
+                    break;
+                }
+            }
+
+
+//            if (number == 0) {
+//                int size = 0;
+//                if (myHabitTasks.size() > 1)
+//                    size = myHabitTasks.size() - 2;
+//                List<MyIntegralList> myIntegralList = myHabitTasks.get(size).getMyIntegralList();
+//                for (MyIntegralList my : myIntegralList) {
+//                    if (my.getName().equals(name)) {
+//                        toMonthHoldNumber0 = my.getMonthFinishDegree();
+//                        break;
+//                    }
+//                }
+//            } else {
+//                int size = myHabitTasks.size();
+//                List<MyIntegralList> showMyIntegralList = null;
+//                int index = 0;
+//                if (size > 1) {
+//                    index = size - 1;
+//                }
+//                showMyIntegralList = myHabitTasks.get(index).getMyIntegralList();
+//                for (MyIntegralList my : showMyIntegralList) {
+//                    if (my.getName().equals(name)) {
+//                        if (myHabitTasks.get(index).getData().equals(data)) {
+//                            toMonthHoldNumber1 = my.getMonthFinishDegree();
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+
+            //遍历查找某习惯历史完成次数
+            if (myHistoryIntegralLists.size() != 0) {
+                int size2 = 0;
+                if (myHistoryIntegralLists.size() > 1) {
+                    if (number == 0) {
+                        //这个是add时  -2
+                        size2 = myHistoryIntegralLists.size() - 2;
+                    } else
+                        //这个是show时  -1
+                        size2 = myHistoryIntegralLists.size() - 1;
+                }
+                if (myHistoryIntegralLists.get(size2).getName().equals(name)) {
+                    historyOkNumber = myHistoryIntegralLists.get(size2).getDegreeOfHistory();
+                }
+            }
+        }
+        int datas0[] = {toMonthHoldNumber, optimumDegreeNumber, historyOkNumber};
+        return datas0;
+    }
+
+    /**
+     * 查看某一习惯最佳连续坚持次数
+     *
+     * @param name
+     * @return
+     */
+
+    public int showContinuousHoldNumber(String name) {
+        int number = 0;
+        final RealmResults<MyIntegralList> myIntegralLists = mRealm.where(MyIntegralList.class).equalTo("name", name).findAll();
+//        for (int i = 0,j = myIntegralLists.size() - 1; i < j; i++,j--) {
+//            int ii = myIntegralLists.get(i).getOptimumDegree();
+//            int jj = myIntegralLists.get(j).getOptimumDegree();
+//            if(ii > jj){
+//                if(ii > number)
+//                    number = ii;
+//            }else{
+//                if(jj > number){
+//                    number = jj;
+//                }
+//            }
+//        }
+        for (MyIntegralList m : myIntegralLists) {
+            if (m.getOptimumDegree() > number) {
+                number = m.getOptimumDegree();
+            }
+        }
+        return number;
     }
 }

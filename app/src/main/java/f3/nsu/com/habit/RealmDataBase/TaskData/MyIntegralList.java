@@ -15,7 +15,7 @@ public class MyIntegralList extends RealmObject {
     private int  insistDay;     //已经坚持的天数
     private String clockTime;   //提醒时间
     private int degreeOfHistory;    //历史完成次数
-    private int optimumDegree;  //最佳次数
+    private int optimumDegree;  //最佳连续次数
     private int monthFinishDegree;  //本月完成次数
     private boolean isStart;    //是否当天已经完成
     private int colorNumber;    //颜色序号

@@ -219,6 +219,7 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 otherHolderTitle.tvAddEdit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                                //创建自定义习惯
                         Intent intent = new Intent(context, AddHabitActivity.class);
                         Activity activity = (Activity) context;
                         context.startActivity(intent);

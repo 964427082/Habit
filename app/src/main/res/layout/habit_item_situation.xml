@@ -3,260 +3,302 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f9f9f9">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="58dp"
-        android:background="#ffffff">
+        android:background="#ffffff"
+        android:id="@+id/relativeLayout">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:text="习惯详情"
-            android:textSize="18sp"
             android:textColor="#262626"
-            android:layout_centerInParent="true"/>
+            android:textSize="18sp" />
+
         <ImageButton
-            android:id="@+id/return_imageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/arrow_left"
+            android:id="@+id/list_view_return_imageButton"
+            android:layout_width="36dp"
+            android:layout_height="50dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="13dp"
-            android:background="@null"/>
+            android:layout_marginLeft="8dp"
+            android:background="@null"
+            android:src="@mipmap/arrow_left" />
     </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="136dp"
         android:background="@mipmap/card_1_bg"
-        android:layout_marginTop="64dp"
-        android:layout_centerHorizontal="true">
-        <f3.nsu.com.habit.ui.DrawCircle
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:layout_marginLeft="11dp"
-            android:layout_marginTop="14dp"/>
+        android:layout_below="@+id/relativeLayout"
+        android:layout_alignEnd="@+id/relativeLayout2">
+
+        <!--//该图标需要自动去匹配！-->
+        <!--<f3.nsu.com.habit.ui.DrawCircle-->
+            <!--android:layout_width="8dp"-->
+            <!--android:layout_height="8dp"-->
+            <!--android:layout_marginLeft="11dp"-->
+            <!--android:layout_marginTop="14dp" />-->
+        <Button
+        android:id="@+id/list_view_color_button"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginLeft="11dp"
+        android:background="@drawable/round_button_color1"/>
+
         <TextView
+            android:id="@+id/list_view_habit_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="习惯名称"
-            android:textSize="16sp"
-            android:textColor="#262626"
             android:layout_marginLeft="26dp"
-            android:layout_marginTop="7dp"/>
-        <ImageView
-            android:id="@+id/image_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/icon_edit"
+            android:layout_marginTop="7dp"
+            android:text="习惯名称"
+            android:textColor="#262626"
+            android:textSize="16sp" />
+
+        <RelativeLayout
+            android:layout_width="40dp"
+            android:layout_height="20dp"
             android:layout_marginLeft="289dp"
-            android:layout_marginTop="15dp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="编辑"
-            android:textSize="12sp"
-            android:textColor="#555555"
-            android:layout_toRightOf="@id/image_edit"
-            android:layout_marginTop="12dp"/>
+            android:layout_marginTop="12dp"
+            android:id="@+id/list_view_image_edit">
+
+            <ImageView
+                android:id="@+id/image_view_eg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/icon_edit" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="编辑"
+                android:textColor="#555555"
+                android:layout_toRightOf="@id/image_view_eg"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
         <View
             android:layout_width="330dp"
             android:layout_height="1dp"
-            android:background="#ececec"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="34dp"/>
+            android:layout_marginTop="34dp"
+            android:background="#ececec" />
+
         <TextView
+            android:id="@+id/list_view_month_hold_number"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:background="@mipmap/circle_1_bg"
-            android:text="13"
-            android:textSize="21sp"
-            android:textColor="#ffffff"
-            android:gravity="center"
             android:layout_marginLeft="31dp"
-            android:layout_marginTop="45dp"/>
+            android:layout_marginTop="45dp"
+            android:background="@mipmap/circle_1_bg"
+            android:gravity="center"
+            android:textColor="#ffffff"
+            android:textSize="21sp" />
+
         <TextView
+            android:id="@+id/list_view_continuous_hold_number"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:background="@mipmap/circle_2_bg"
-            android:text="5"
-            android:textSize="21sp"
-            android:textColor="#ffffff"
-            android:gravity="center"
             android:layout_marginLeft="144dp"
-            android:layout_marginTop="45dp"/>
+            android:layout_marginTop="45dp"
+            android:background="@mipmap/circle_2_bg"
+            android:gravity="center"
+            android:textColor="#ffffff"
+            android:textSize="21sp" />
+
         <TextView
+            android:id="@+id/list_view_history_hold_number"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:background="@mipmap/circle_3_bg"
-            android:text="23"
-            android:textSize="21sp"
-            android:textColor="#ffffff"
-            android:gravity="center"
             android:layout_marginLeft="263dp"
-            android:layout_marginTop="45dp"/>
+            android:layout_marginTop="45dp"
+            android:background="@mipmap/circle_3_bg"
+            android:gravity="center"
+            android:textColor="#ffffff"
+            android:textSize="21sp" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="本月坚持次数"
-            android:textSize="12sp"
-            android:textColor="#262626"
             android:layout_marginLeft="29dp"
-            android:layout_marginTop="112dp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="最佳连续坚持次数"
-            android:textSize="12sp"
+            android:layout_marginTop="112dp"
+            android:text="本月坚持次数"
             android:textColor="#262626"
-            android:layout_marginLeft="128dp"
-            android:layout_marginTop="112dp"/>
+            android:textSize="12sp" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="历史坚持次数"
-            android:textSize="12sp"
+            android:layout_marginLeft="128dp"
+            android:layout_marginTop="112dp"
+            android:text="最佳连续坚持次数"
+            android:textColor="#262626"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="260dp"
             android:layout_marginTop="112dp"
-            android:textColor="#262626"/>
+            android:text="历史坚持次数"
+            android:textColor="#262626"
+            android:textSize="12sp" />
 
     </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="350dp"
         android:layout_height="149dp"
-        android:layout_marginTop="207dp"
         android:layout_centerHorizontal="true"
-        android:background="@mipmap/card_2_bg">
+        android:layout_marginTop="207dp"
+        android:background="@mipmap/card_2_bg"
+        android:id="@+id/relativeLayout2">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="13dp"
             android:layout_marginTop="12dp"
-            android:src="@mipmap/icon_data"/>
+            android:src="@mipmap/icon_data" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="35dp"
             android:layout_marginTop="15dp"
             android:text="本月习惯坚持率"
-            android:textSize="12sp"
-            android:textColor="#262626"/>
+            android:textColor="#262626"
+            android:textSize="12sp" />
+
+        //柱状图
         <f3.nsu.com.habit.ui.Histogram
-            android:id="@+id/histogram"
+            android:id="@+id/list_view_histogram"
             android:layout_width="288dp"
             android:layout_height="95dp"
             android:layout_marginLeft="14dp"
-            android:layout_marginTop="37dp"/>
+            android:layout_marginTop="37dp" />
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/icon_arrow"
+            android:layout_marginLeft="295dp"
             android:layout_marginTop="119.18dp"
-            android:layout_marginLeft="295dp"/>
+            android:src="@mipmap/icon_arrow" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="305dp"
             android:layout_marginTop="114dp"
             android:text="周数"
-            android:textSize="8sp"
-            android:textColor="#434343"/>
+            android:textColor="#434343"
+            android:textSize="8sp" />
 
     </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="364dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="364dp"
         android:background="@mipmap/card_3_bg">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="13dp"
             android:layout_marginTop="11dp"
-            android:src="@mipmap/icon_calendar"/>
+            android:src="@mipmap/icon_calendar" />
+
         <TextView
+            android:id="@+id/list_view_month_calendar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="13dp"
             android:layout_marginLeft="38dp"
-            android:text="7月习惯日历"
-            android:textSize="12sp"
-            android:textColor="#262626"/>
+            android:layout_marginTop="13dp"
+            android:textColor="#262626"
+            android:textSize="12sp" />
+
         <LinearLayout
             android:layout_width="315dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="39dp"
             android:layout_marginLeft="20dp"
+            android:layout_marginTop="39dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:text="日"
-                android:textSize="12sp"
-                android:textColor="#555555"/>
+                android:textColor="#555555"
+                android:textSize="12sp" />
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:text="一"
-                android:textSize="12sp"
-                android:textColor="#555555"/>
+                android:textColor="#555555"
+                android:textSize="12sp" />
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:text="二"
-                android:textSize="12sp"
-                android:textColor="#555555"/>
+                android:textColor="#555555"
+                android:textSize="12sp" />
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:text="三"
-                android:textSize="12sp"
-                android:textColor="#555555"/>
+                android:textColor="#555555"
+                android:textSize="12sp" />
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:text="四"
-                android:textSize="12sp"
-                android:textColor="#555555"/>
+                android:textColor="#555555"
+                android:textSize="12sp" />
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:text="五"
-                android:textSize="12sp"
-                android:textColor="#555555"/>
+                android:textColor="#555555"
+                android:textSize="12sp" />
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:text="六"
-                android:textSize="12sp"
-                android:textColor="#555555"/>
+                android:textColor="#555555"
+                android:textSize="12sp" />
         </LinearLayout>
+
         <f3.nsu.com.habit.ui.NewMonthDateView
             android:id="@+id/newMonthDateView"
             android:layout_width="315dp"
             android:layout_height="152dp"
-            android:layout_marginTop="58dp"
-            android:layout_marginLeft="20dp"/>
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="58dp" />
 
     </RelativeLayout>
 </RelativeLayout>

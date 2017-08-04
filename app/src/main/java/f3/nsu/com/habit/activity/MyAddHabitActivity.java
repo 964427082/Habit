@@ -65,15 +65,10 @@ public class MyAddHabitActivity extends Activity {
     public void init() {
         //已经选中的习惯
         final List<MyIntegralList> myIntegralLists = createRealm(this).showTodayMyHabitIntegralList();
-        Log.i(TAG, "onClick: 已经选中的习惯个数 = " + myIntegralLists.size());
         //系统中的习惯
         final List<TaskList> systemList = createRealm(this).showSystemTask();
-        Log.i(TAG, "onClick: 系统中的习惯个数 = " + systemList.size());
         //自定义中的习惯
         final List<TaskList> customTasks = createRealm(this).showCustomTask();
-
-        Log.i(TAG, "onClick: 自定义中的习惯个数 = " + customTasks.size());
-
         int number[] = generateRandomNumber();
         final ArrayList<TaskList> myIntegral = new ArrayList<>();
         for (MyIntegralList m : myIntegralLists)
@@ -158,7 +153,7 @@ public class MyAddHabitActivity extends Activity {
                 }
                 else {
                     if (myHabitItems == null && !isExit) {
-                        Toast.makeText(context,"你还没保存习惯,继续点击可退出",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,"你还没添加习惯,继续点击可退出",Toast.LENGTH_SHORT).show();
                         isExit = true;
                     }
                 }
@@ -170,7 +165,13 @@ public class MyAddHabitActivity extends Activity {
                     Toast.makeText(context, "亲，至少保留一个习惯哟！", Toast.LENGTH_SHORT).show();
                 } else {
                     if (ItemAdapter.isAdd) {
-                        changeMyHabitTask(myHabitItems);
+                        //先删除再添加
+                        /**
+                         * myIntegralLists 为未修改之前的习惯列表
+                         * myHabitItems  为修改之后的习惯列表
+                         */
+                        List<MyIntegralList> myIntegralLists = DBControl.createRealm(this).showTodayMyHabitIntegralList();
+                        getNoDifferent(myIntegralLists, myHabitItems);
                         ItemAdapter.isAdd = false;
                         finish();
                         break;
@@ -182,20 +183,6 @@ public class MyAddHabitActivity extends Activity {
         }
     }
 
-    /**
-     * 改变习惯的选择    瀑布式
-     *
-     * @param myHabitItems
-     */
-    private void changeMyHabitTask(ArrayList<TaskList> myHabitItems) {
-        //先删除再添加
-        /**
-         * myIntegralLists 为未修改之前的习惯列表
-         * myHabitItems  为修改之后的习惯列表
-         */
-        List<MyIntegralList> myIntegralLists = DBControl.createRealm(this).showTodayMyHabitIntegralList();
-        getNoDifferent(myIntegralLists, myHabitItems);
-    }
 
     /**
      * 筛选习惯 进行添加  删除操作
@@ -214,16 +201,14 @@ public class MyAddHabitActivity extends Activity {
         Map<String, Integer> map = new HashMap<String, Integer>(myIntegralTaskList.size() + myHabitItems.size());
         for (TaskList m : myIntegralTaskList) {
             map.put(m.getName(), 1);
-            Log.i(TAG, "getNoDifferent:  已近保存了的习惯 m.getName = " + m.getName());
         }
         for (TaskList t : myHabitItems) {
             Integer c = map.get(t.getName());
             if (c != null) {
-                Log.i(TAG, "getNoDifferent: 将相同的习惯键值改为  2 t.getName = " + t.getName());
                 map.put(t.getName(), ++c);
                 continue;
             } else {
-                Log.i(TAG, "getNoDifferent: 不同的习惯  去存储  t.getName = " + t.getName());
+                //此处保存的是新添加的
                 DBControl.createRealm(this).addMyHabitTask(data, t.getName(), t.getModify(), t.getExpectDay(), t.getTime(), t.getColorNumber());
             }
         }
@@ -231,7 +216,7 @@ public class MyAddHabitActivity extends Activity {
             if (entry.getValue() == 1) {
                 for (TaskList m : myIntegralTaskList) {
                     if (m.getName().equals(entry.getKey())) {
-                        Log.i(TAG, "getNoDifferent:  删除键值为1的习惯 m.getName = " + m.getName());
+                        //此处删除的是下滑的    删除当天数据库里面的数据
                         DBControl.createRealm(this).deleteMyHabitTaskList(m.getName());
                     }
                 }
