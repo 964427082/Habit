@@ -52,6 +52,7 @@ public class Histogram extends View {
         axisLinePaint.setColor(0xff2fa8e7);
         hLinePaint.setColor(Color.LTGRAY);
         xTitlePaint.setColor(Color.BLACK);
+
         xTitlePaint.setColor(Color.BLACK);
     }
     public void  setHabitData(float[] data){

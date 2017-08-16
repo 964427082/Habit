@@ -25,15 +25,13 @@
             <ImageButton
                 style="@style/BottomBarImgBtn"
                 android:id="@+id/button_home"
-                android:background="@drawable/button_home_state"
-                android:padding="10dp"/>
+                android:background="@drawable/button_home_state"/>
         </RelativeLayout>
         <RelativeLayout style="@style/BottomBar">
             <ImageButton
                 style="@style/BottomBarImgBtn"
                 android:id="@+id/button_pet"
-                android:background="@drawable/button_pet_state"
-                android:padding="10dp"/>
+                android:background="@drawable/button_pet_state"/>
         </RelativeLayout>
 
         <RelativeLayout style="@style/BottomBar">
@@ -41,8 +39,7 @@
             <ImageButton
                 android:id="@+id/button_personal"
                 style="@style/BottomBarImgBtn"
-                android:background="@drawable/button_personal_state"
-                android:padding="10dp"/>
+                android:background="@drawable/button_personal_state"/>
         </RelativeLayout>
 
     </LinearLayout>

@@ -16,6 +16,7 @@
         <activity android:name=".activity.AddHabitActivity" android:theme="@style/TranslucentTheme"></activity>
         <activity android:name=".activity.SituationActivity" android:theme="@style/TranslucentTheme"></activity>
         <activity android:name=".activity.MyAddHabitActivity" android:theme="@style/TranslucentTheme"/>
+        <activity android:name=".activity.FirstRunActivity" android:theme="@style/TranslucentTheme"/>
         <activity android:name=".activity.StartActivity" android:theme="@style/Theme.AppStartLoadTranslucent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

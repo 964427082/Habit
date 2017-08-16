@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#58b1ef">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="选一个作为你的目标吧！"
+        android:textSize="24sp"
+        android:textColor="#ffffff"
+        android:layout_marginTop="52dp"
+        android:layout_centerHorizontal="true"/>
+    <f3.nsu.com.habit.ui.CarouselViewPager
+        android:id="@+id/id_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="396dp"
+        android:clipChildren="false"
+        android:layout_marginTop="109dp"
+        android:layout_centerHorizontal="true">
+
+    </f3.nsu.com.habit.ui.CarouselViewPager>
+    <Button
+        android:id="@+id/choose_button"
+        android:layout_width="172dp"
+        android:layout_height="37dp"
+        android:text="开启你的旅途~"
+        android:textSize="16sp"
+        android:textColor="#555555"
+        android:background="@drawable/choose_corners"
+        android:layout_marginTop="522dp"
+        android:layout_centerHorizontal="true"/>
+    <Button
+        android:id="@+id/unChoose_button"
+        android:layout_width="172dp"
+        android:layout_height="37dp"
+        android:text="跳过"
+        android:textSize="16sp"
+        android:textColor="#262626"
+        android:background="@drawable/unchoose_corners"
+        android:layout_marginTop="569dp"
+        android:layout_centerHorizontal="true"/>
+</RelativeLayout>
