@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
@@ -72,7 +71,7 @@ public class MyAddHabitActivity extends Activity {
         int number[] = generateRandomNumber();
         final ArrayList<TaskList> myIntegral = new ArrayList<>();
         for (MyIntegralList m : myIntegralLists)
-            myIntegral.add(new TaskList(m.getName(), m.getModify(), m.isStart(), m.getExpectDay(), m.getColorNumber(), m.getClockTime()));
+            myIntegral.add(new TaskList(m.getName(), m.getModify(), m.isStart(), m.getExpectDay(), m.getColorNumber(), m.getClockTime(),m.getServiceNumber()));
 
         List<TaskList> everList = new ArrayList<>();
         for (int i = 0; i < number.length; i++) {
@@ -195,7 +194,7 @@ public class MyAddHabitActivity extends Activity {
     private void getNoDifferent(List<MyIntegralList> myIntegralLists, List<TaskList> myHabitItems) {
         List<TaskList> myIntegralTaskList = new ArrayList<>();
         for (MyIntegralList m : myIntegralLists) {
-            myIntegralTaskList.add(new TaskList(m.getName(), m.getModify(), m.isStart(), m.getExpectDay(), m.getColorNumber(), m.getClockTime()));
+            myIntegralTaskList.add(new TaskList(m.getName(), m.getModify(), m.isStart(), m.getExpectDay(), m.getColorNumber(), m.getClockTime(),m.getServiceNumber()));
 
         }
         Map<String, Integer> map = new HashMap<String, Integer>(myIntegralTaskList.size() + myHabitItems.size());
@@ -209,7 +208,7 @@ public class MyAddHabitActivity extends Activity {
                 continue;
             } else {
                 //此处保存的是新添加的
-                DBControl.createRealm(this).addMyHabitTask(data, t.getName(), t.getModify(), t.getExpectDay(), t.getTime(), t.getColorNumber());
+                DBControl.createRealm(this).addMyHabitTask(data, t.getName(), t.getModify(), t.getExpectDay(), t.getTime(), t.getColorNumber(),t.getServiceNumber());
             }
         }
         for (Map.Entry<String, Integer> entry : map.entrySet()) {

@@ -65,30 +65,30 @@ public class DBControl {
         RealmList<TaskList> systemTaskList = st.getSystemTaskList();
         if (MainActivity.firstIn) {
             Log.i("add", "SystemTask: ");
-            systemTaskList.add(new TaskList("按时起床", 6, false, 30, 2, "07:20"));
-            systemTaskList.add(new TaskList("记单词", 6, false, 30, 3, "08:00"));
-            systemTaskList.add(new TaskList("看书一小时", 6, false, 30, 2, "10:00"));
-            systemTaskList.add(new TaskList("不乱花钱", 5, false, 30, 4, "19:00"));
-            systemTaskList.add(new TaskList("存梦想基金", 7, false, 30, 5, "20:10"));
+            systemTaskList.add(new TaskList("按时起床", 6, false, 30, 2, "07:20",1));
+            systemTaskList.add(new TaskList("记单词", 6, false, 30, 3, "08:00",2));
+            systemTaskList.add(new TaskList("看书一小时", 6, false, 30, 2, "10:00",3));
+            systemTaskList.add(new TaskList("不乱花钱", 5, false, 30, 4, "19:00",4));
+            systemTaskList.add(new TaskList("存梦想基金", 7, false, 30, 5, "20:10",5));
 
-            systemTaskList.add(new TaskList("早上空腹喝杯水", 4, false, 30, 2, "07:50"));
-            systemTaskList.add(new TaskList("晨跑", 6, false, 30, 1, "07:00"));
-            systemTaskList.add(new TaskList("吃早餐", 3, false, 30, 2, "08:10"));
-            systemTaskList.add(new TaskList("喝上5杯水", 4, false, 30, 1, "19:50"));
-            systemTaskList.add(new TaskList("按时睡觉", 6, false, 30, 1, "22:00"));
-            systemTaskList.add(new TaskList("坚持午觉", 5, false, 30, 1, "13:00"));
+            systemTaskList.add(new TaskList("早上空腹喝杯水", 4, false, 30, 2, "07:50",6));
+            systemTaskList.add(new TaskList("晨跑", 6, false, 30, 1, "07:00",7));
+            systemTaskList.add(new TaskList("吃早餐", 3, false, 30, 2, "08:10",8));
+            systemTaskList.add(new TaskList("喝上5杯水", 4, false, 30, 1, "19:50",9));
+            systemTaskList.add(new TaskList("按时睡觉", 6, false, 30, 1, "22:00",10));
+            systemTaskList.add(new TaskList("坚持午觉", 5, false, 30, 1, "13:00",11));
 
-            systemTaskList.add(new TaskList("30个俯卧撑", 4, false, 30, 5, "20:40"));
-            systemTaskList.add(new TaskList("称体重", 2, false, 30, 5, "20:00"));
-            systemTaskList.add(new TaskList("戒烟", 4, false, 30, 3, "08:15"));
-            systemTaskList.add(new TaskList("不玩游戏", 6, false, 30, 2, "09:00"));
-            systemTaskList.add(new TaskList("静下来听歌", 7, false, 30, 4, "17:05"));
+            systemTaskList.add(new TaskList("30个俯卧撑", 4, false, 30, 5, "20:40",12));
+            systemTaskList.add(new TaskList("称体重", 2, false, 30, 5, "20:00",13));
+            systemTaskList.add(new TaskList("戒烟", 4, false, 30, 3, "08:15",14));
+            systemTaskList.add(new TaskList("不玩游戏", 6, false, 30, 2, "09:00",15));
+            systemTaskList.add(new TaskList("静下来听歌", 7, false, 30, 4, "17:05",16));
 
-            systemTaskList.add(new TaskList("不说脏话", 5, false, 30, 1, "08:16"));
+            systemTaskList.add(new TaskList("不说脏话", 5, false, 30, 1, "08:16",17));
 
-            systemTaskList.add(new TaskList("拍一张照片", 8, false, 30, 4, "10:40"));
-            systemTaskList.add(new TaskList("写下今天的总结", 7, false, 30, 5, "21:30"));
-            systemTaskList.add(new TaskList("Call你想念的人", 8, false, 30, 4, "18:00"));
+            systemTaskList.add(new TaskList("拍一张照片", 8, false, 30, 4, "10:40",18));
+            systemTaskList.add(new TaskList("写下今天的总结", 7, false, 30, 5, "21:30",19));
+            systemTaskList.add(new TaskList("Call你想念的人", 8, false, 30, 4, "18:00",20));
         }
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
@@ -120,7 +120,7 @@ public class DBControl {
     /**
      * 保存添加的自定义习惯列表
      */
-    public void addCustomTask(final String name, final int expectDay, final int color, final String clockTime) {
+    public void addCustomTask(final String name, final int expectDay, final int color, final String clockTime,final int serviceNumber) {
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -132,6 +132,7 @@ public class DBControl {
                 taskList.setModify(5);
                 taskList.setTime(clockTime);
                 taskList.setStart(false);
+                taskList.setServiceNumber(serviceNumber);
                 if (c == null) {
                     CustomTask customTask = realm.createObject(CustomTask.class, "customTask");
                     customTask.getCustomTaskList().add(taskList);
@@ -278,7 +279,8 @@ public class DBControl {
      *                  最佳连续坚持次数-----去遍历所有    查询该习惯最大连续坚持次数并复制
      *                  历史坚持次数！
      */
-    public void addMyHabitTask(final String data, final String name, final int modify, final int expectDay, final String clockTime, final int colorNumber) {
+    public void addMyHabitTask(final String data, final String name, final int modify, final int expectDay,
+                               final String clockTime, final int colorNumber,final int serviceNumber) {
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -291,12 +293,14 @@ public class DBControl {
                 myIntegralList.setInsistDay(0);     //已经坚持的天数
                 myIntegralList.setColorNumber(colorNumber);     //颜色序号
                 myIntegralList.setStart(false);
+                myIntegralList.setIsClockTime(true);
+                myIntegralList.setServiceNumber(serviceNumber);
 
-                int datas[] = showHistory(name, 0);
+                int dates[] = showHistory(name, 0);
 
-                myIntegralList.setMonthFinishDegree(datas[0]);     //本月完成次数
-                myIntegralList.setOptimumDegree(datas[1]);         //最佳次数
-                myIntegralList.setDegreeOfHistory(datas[2]);   //历史次数是一直累加的
+                myIntegralList.setMonthFinishDegree(dates[0]);     //本月完成次数
+                myIntegralList.setOptimumDegree(dates[1]);         //最佳次数
+                myIntegralList.setDegreeOfHistory(dates[2]);   //历史次数是一直累加的
 
 
                 if (m == null) {
@@ -345,8 +349,10 @@ public class DBControl {
                         myIntegralList.setClockTime(m.getClockTime());
                         myIntegralList.setInsistDay(m.getInsistDay());
                         myIntegralList.setColorNumber(m.getColorNumber());
+                        myIntegralList.setIsClockTime(m.getIsClockTime());
                         myIntegralList.setOptimumDegree(m.getOptimumDegree());                  //复制了所有的  连续坚持次数
                         myIntegralList.setDegreeOfHistory(m.getDegreeOfHistory());              //复制了所有的  历史坚持次数
+                        myIntegralList.setServiceNumber(m.getServiceNumber());
                         //如果复制的数据是上一个月的数据    则将本月坚持次数归零
                         if (myHabit.getMonth() != month) {
                             myIntegralList.setMonthFinishDegree(0);
@@ -400,7 +406,6 @@ public class DBControl {
                         m.setStart(true);
                         m.setInsistDay(m.getInsistDay() + 1);
 
-                        Log.i(TAG, "onClick: amend  本月完成次数 = " + m.getMonthFinishDegree() + "历史完成次数" + m.getDegreeOfHistory());
                         m.setMonthFinishDegree(m.getMonthFinishDegree() + 1);   //本月完成次数
                         int optimumDegree = yesterdayOptimumDegreeNumber(data, name);   //最佳连续次数
                         m.setOptimumDegree(optimumDegree);
@@ -451,7 +456,7 @@ public class DBControl {
                     year = year - 1;
                     month = 12;
                 } else if (month == 3) {
-                    if ((year % 4) == 0) {
+                    if (((year % 4) == 0 && (year % 100 != 0)) || (year / 400 == 0)) {
                         oldDay = "29";
                     } else
                         oldDay = "28";
@@ -708,6 +713,11 @@ public class DBControl {
         return number;
     }
 
+    public RealmResults<MyHabitTask> showToMonth() {
+        final RealmResults<MyHabitTask> myHabitTasks = mRealm.where(MyHabitTask.class).equalTo("month", month).findAll();
+        return myHabitTasks;
+    }
+
     /**
      * 查询某习惯历史坚持次数
      * 本月坚持次数----去遍历历史查询本月最后一天  复制即可！
@@ -717,8 +727,7 @@ public class DBControl {
      * @return
      */
     public int[] showHistory(String name, int number) {
-        final RealmResults<MyHabitTask> myHabitTasks = mRealm.where(MyHabitTask.class).equalTo("month", month).findAll();
-
+        final RealmResults<MyHabitTask> myHabitTasks = showToMonth();
         final RealmResults<MyIntegralList> myHistoryIntegralLists = mRealm.where(MyIntegralList.class).equalTo("name", name).findAll();
 
         int toMonthHoldNumber = 0;
@@ -813,22 +822,9 @@ public class DBControl {
      * @param name
      * @return
      */
-
     public int showContinuousHoldNumber(String name) {
         int number = 0;
         final RealmResults<MyIntegralList> myIntegralLists = mRealm.where(MyIntegralList.class).equalTo("name", name).findAll();
-//        for (int i = 0,j = myIntegralLists.size() - 1; i < j; i++,j--) {
-//            int ii = myIntegralLists.get(i).getOptimumDegree();
-//            int jj = myIntegralLists.get(j).getOptimumDegree();
-//            if(ii > jj){
-//                if(ii > number)
-//                    number = ii;
-//            }else{
-//                if(jj > number){
-//                    number = jj;
-//                }
-//            }
-//        }
         for (MyIntegralList m : myIntegralLists) {
             if (m.getOptimumDegree() > number) {
                 number = m.getOptimumDegree();

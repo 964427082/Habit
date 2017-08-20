@@ -19,9 +19,9 @@ public class GetTime {
         year = c.get(Calendar.YEAR);
         month = c.get(Calendar.MONTH) + 1;
         day = c.get(Calendar.DAY_OF_MONTH);
-        year = 2017;
-        month = 8;
-        day = 23;
+//        year = 2017;
+//        month = 8;
+//        day = 18;
 
     }
 

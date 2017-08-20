@@ -4,18 +4,11 @@
     android:layout_height="match_parent"
     android:background="#f9f9f9">
 
-    <!--状态栏-->
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="22dp"
-        android:background="@mipmap/clander_bg_top"
-        android:layout_alignParentTop="true"/>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="58dp"
         android:background="#ffffff"
-        android:id="@+id/relativeLayout"
-        android:layout_marginTop="22dp">
+        android:id="@+id/relativeLayout">
 
         <TextView
             android:layout_width="wrap_content"
@@ -36,13 +29,11 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/relativeLayout1"
         android:layout_width="wrap_content"
         android:layout_height="136dp"
         android:background="@mipmap/card_1_bg"
         android:layout_below="@+id/relativeLayout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp">
+        android:layout_alignEnd="@+id/relativeLayout2">
 
         <!--//该图标需要自动去匹配！-->
         <!--<f3.nsu.com.habit.ui.DrawCircle-->
@@ -162,10 +153,9 @@
         android:layout_width="350dp"
         android:layout_height="149dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="207dp"
         android:background="@mipmap/card_2_bg"
-        android:id="@+id/relativeLayout2"
-        android:layout_below="@id/relativeLayout1"
-        android:layout_marginTop="10dp">
+        android:id="@+id/relativeLayout2">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -195,7 +185,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="295dp"
-            android:layout_marginTop="119.18dp"
+            android:layout_marginTop="119.10dp"
             android:src="@mipmap/icon_arrow" />
 
         <TextView
@@ -213,9 +203,8 @@
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:background="@mipmap/card_3_bg"
-        android:layout_below="@id/relativeLayout2">
+        android:layout_marginTop="364dp"
+        android:background="@mipmap/card_3_bg">
 
         <ImageView
             android:layout_width="wrap_content"

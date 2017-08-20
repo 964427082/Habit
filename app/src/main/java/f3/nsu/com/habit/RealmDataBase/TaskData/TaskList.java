@@ -15,17 +15,20 @@ public class TaskList extends RealmObject {
     private int expectDay;      //系统给定的预定天数
     private int colorNumber;    //颜色序号
     private String time;        //提醒时间
+    private int serviceNumber;  //服务序号
 
     public TaskList() {
     }
 
-    public TaskList(String name, int modify, boolean isStart,int expectDay,int colorNumber,String time) {
+    public TaskList(String name, int modify, boolean isStart,int expectDay,
+                    int colorNumber,String time,int serviceNumber) {
         this.name = name;
         this.modify = modify;
         this.isStart = isStart;
         this.expectDay = expectDay;
         this.colorNumber = colorNumber;
         this.time = time;
+        this.serviceNumber = serviceNumber;
     }
 
     public String getName() {
@@ -82,5 +85,13 @@ public class TaskList extends RealmObject {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public int getServiceNumber() {
+        return serviceNumber;
+    }
+
+    public void setServiceNumber(int serviceNumber) {
+        this.serviceNumber = serviceNumber;
     }
 }

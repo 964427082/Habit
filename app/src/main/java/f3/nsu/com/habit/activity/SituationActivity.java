@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,8 +22,11 @@ import butterknife.OnClick;
 import f3.nsu.com.habit.GetTime.GetTime;
 import f3.nsu.com.habit.R;
 import f3.nsu.com.habit.RealmDataBase.DBControl;
+import f3.nsu.com.habit.RealmDataBase.TaskData.MyHabitTask;
+import f3.nsu.com.habit.RealmDataBase.TaskData.MyIntegralList;
 import f3.nsu.com.habit.ui.Histogram;
 import f3.nsu.com.habit.ui.NewMonthDateView;
+import io.realm.RealmResults;
 
 /**
  * Created by zhy on 2017/7/12.
@@ -49,12 +54,14 @@ public class SituationActivity extends Activity {
     @BindView(R.id.list_view_color_button)
     Button listViewColorButton;
 
-    private float[] habitData = new float[]{35, 52, 78, 23};
     private int month = new GetTime().getMonth();
+    private int year = new GetTime().getYear();
     private int number = 1;
-    private String  name;
+    private String name;
     private Context context = this;
     private List<Integer> list = new ArrayList<>();
+    private PopupWindow mPopupWindow;
+    private int oneNumber = 0, towNumber = 0, threeNumber = 0, fourNumber = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,11 +74,12 @@ public class SituationActivity extends Activity {
 
     private void init() {
         Intent intent = getIntent();
-        name = intent.getAction();
-        number = intent.getFlags();
+        Bundle bu = intent.getExtras();
+        name = bu.getString("name");
+        number = bu.getInt("colorNumber");
         setColor(number);
         completeTag(name);
-        int datas[] = DBControl.createRealm(context).showHistory(name,1);
+        int datas[] = DBControl.createRealm(context).showHistory(name, 1);
         int continuousHoldNumber = DBControl.createRealm(this).showContinuousHoldNumber(name);
         listViewMonthCalendar.setText(month + "月习惯日历");
         listViewHabitName.setText(name);
@@ -79,13 +87,126 @@ public class SituationActivity extends Activity {
         listViewContinuousHoldNumber.setText(continuousHoldNumber + "");    //最佳连续坚持次数
         listViewHistoryHoldNumber.setText(datas[2] + "");      //历史坚持次数
 
-
         //设置柱状图的值
-        listViewHistogram.setHabitData(habitData);
+        listViewHistogram.setHabitData(showToMonthNumbers(name));
+        listViewHistogram.setOnChartClickListener(new Histogram.OnChartClickListener() {
+            @Override
+            public void onClick(int num, float x, float y, float value) {
+                //显示提示窗
+                View inflate = View.inflate(SituationActivity.this,R.layout.popupwindow,null);
+                TextView text = (TextView) inflate.findViewById(R.id.popup_window_text);
+
+                text.setText(value + "%\n" + showNumber(num) + "次");
+                if(mPopupWindow != null){
+                    mPopupWindow.dismiss();
+                }
+                mPopupWindow = new PopupWindow(inflate,150,100,true);
+                mPopupWindow.setTouchable(true);
+
+                mPopupWindow.showAsDropDown(listViewHistogram, (int) (x - 240),
+                        (int)((- listViewHistogram.getHeight()) + y - 105));
+//                mPopupWindow.setBackgroundDrawable(getResources().getDrawable(R.mipmap.card_2_bg));
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPopupWindow.dismiss();
+                    }
+                },3000);
+            }
+        });
+    }
+
+    //返回该周完成次数
+    private int showNumber(int num) {
+        switch (num){
+            case 1:
+                return oneNumber;
+            case 2:
+                return towNumber;
+            case 3:
+                return threeNumber;
+            case 4:
+                return fourNumber;
+            default:
+                return 0;
+        }
+    }
+
+    //查询柱状图的值
+    private float[] showToMonthNumbers(String name) {
+        RealmResults<MyHabitTask> myHabitTasks = DBControl.createRealm(context).showToMonth();
+        for (MyHabitTask mt : myHabitTasks) {
+            List<MyIntegralList> myIntegralLists = mt.getMyIntegralList();
+            for (MyIntegralList ml : myIntegralLists) {
+                if (ml.getName().equals(name)) {
+                    if (ml.isStart()) {
+                        int day = Integer.valueOf(mt.getData().substring(6, 8));
+                        if (day <= 7)
+                            oneNumber++;
+                        else if (day <= 14)
+                            towNumber++;
+                        else if (day <= 21)
+                            threeNumber++;
+                        else
+                            fourNumber++;
+                    }
+                }
+            }
+        }
+        double cardinal = 0;
+        if (month == 2) {
+            if (((year % 4) == 0 && (year % 100 != 0)) || (year / 400 == 0))
+                cardinal = 8;
+            else
+                cardinal = 7;
+        } else if (month == 4 || month == 6 || month == 9 || month == 11) {
+            cardinal = 9;
+        } else
+            cardinal = 10;
+
+        int intFour = (int) (fourNumber / cardinal * 1000);
+        int number1 = intFour / 10;
+        int small = intFour % 10;
+        if (small > 3) {
+            number1 = number1 + 1;
+        }
+        float[] habitData = {returnNumber(oneNumber), returnNumber(towNumber),
+                returnNumber(threeNumber), number1};
+        return habitData;
+    }
+
+    private float returnNumber(int oneNumber) {
+        switch (oneNumber) {
+            case 1: {
+                return (float) 14.29;
+
+            }
+            case 2: {
+                return (float) 28.57;
+            }
+            case 3: {
+                return (float) 42.86;
+            }
+            case 4: {
+                return (float) 57.14;
+            }
+            case 5: {
+                return (float) 71.43;
+            }
+            case 6: {
+                return (float) 85.71;
+            }
+            case 7: {
+                return 100;
+            }
+            default: {
+                return 0;
+            }
+        }
     }
 
     private void setColor(int number) {
-        switch (number){
+        switch (number) {
             case 1:
                 listViewColorButton.setBackgroundResource(R.drawable.round_button_color1);
                 break;

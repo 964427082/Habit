@@ -3,11 +3,14 @@ package f3.nsu.com.habit.Adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,6 +24,7 @@ import f3.nsu.com.habit.R;
 import f3.nsu.com.habit.RealmDataBase.DBControl;
 import f3.nsu.com.habit.RealmDataBase.TaskData.MyIntegralList;
 import f3.nsu.com.habit.activity.SituationActivity;
+import f3.nsu.com.habit.service.ClockTimeService;
 import f3.nsu.com.habit.ui.HabitList;
 
 /**
@@ -61,6 +65,17 @@ public class HabitAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        final int po = position;
+//        if (convertView != null) {
+//            convertView.setOnLongClickListener(new View.OnLongClickListener() {
+//                @Override
+//                public boolean onLongClick(View v) {
+//                    //ListView  的长按点击事件
+//                    Log.i(TAG, "onItemLongClick: po = " + po);
+//                    return true;
+//                }
+//            });
+//        }
         ViewHolder viewHolder = null;
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.habit_listitem, parent, false);
@@ -72,6 +87,8 @@ public class HabitAdapter extends BaseAdapter {
             viewHolder.completeButton = (Button) convertView.findViewById(R.id.complete_button);
             viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.progressBar);
             viewHolder.colorButton = (Button) convertView.findViewById(R.id.color_button);
+
+            viewHolder.clockImageView = (ImageView) convertView.findViewById(R.id.clock_image_view);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -94,6 +111,12 @@ public class HabitAdapter extends BaseAdapter {
             default:
                 break;
         }
+        //是否设置闹钟
+        if (habitDate.get(position).getIsClockTime()) {
+            viewHolder.clockImageView.setImageResource(R.mipmap.icon_clock);
+        } else {
+            //更换一张图片
+        }
         String date = new GetTime().getData();
         String name = habitDate.get(position).getHabitName();
         if (habitDate.get(position).getComplete() || isCheck[position]) {
@@ -101,8 +124,10 @@ public class HabitAdapter extends BaseAdapter {
         } else {
             int goalDay = habitDate.get(position).getGoalDay();
             int completeDay = habitDate.get(position).getCompleteDay();
+            String clockTime = habitDate.get(position).getHabitTime();
+            int serviceNumber = habitDate.get(position).getServiceNumber();
             viewHolder.completeButton.setOnClickListener(new ListButtonListener(position, mContext, viewHolder.completeButton,
-                    date, name, habitDate.get(position).getModify(), goalDay, completeDay));
+                    date, name, habitDate.get(position).getModify(), goalDay, completeDay, clockTime,serviceNumber));
             viewHolder.completeButton.setBackgroundResource(R.drawable.icon_right_default);
         }
         habitDate.get(position).getColorNumber();
@@ -112,6 +137,14 @@ public class HabitAdapter extends BaseAdapter {
         viewHolder.timeText.setText(habitDate.get(position).getHabitTime());
         viewHolder.dayText.setText(habitDate.get(position).getGoalDay() + "天/" + habitDate.get(position).getCompleteDay() + "天");
         viewHolder.listViewRelativeLayout.setOnClickListener(new ListViewItem(position));
+        
+        convertView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                    //ListView  的长按点击事件
+                return true;
+            }
+        });
         return convertView;
     }
 
@@ -123,6 +156,7 @@ public class HabitAdapter extends BaseAdapter {
         private ProgressBar progressBar;
         private Button colorButton;
         private RelativeLayout listViewRelativeLayout;
+        private ImageView clockImageView;
         private int modify; //积分
     }
 
@@ -136,9 +170,12 @@ public class HabitAdapter extends BaseAdapter {
         int modify;
         int goalDay;
         int completeDay;
+        String clockTime;
+        int serviceNumber;
 
 
-        public ListButtonListener(int position, Context context, Button button, String date, String name, int modify, int goalDay, int completeDay) {
+        public ListButtonListener(int position, Context context, Button button, String date, String name, int modify,
+                                  int goalDay, int completeDay, String clockTime,int serviceNumber) {
             this.mPosition = position;
             this.mContext = context;
             this.button1 = button;
@@ -147,10 +184,13 @@ public class HabitAdapter extends BaseAdapter {
             this.modify = modify;
             this.goalDay = goalDay;
             this.completeDay = completeDay;
+            this.clockTime = clockTime;
+            this.serviceNumber = serviceNumber;
         }
 
         @Override
         public void onClick(View v) {
+
             List<MyIntegralList> myIntegralList = DBControl.createRealm(mContext).amendProgress(date);
             boolean is = false;
             for (MyIntegralList m : myIntegralList) {
@@ -164,13 +204,26 @@ public class HabitAdapter extends BaseAdapter {
                 if (i == completeDay) {
                     Toast.makeText(mContext, "恭喜您，坚持完成了“" + name + "”该项，共计" + completeDay + "天", Toast.LENGTH_SHORT).show();
                     habitDate.get(mPosition).setGoalDay(goalDay + 1);
-                    amendMyHabitIsStart(date,name,modify);
+                    amendMyHabitIsStart(date, name, modify);
                     //添加后删除该项任务
                 } else {
                     Toast.makeText(mContext, "您完成了" + name + "此项任务！", Toast.LENGTH_SHORT).show();
                     habitDate.get(mPosition).setGoalDay(goalDay + 1);
                     amendMyHabitIsStart(date, name, modify);
                 }
+
+                Log.i(TAG, "ClockTimeService: 开启服务");
+                Intent intent = new Intent(mContext, ClockTimeService.class);
+//                Intent intent = new Intent("f3.nsu.com.habit.service.ClockTimeService");
+                Bundle bundle = new Bundle();
+                bundle.putString("name", name);
+                bundle.putString("clockTime", clockTime);
+                bundle.putBoolean("isClockTime", false);
+                bundle.putInt("number",serviceNumber);
+                intent.putExtras(bundle);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mContext.startService(intent);
+
             }
             isCheck[mPosition] = true;
             notifyDataSetChanged();
@@ -196,11 +249,16 @@ public class HabitAdapter extends BaseAdapter {
 
         @Override
         public void onClick(View v) {
+            Log.i(TAG, "onItemLongClick: 单点击事件");
             Activity ac = (Activity) mContext;
+            Bundle bu = new Bundle();
+            bu.putString("name", habitDate.get(position).getHabitName());
+            bu.putInt("colorNumber", habitDate.get(position).getColorNumber());
             Intent intent = new Intent(ac, SituationActivity.class);
-            intent.setAction(habitDate.get(position).getHabitName());
-            intent.setFlags(habitDate.get(position).getColorNumber());
+            intent.putExtras(bu);
             ac.startActivity(intent);
         }
     }
+
+
 }

@@ -29,17 +29,17 @@ public class FistPushClass {
 
 
     public List<TaskList> showMyFistPush() {
-        fistPushList.add(new TaskList("联系亲朋好友",4,false,100,1,"20:00"));
-        fistPushList.add(new TaskList("每天坚持读书",5,false,100,2,"12:00"));
-        fistPushList.add(new TaskList("清洁整理房间",4,false,100,4,"08:30"));
-        fistPushList.add(new TaskList("每天写一篇日记",5,false,100,5,"19:00"));
-        fistPushList.add(new TaskList("睡前回顾当天",4,false,100,3,"22:00"));
+        fistPushList.add(new TaskList("联系亲朋好友",4,false,100,1,"20:00",21));
+        fistPushList.add(new TaskList("每天坚持读书",5,false,100,2,"12:00",22));
+        fistPushList.add(new TaskList("清洁整理房间",4,false,100,4,"08:30",23));
+        fistPushList.add(new TaskList("每天写一篇日记",5,false,100,5,"19:00",24));
+        fistPushList.add(new TaskList("睡前回顾当天",4,false,100,3,"22:00",25));
         return fistPushList;
     }
 
     private void addMyFistPushToMyHabitTask(List<TaskList> fpl) {
         for(TaskList t : fpl){
-            DBControl.createRealm(context).addMyHabitTask(data,t.getName(),t.getModify(),t.getExpectDay(),t.getTime(),t.getColorNumber());
+            DBControl.createRealm(context).addMyHabitTask(data,t.getName(),t.getModify(),t.getExpectDay(),t.getTime(),t.getColorNumber(),t.getServiceNumber());
         }
     }
 }

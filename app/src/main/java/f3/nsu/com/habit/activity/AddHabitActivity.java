@@ -38,13 +38,14 @@ public class AddHabitActivity extends FragmentActivity implements View.OnClickLi
     private RadioButton radioButton1, radioButton2, radioButton3, radioButton4, radioButton5;//五个颜色单选按钮
     private ImageButton returnImgBtn, completeImgBtn;
     private Context context = this;
-    private List<TaskList> systemList = DBControl.createRealm(this).showSystemTask();
-    private List<TaskList> customList = DBControl.createRealm(this).showCustomTask();
+    private List<TaskList> systemList = DBControl.createRealm(this).showSystemTask();       //系统习惯
+    private List<TaskList> customList = DBControl.createRealm(this).showCustomTask();       //自定义习惯
     private int colorNumber = 1;
     private boolean is = false;
     private String data = new GetTime().getData();
     private NumberPicker hour_numberPicker;
     private NumberPicker seconds_numberPicker;
+    private int serviceNumber = 0;
 
 
     @Override
@@ -146,6 +147,11 @@ public class AddHabitActivity extends FragmentActivity implements View.OnClickLi
             case R.id.complete_img_btn:
                 is = isComplete();
                 if (is == true) {
+                    if(customList.size() != 0){
+                        serviceNumber = customList.get(customList.size() - 1).getServiceNumber();
+                    }else
+                        serviceNumber = 21;
+                    Log.i(TAG, "onClick: serviceNumber = " + serviceNumber);
                     String name = nameEditText.getText().toString();
                     int integer = Integer.valueOf(dayEditText.getText().toString());
                     int h = hour_numberPicker.getValue();
@@ -162,7 +168,7 @@ public class AddHabitActivity extends FragmentActivity implements View.OnClickLi
                         else
                             time = h + ":" + s;
                     }
-                    DBControl.createRealm(context).addCustomTask(name, integer, colorNumber, time);
+                    DBControl.createRealm(context).addCustomTask(name, integer, colorNumber, time,serviceNumber);
                     startActivity(new Intent(AddHabitActivity.this, MyAddHabitActivity.class));
                     finish();
                 }

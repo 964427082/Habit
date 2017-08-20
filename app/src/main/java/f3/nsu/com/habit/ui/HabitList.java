@@ -14,11 +14,14 @@ public class HabitList {
     private boolean isComplete; //当天是否完成标记
     private int modify;     //该习惯的积分
     private int colorNumber;    //颜色序号
+    private boolean isClockTime;
+    private int serviceNumber;  //服务序号
 
     public HabitList() {
     }
 
-    public HabitList(String HabitName, String HabitTime, int goalDay, int completeDay, boolean isComplete,int modify,int colorNumber) {
+    public HabitList(String HabitName, String HabitTime, int goalDay, int completeDay, boolean isComplete,
+                     int modify,int colorNumber,boolean isClockTime,int serviceNumber) {
         this.HabitName = HabitName;
         this.HabitTime = HabitTime;
         this.modify = modify;
@@ -26,6 +29,8 @@ public class HabitList {
         this.completeDay = completeDay;
         this.isComplete = isComplete;
         this.colorNumber = colorNumber;
+        this.isClockTime = isClockTime;
+        this.serviceNumber = serviceNumber;
     }
 
     public void setHabitName(String HabitName) {
@@ -82,5 +87,21 @@ public class HabitList {
 
     public void setColorNumber(int colorNumber) {
         this.colorNumber = colorNumber;
+    }
+
+    public boolean getIsClockTime() {
+        return isClockTime;
+    }
+
+    public void setClockTime(boolean clockTime) {
+        isClockTime = clockTime;
+    }
+
+    public int getServiceNumber() {
+        return serviceNumber;
+    }
+
+    public void setServiceNumber(int serviceNumber) {
+        this.serviceNumber = serviceNumber;
     }
 }
