@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="288dp"
+    android:layout_height="204dp"
+    android:background="#f9f9f9">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="7dp"
+        android:text="编辑"
+        android:textColor="#262626"
+        android:textSize="21sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="13dp"
+        android:layout_marginTop="41dp"
+        android:text="习惯名称"
+        android:textColor="#333333"
+        android:textSize="14sp" />
+
+    <EditText
+        android:layout_width="252dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="13dp"
+        android:layout_marginTop="60dp"
+        android:hint="请输入习惯新名字"
+        android:maxLength="10"
+        android:text="原来的习惯名字"
+        android:textColor="#555555"
+        android:textCursorDrawable="@drawable/color_cursor"
+        android:textSize="12sp"
+        android:theme="@style/MyEditText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="13dp"
+        android:layout_marginTop="100dp"
+        android:text="闹钟提醒"
+        android:textColor="#555555"
+        android:textSize="14sp" />
+
+    <Switch
+        android:id="@+id/clock_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="222dp"
+        android:layout_marginTop="100dp"
+        android:switchMinWidth="20dp"
+        android:textOff="  "
+        android:textOn="  "
+        android:thumb="@drawable/thumb"
+        android:track="@drawable/track" />
+    <!--<view-->
+    <!--android:layout_width="279dp"-->
+    <!--android:layout_height="1dp"-->
+    <!--android:background="#979797"-->
+    <!--android:layout_marginTop="158dp"-->
+    <!--android:layout_centerHorizontal="true"/>-->
+    <!--<view-->
+    <!--android:layout_width="1dp"-->
+    <!--android:layout_height="30dp"-->
+    <!--android:background="#979797"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_marginTop="165dp"/>-->
+    <RelativeLayout
+        android:layout_width="279dp"
+        android:layout_height="1dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="158dp"
+        android:background="#979797" />
+
+    <RelativeLayout
+        android:layout_width="1dp"
+        android:layout_height="30dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="165dp"
+        android:background="#979797" />
+
+    <Button
+        android:id="@+id/cancel_button"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="22dp"
+        android:layout_marginTop="155dp"
+        android:background="@null"
+        android:text="取消"
+        android:textColor="#363636"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/complete_button"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="170dp"
+        android:layout_marginTop="155dp"
+        android:background="@null"
+        android:text="完成"
+        android:textColor="#4aa0eb"
+        android:textSize="18sp" />
+
+</RelativeLayout>

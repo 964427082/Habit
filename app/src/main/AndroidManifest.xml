@@ -35,6 +35,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.FirstRunActivity"
+            android:theme="@style/TranslucentTheme"/>
 
         <service
             android:name=".service.ClockTimeService"

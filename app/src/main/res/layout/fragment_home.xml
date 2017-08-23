@@ -9,8 +9,8 @@
         android:id="@+id/tab_relative"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="22dp"
-        android:background="@mipmap/clander_bg_top">
+        android:layout_marginTop="25dp"
+        android:background="#47b8e7">
         <ImageButton
             android:id="@+id/calendar_ImageButton"
             android:layout_width="wrap_content"
@@ -18,7 +18,10 @@
             android:src="@mipmap/icon_icon_calendar"
             android:layout_centerVertical="true"
             android:background="@null"
-            android:layout_marginLeft="17dp"/>
+            android:paddingLeft="17dp"
+            android:paddingRight="15dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -33,7 +36,10 @@
             android:src="@mipmap/icon_insert"
             android:background="@null"
             android:layout_centerVertical="true"
-            android:layout_marginRight="21dp"
+            android:paddingRight="21dp"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            android:paddingLeft="15dp"
             android:layout_alignParentRight="true"/>
 
     </RelativeLayout>
@@ -42,7 +48,7 @@
         android:id="@+id/expandLayout"
         android:layout_width="match_parent"
         android:layout_height="139dp"
-        android:background="@mipmap/clander_bg"
+        android:background="@drawable/calendar_bg"
         android:layout_below="@id/tab_relative">
         <RelativeLayout
             android:layout_width="80dp"

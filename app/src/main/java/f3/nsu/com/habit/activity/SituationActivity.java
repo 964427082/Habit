@@ -6,12 +6,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +67,12 @@ public class SituationActivity extends Activity {
     private List<Integer> list = new ArrayList<>();
     private PopupWindow mPopupWindow;
     private int oneNumber = 0, towNumber = 0, threeNumber = 0, fourNumber = 0;
+    private AlertDialog.Builder builder = null;
+    private AlertDialog alert = null;
+    private View builderView;
+    private Context mContext;
+    private Button cancelButton,completeButton;
+    private Switch clockSwitch;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -235,6 +246,7 @@ public class SituationActivity extends Activity {
 
     @OnClick({R.id.list_view_return_imageButton, R.id.list_view_image_edit})
     public void onViewClicked(View view) {
+
         switch (view.getId()) {
             //返回按钮
             case R.id.list_view_return_imageButton:
@@ -242,7 +254,50 @@ public class SituationActivity extends Activity {
                 break;
             //编辑按钮
             case R.id.list_view_image_edit:
+                showEditDialog();
+                alert.show();
+                break;
+            default:
                 break;
         }
     }
+
+    private void showEditDialog() {
+        mContext = SituationActivity.this;
+        builder = new AlertDialog.Builder(mContext);
+        final LayoutInflater inflater = SituationActivity.this.getLayoutInflater();
+        builderView = inflater.inflate(R.layout.alertdialog_edit,null);
+        builder.setView(builderView);
+        builder.setCancelable(false);
+        alert = builder.create();
+        cancelButton = (Button) builderView.findViewById(R.id.cancel_button);
+        completeButton = (Button) builderView.findViewById(R.id.complete_button);
+        clockSwitch = (Switch) builderView.findViewById(R.id.clock_switch);
+        clockSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    Toast.makeText(mContext,"您开启了闹钟提醒！",Toast.LENGTH_LONG).show();
+                }else {
+                    Toast.makeText(mContext,"您关闭了闹钟提醒！",Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mContext,"您点击了取消!", Toast.LENGTH_LONG).show();
+                alert.dismiss();
+            }
+        });
+        completeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mContext,"您点击了完成！",Toast.LENGTH_LONG).show();
+                alert.dismiss();
+            }
+        });
+
+    }
+
 }
