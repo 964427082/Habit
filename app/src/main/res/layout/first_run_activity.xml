@@ -21,6 +21,7 @@
         android:layout_marginTop="109dp"
         android:layout_centerHorizontal="true">
 
+
     </f3.nsu.com.habit.ui.CarouselViewPager>
     <Button
         android:id="@+id/choose_button"

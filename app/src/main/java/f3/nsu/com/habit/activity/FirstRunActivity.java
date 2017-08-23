@@ -38,6 +38,8 @@ public class FirstRunActivity extends Activity implements View.OnClickListener{
         chooseButton.setOnClickListener(this);
         unChooseButton.setOnClickListener(this);
 
+
+
         adapter = new ImagePagerAdapter(this, viewPager);
         viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(adapter);

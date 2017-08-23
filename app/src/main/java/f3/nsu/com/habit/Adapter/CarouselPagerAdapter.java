@@ -30,6 +30,8 @@ public abstract class CarouselPagerAdapter<V extends CarouselViewPager> extends 
     @IntRange(from = 0)
     public abstract int getRealDataCount();
 
+
+
     @Override
     public final int getCount() {
         long realDataCount = getRealDataCount();

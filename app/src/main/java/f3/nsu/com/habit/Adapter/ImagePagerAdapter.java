@@ -13,6 +13,8 @@ import f3.nsu.com.habit.ui.CarouselViewPager;
  * 继承自CarouselPagerAdapter，并使用
  */
 
+
+
 public class ImagePagerAdapter extends CarouselPagerAdapter<CarouselViewPager> {
 
     public ImagePagerAdapter(Context context, CarouselViewPager viewPager) {

@@ -5,6 +5,7 @@
     <!-- 圆角弧度 20 -->
     <corners android:radius="8dp"/>
     <!-- 变化率 -->
+
     <gradient
         android:endColor="#54ADF1"
         android:startColor="#54ADF1" />

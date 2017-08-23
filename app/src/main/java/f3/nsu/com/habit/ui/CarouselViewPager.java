@@ -15,6 +15,8 @@ public class CarouselViewPager extends ViewPager {
      */
     private boolean hasData;
 
+
+
     public CarouselViewPager(Context context) {
         super(context);
     }
