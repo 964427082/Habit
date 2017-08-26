@@ -14,6 +14,7 @@ public class TaskList extends RealmObject {
     private boolean isStart;    //判断是否完成的标志
     private int expectDay;      //系统给定的预定天数
     private int colorNumber;    //颜色序号
+    private boolean isClockTime;    //是否打开提醒时间
     private String time;        //提醒时间
     private int serviceNumber;  //服务序号
 
@@ -21,7 +22,7 @@ public class TaskList extends RealmObject {
     }
 
     public TaskList(String name, int modify, boolean isStart,int expectDay,
-                    int colorNumber,String time,int serviceNumber) {
+                    int colorNumber,String time,int serviceNumber,boolean isClockTime) {
         this.name = name;
         this.modify = modify;
         this.isStart = isStart;
@@ -93,5 +94,13 @@ public class TaskList extends RealmObject {
 
     public void setServiceNumber(int serviceNumber) {
         this.serviceNumber = serviceNumber;
+    }
+
+    public boolean isClockTime() {
+        return isClockTime;
+    }
+
+    public void setClockTime(boolean clockTime) {
+        isClockTime = clockTime;
     }
 }

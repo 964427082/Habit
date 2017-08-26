@@ -9,8 +9,8 @@
     <!--状态栏-->
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="25dp"
-        android:background="#57a0d2"
+        android:layout_height="22dp"
+        android:background="@mipmap/clander_bg_top"
         android:layout_alignParentTop="true"/>
     <!--底部导航栏-->
     <LinearLayout
@@ -30,12 +30,14 @@
         </RelativeLayout>
         <RelativeLayout style="@style/BottomBar">
             <ImageButton
-                android:id="@+id/button_pet"
                 style="@style/BottomBarImgBtn"
+                android:id="@+id/button_pet"
                 android:background="@drawable/button_pet_state"
-                android:padding="10dp" />
+                android:padding="10dp"/>
         </RelativeLayout>
+
         <RelativeLayout style="@style/BottomBar">
+
             <ImageButton
                 android:id="@+id/button_personal"
                 style="@style/BottomBarImgBtn"
@@ -78,12 +80,11 @@
             android:layout_height="match_parent">
 
         </fragment>
-
         <fragment
             android:id="@+id/fragment_add_reward"
-            android:name="f3.nsu.com.habit.fragment.AddRewardFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:name="f3.nsu.com.habit.fragment.AddRewardFragment">
 
         </fragment>
 

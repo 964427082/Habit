@@ -13,15 +13,20 @@ public class GetTime {
     private int year;
     private int month;
     private int day;
+    private int nowHour;
+    private int nowMinute;
 
     public GetTime() {
         Calendar c = Calendar.getInstance();
         year = c.get(Calendar.YEAR);
         month = c.get(Calendar.MONTH) + 1;
         day = c.get(Calendar.DAY_OF_MONTH);
+        nowHour = c.get(Calendar.HOUR_OF_DAY);
+        nowMinute = c.get(Calendar.MINUTE);
+
 //        year = 2017;
-//        month = 8;
-//        day = 18;
+//        month = 9;
+//        day = 1;
 
     }
 
@@ -73,6 +78,14 @@ public class GetTime {
 
     public int getDay() {
         return day;
+    }
+
+    public int getNowHour() {
+        return nowHour;
+    }
+
+    public int getNowMinute() {
+        return nowMinute;
     }
 }
 

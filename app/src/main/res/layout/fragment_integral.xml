@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@mipmap/blue_card"
-        android:layout_marginTop="25dp">
+        android:layout_marginTop="22dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -25,11 +25,9 @@
             android:layout_height="wrap_content"
             android:src="@mipmap/icon_insert"
             android:background="@null"
+            android:layout_marginTop="21dp"
             android:layout_alignParentRight="true"
-            android:paddingRight="17dp"
-            android:paddingTop="23dp"
-            android:paddingLeft="15dp"
-            android:paddingBottom="15dp"/>
+            android:layout_marginRight="17dp"/>
         <TextView
             android:id="@+id/my_integral_textView"
             android:layout_width="wrap_content"

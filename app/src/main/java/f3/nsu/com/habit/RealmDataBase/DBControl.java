@@ -65,30 +65,30 @@ public class DBControl {
         RealmList<TaskList> systemTaskList = st.getSystemTaskList();
         if (MainActivity.firstIn) {
             Log.i("add", "SystemTask: ");
-            systemTaskList.add(new TaskList("按时起床", 6, false, 30, 2, "07:20",1));
-            systemTaskList.add(new TaskList("记单词", 6, false, 30, 3, "08:00",2));
-            systemTaskList.add(new TaskList("看书一小时", 6, false, 30, 2, "10:00",3));
-            systemTaskList.add(new TaskList("不乱花钱", 5, false, 30, 4, "19:00",4));
-            systemTaskList.add(new TaskList("存梦想基金", 7, false, 30, 5, "20:10",5));
+            systemTaskList.add(new TaskList("按时起床", 6, false, 30, 2, "07:20", 1, false));
+            systemTaskList.add(new TaskList("记单词", 6, false, 30, 3, "08:00", 2, false));
+            systemTaskList.add(new TaskList("看书一小时", 6, false, 30, 2, "10:00", 3, false));
+            systemTaskList.add(new TaskList("不乱花钱", 5, false, 30, 4, "19:00", 4, false));
+            systemTaskList.add(new TaskList("存梦想基金", 7, false, 30, 5, "20:10", 5, false));
 
-            systemTaskList.add(new TaskList("早上空腹喝杯水", 4, false, 30, 2, "07:50",6));
-            systemTaskList.add(new TaskList("晨跑", 6, false, 30, 1, "07:00",7));
-            systemTaskList.add(new TaskList("吃早餐", 3, false, 30, 2, "08:10",8));
-            systemTaskList.add(new TaskList("喝上5杯水", 4, false, 30, 1, "19:50",9));
-            systemTaskList.add(new TaskList("按时睡觉", 6, false, 30, 1, "22:00",10));
-            systemTaskList.add(new TaskList("坚持午觉", 5, false, 30, 1, "13:00",11));
+            systemTaskList.add(new TaskList("早上空腹喝杯水", 4, false, 30, 2, "07:50", 6, false));
+            systemTaskList.add(new TaskList("晨跑", 6, false, 30, 1, "07:00", 7, false));
+            systemTaskList.add(new TaskList("吃早餐", 3, false, 30, 2, "08:10", 8, false));
+            systemTaskList.add(new TaskList("喝上5杯水", 4, false, 30, 1, "19:50", 9, false));
+            systemTaskList.add(new TaskList("按时睡觉", 6, false, 30, 1, "22:00", 10, false));
+            systemTaskList.add(new TaskList("坚持午觉", 5, false, 30, 1, "13:00", 11, false));
 
-            systemTaskList.add(new TaskList("30个俯卧撑", 4, false, 30, 5, "20:40",12));
-            systemTaskList.add(new TaskList("称体重", 2, false, 30, 5, "20:00",13));
-            systemTaskList.add(new TaskList("戒烟", 4, false, 30, 3, "08:15",14));
-            systemTaskList.add(new TaskList("不玩游戏", 6, false, 30, 2, "09:00",15));
-            systemTaskList.add(new TaskList("静下来听歌", 7, false, 30, 4, "17:05",16));
+            systemTaskList.add(new TaskList("30个俯卧撑", 4, false, 30, 5, "20:40", 12, false));
+            systemTaskList.add(new TaskList("称体重", 2, false, 30, 5, "20:00", 13, false));
+            systemTaskList.add(new TaskList("戒烟", 4, false, 30, 3, "08:15", 14, false));
+            systemTaskList.add(new TaskList("不玩游戏", 6, false, 30, 2, "09:00", 15, false));
+            systemTaskList.add(new TaskList("静下来听歌", 7, false, 30, 4, "17:05", 16, false));
 
-            systemTaskList.add(new TaskList("不说脏话", 5, false, 30, 1, "08:16",17));
+            systemTaskList.add(new TaskList("不说脏话", 5, false, 30, 1, "08:16", 17, false));
 
-            systemTaskList.add(new TaskList("拍一张照片", 8, false, 30, 4, "10:40",18));
-            systemTaskList.add(new TaskList("写下今天的总结", 7, false, 30, 5, "21:30",19));
-            systemTaskList.add(new TaskList("Call你想念的人", 8, false, 30, 4, "18:00",20));
+            systemTaskList.add(new TaskList("拍一张照片", 8, false, 30, 4, "10:40", 18, false));
+            systemTaskList.add(new TaskList("写下今天的总结", 7, false, 30, 5, "21:30", 19, false));
+            systemTaskList.add(new TaskList("Call你想念的人", 8, false, 30, 4, "18:00", 20, false));
         }
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
@@ -120,7 +120,7 @@ public class DBControl {
     /**
      * 保存添加的自定义习惯列表
      */
-    public void addCustomTask(final String name, final int expectDay, final int color, final String clockTime,final int serviceNumber) {
+    public void addCustomTask(final String name, final int expectDay, final int color, final String clockTime, final int serviceNumber) {
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -209,6 +209,27 @@ public class DBControl {
         });
     }
 
+    /**
+     * 更改我的习惯是否开启通知服务（闹钟）
+     *
+     * @param name
+     * @param isClockTime
+     */
+    public void amendMyHabitIsStartService(final String name, final boolean isClockTime) {
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                MyHabitTask myHabitTask = mRealm.where(MyHabitTask.class).equalTo("data", data).findFirst();
+                List<MyIntegralList> myIntegralList = myHabitTask.getMyIntegralList();
+                for (int i = 0; i < myIntegralList.size(); i++) {
+                    if (myIntegralList.get(i).getName().equals(name)) {
+                        myIntegralList.get(i).setIsClockTime(isClockTime);
+                    }
+                }
+
+            }
+        });
+    }
 
     /**
      * 更改我的习惯坚持天数
@@ -280,7 +301,7 @@ public class DBControl {
      *                  历史坚持次数！
      */
     public void addMyHabitTask(final String data, final String name, final int modify, final int expectDay,
-                               final String clockTime, final int colorNumber,final int serviceNumber) {
+                               final String clockTime, final int colorNumber, final int serviceNumber) {
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -293,7 +314,7 @@ public class DBControl {
                 myIntegralList.setInsistDay(0);     //已经坚持的天数
                 myIntegralList.setColorNumber(colorNumber);     //颜色序号
                 myIntegralList.setStart(false);
-                myIntegralList.setIsClockTime(true);
+                myIntegralList.setIsClockTime(false);
                 myIntegralList.setServiceNumber(serviceNumber);
 
                 int dates[] = showHistory(name, 0);
@@ -519,6 +540,51 @@ public class DBControl {
     public int showTotalOkTaskNumber() {
         int o = mRealm.where(MyHabitTask.class).sum("okNumber").intValue();
         return o;
+    }
+
+    /**
+     * 查看前一天是否完成了所有的习惯
+     *
+     * @return 都完成 返回true
+     */
+    public int showYesterdayIs() {
+        RealmResults<MyHabitTask> myHabitTasks = mRealm.where(MyHabitTask.class).findAll();
+        if (myHabitTasks.size() == 0) {
+            return 0;
+        } else {
+            MyHabitTask myHabitTask;
+            if (myHabitTasks.size() == 1) {
+                myHabitTask = myHabitTasks.get(myHabitTasks.size() - 1);
+                return myHabitTask.getHoldNumber();
+            } else
+                myHabitTask = myHabitTasks.get(myHabitTasks.size() - 2);
+            for (MyIntegralList ml : myHabitTask.getMyIntegralList()) {
+                if (!ml.isStart())
+                    return myHabitTask.getHoldNumber();
+            }
+            return (myHabitTask.getHoldNumber() + 1);
+        }
+    }
+
+
+    //获取个人中心中坚持天数
+    public int getHoldNumber() {
+        MyHabitTask myHabitTasks = mRealm.where(MyHabitTask.class).equalTo("data", data).findFirst();
+        if (myHabitTasks == null) {
+            return 0;
+        } else
+            return myHabitTasks.getHoldNumber();
+    }
+
+    //修改累计天数
+    public void amendHoldNumber(final int number) {
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                MyHabitTask myHabitTasks = mRealm.where(MyHabitTask.class).equalTo("data", data).findFirst();
+                myHabitTasks.setHoldNumber(number);
+            }
+        });
     }
 
     /**

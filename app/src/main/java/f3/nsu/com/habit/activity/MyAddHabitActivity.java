@@ -71,7 +71,7 @@ public class MyAddHabitActivity extends Activity {
         int number[] = generateRandomNumber();
         final ArrayList<TaskList> myIntegral = new ArrayList<>();
         for (MyIntegralList m : myIntegralLists)
-            myIntegral.add(new TaskList(m.getName(), m.getModify(), m.isStart(), m.getExpectDay(), m.getColorNumber(), m.getClockTime(),m.getServiceNumber()));
+            myIntegral.add(new TaskList(m.getName(), m.getModify(), m.isStart(), m.getExpectDay(), m.getColorNumber(), m.getClockTime(),m.getServiceNumber(),m.getIsClockTime()));
 
         List<TaskList> everList = new ArrayList<>();
         for (int i = 0; i < number.length; i++) {
@@ -194,7 +194,7 @@ public class MyAddHabitActivity extends Activity {
     private void getNoDifferent(List<MyIntegralList> myIntegralLists, List<TaskList> myHabitItems) {
         List<TaskList> myIntegralTaskList = new ArrayList<>();
         for (MyIntegralList m : myIntegralLists) {
-            myIntegralTaskList.add(new TaskList(m.getName(), m.getModify(), m.isStart(), m.getExpectDay(), m.getColorNumber(), m.getClockTime(),m.getServiceNumber()));
+            myIntegralTaskList.add(new TaskList(m.getName(), m.getModify(), m.isStart(), m.getExpectDay(), m.getColorNumber(), m.getClockTime(),m.getServiceNumber(),m.getIsClockTime()));
 
         }
         Map<String, Integer> map = new HashMap<String, Integer>(myIntegralTaskList.size() + myHabitItems.size());

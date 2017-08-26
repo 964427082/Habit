@@ -1,12 +1,14 @@
 package f3.nsu.com.habit.activity;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -29,6 +31,8 @@ import f3.nsu.com.habit.R;
 import f3.nsu.com.habit.RealmDataBase.DBControl;
 import f3.nsu.com.habit.RealmDataBase.TaskData.MyHabitTask;
 import f3.nsu.com.habit.RealmDataBase.TaskData.MyIntegralList;
+import f3.nsu.com.habit.tool.StartOrStopService;
+import f3.nsu.com.habit.ui.CountClockTime;
 import f3.nsu.com.habit.ui.Histogram;
 import f3.nsu.com.habit.ui.NewMonthDateView;
 import io.realm.RealmResults;
@@ -61,18 +65,23 @@ public class SituationActivity extends Activity {
 
     private int month = new GetTime().getMonth();
     private int year = new GetTime().getYear();
-    private int number = 1;
-    private String name;
-    private Context context = this;
+    private int number = 1;    //颜色序号
+    private String name;    //习惯名字
+    private String clockTime;    //闹钟时间
+    private int serviceNumber;      //服务序号
+    private boolean isClockTime = false;    //是否开启闹钟
+    public Context context = this;
     private List<Integer> list = new ArrayList<>();
     private PopupWindow mPopupWindow;
     private int oneNumber = 0, towNumber = 0, threeNumber = 0, fourNumber = 0;
     private AlertDialog.Builder builder = null;
     private AlertDialog alert = null;
     private View builderView;
-    private Context mContext;
-    private Button cancelButton,completeButton;
+    private Button cancelButton, completeButton;
+    private TextView newHabitName;      //修改习惯名字
     private Switch clockSwitch;
+    private boolean isStartService = false; //是否发出通知  仅在当前有效
+    private boolean isOnClick = false;      //是否点击了闹钟开关
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,6 +97,9 @@ public class SituationActivity extends Activity {
         Bundle bu = intent.getExtras();
         name = bu.getString("name");
         number = bu.getInt("colorNumber");
+        isClockTime = bu.getBoolean("isClockTime");
+        clockTime = bu.getString("clockTime");
+        serviceNumber = bu.getInt("serviceNumber");
         setColor(number);
         completeTag(name);
         int datas[] = DBControl.createRealm(context).showHistory(name, 1);
@@ -104,32 +116,32 @@ public class SituationActivity extends Activity {
             @Override
             public void onClick(int num, float x, float y, float value) {
                 //显示提示窗
-                View inflate = View.inflate(SituationActivity.this,R.layout.popupwindow,null);
+                View inflate = View.inflate(SituationActivity.this, R.layout.popupwindow, null);
                 TextView text = (TextView) inflate.findViewById(R.id.popup_window_text);
 
                 text.setText(value + "%\n" + showNumber(num) + "次");
-                if(mPopupWindow != null){
+                if (mPopupWindow != null) {
                     mPopupWindow.dismiss();
                 }
-                mPopupWindow = new PopupWindow(inflate,150,100,true);
+                mPopupWindow = new PopupWindow(inflate, 150, 100, true);
                 mPopupWindow.setTouchable(true);
 
                 mPopupWindow.showAsDropDown(listViewHistogram, (int) (x - 240),
-                        (int)((- listViewHistogram.getHeight()) + y - 105));
+                        (int) ((-listViewHistogram.getHeight()) + y - 105));
 //                mPopupWindow.setBackgroundDrawable(getResources().getDrawable(R.mipmap.card_2_bg));
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         mPopupWindow.dismiss();
                     }
-                },3000);
+                }, 3000);
             }
         });
     }
 
     //返回该周完成次数
     private int showNumber(int num) {
-        switch (num){
+        switch (num) {
             case 1:
                 return oneNumber;
             case 2:
@@ -263,43 +275,79 @@ public class SituationActivity extends Activity {
     }
 
 
-
+    //对某个习惯的编辑操作
     private void showEditDialog() {
-        mContext = SituationActivity.this;
-        builder = new AlertDialog.Builder(mContext);
+        builder = new AlertDialog.Builder(context);
         final LayoutInflater inflater = SituationActivity.this.getLayoutInflater();
-        builderView = inflater.inflate(R.layout.alertdialog_edit,null);
+        builderView = inflater.inflate(R.layout.alertdialog_edit, null);
         builder.setView(builderView);
         builder.setCancelable(false);
         alert = builder.create();
+        newHabitName = (TextView) builderView.findViewById(R.id.new_habit_name_text_view);
         cancelButton = (Button) builderView.findViewById(R.id.cancel_button);
         completeButton = (Button) builderView.findViewById(R.id.complete_button);
         clockSwitch = (Switch) builderView.findViewById(R.id.clock_switch);
+        newHabitName.setText(name);
+        if (isClockTime)
+            clockSwitch.setChecked(true);
         clockSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
-                    Toast.makeText(mContext,"您开启了闹钟提醒！",Toast.LENGTH_LONG).show();
-                }else {
-                    Toast.makeText(mContext,"您关闭了闹钟提醒！",Toast.LENGTH_LONG).show();
+                Log.i(TAG, "onCheckedChanged: 点击闹钟开关");
+                isOnClick = true;
+                if (isChecked) {
+                    isStartService = true;
+                    isClockTime = true;
+                } else {
+                    isStartService = false;
+                    isClockTime = false;
                 }
             }
         });
+        //取消逻辑
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext,"您点击了取消!", Toast.LENGTH_LONG).show();
                 alert.dismiss();
             }
         });
+        //保存逻辑
         completeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext,"您点击了完成！",Toast.LENGTH_LONG).show();
+                if (isOnClick) {  //点击了闹钟开关   才有无通知的说法
+                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                    if (isStartService) {
+                        //计算预计提醒时间
+                        //判断名字是否重复
+                        int hour = Integer.parseInt(clockTime.substring(0, 2));
+                        int minuet = Integer.parseInt(clockTime.substring(3, 5));
+                        if (hour == 0)
+                            hour = 24;
+                        int everTime = new CountClockTime(hour, minuet).getTime();
+                        int newHour = everTime / 60;
+                        int newMinuet = everTime % 60;
+                        if (newHour == 0) {
+                            if (newMinuet == 1) {
+                                Toast.makeText(context, "闹钟不到一分钟后提醒", Toast.LENGTH_LONG).show();
+                            } else
+                                Toast.makeText(context, "闹钟" + newMinuet + "分钟后提醒", Toast.LENGTH_LONG).show();
+                        } else {
+                            if (newMinuet == 0)
+                                Toast.makeText(context, "闹钟" + newHour + "小时后提醒", Toast.LENGTH_LONG).show();
+                            else
+                                Toast.makeText(context, "闹钟" + newHour + "小时" + newMinuet + "分钟后提醒", Toast.LENGTH_LONG).show();
+                        }
+                        new StartOrStopService(alarmManager).isStartService(name,clockTime,serviceNumber
+                        ,true,getApplicationContext(),isClockTime);
+                    } else {
+                        new StartOrStopService(alarmManager).isStartService(name,clockTime,serviceNumber
+                                ,false,getApplicationContext(),isClockTime);
+                    }
+                    DBControl.createRealm(context).amendMyHabitIsStartService(name, isClockTime);
+                }
                 alert.dismiss();
             }
         });
-
     }
-
 }

@@ -16,16 +16,18 @@ public class MyHabitTask extends RealmObject {
     private RealmList<MyIntegralList> myIntegralList;
     private int todayIntegral; //当天积累的分数
     private int okNumber;       //当天完成次数
+    private int holdNumber;     //坚持天数
 
     public MyHabitTask() {
     }
 
-    public MyHabitTask(String data, RealmList<MyIntegralList> myIntegralList, int todayIntegral, int okNumber,int month) {
+    public MyHabitTask(String data, RealmList<MyIntegralList> myIntegralList, int todayIntegral, int okNumber,int month,int holdNumber) {
         this.data = data;
         this.myIntegralList = myIntegralList;
         this.todayIntegral = todayIntegral;
         this.okNumber = okNumber;
         this.month = month;
+        this.holdNumber = holdNumber;
     }
 
     public String getData() {
@@ -66,5 +68,13 @@ public class MyHabitTask extends RealmObject {
 
     public void setMonth(int month) {
         this.month = month;
+    }
+
+    public int getHoldNumber() {
+        return holdNumber;
+    }
+
+    public void setHoldNumber(int holdNumber) {
+        this.holdNumber = holdNumber;
     }
 }

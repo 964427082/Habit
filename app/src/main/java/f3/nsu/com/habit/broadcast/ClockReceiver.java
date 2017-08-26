@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import java.util.List;
 
@@ -43,18 +42,20 @@ public class ClockReceiver extends BroadcastReceiver {
 //            }
 //        }
         if (intent.getAction() == "com.habit.service") {
-            isServiceRunning(context, serviceName);
-            Log.i(TAG, "onStartCommand111111: 广播去重复服务");
+//            isServiceRunning(context, serviceName);
+
             Bundle bundle = intent.getExtras();
             String name = bundle.getString("name");
             String clockTime = bundle.getString("clockTime");
             int number = bundle.getInt("number");
+            boolean isClockTime = bundle.getBoolean("isClockTime");
             Intent i = new Intent(context, ClockTimeService.class);
             Bundle bu = new Bundle();
             bu.putString("name", name);
             bu.putString("clockTime", clockTime);
-            bu.putBoolean("isClockTime", true);
+            bu.putBoolean("isClockTime", isClockTime);
             bu.putInt("number",number);
+            bu.putBoolean("broadcastReceiver",true);
             i.putExtras(bu);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startService(i);
@@ -62,14 +63,12 @@ public class ClockReceiver extends BroadcastReceiver {
     }
 
     public static boolean isServiceRunning(Context mContext, String className) {
-        boolean isRunning = false;
         ActivityManager activityManager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningServiceInfo> serviceInfoList = activityManager.getRunningServices(30);
         if (!(serviceInfoList.size() > 0)) {
             return false;
         }
         for (ActivityManager.RunningServiceInfo i : serviceInfoList) {
-            Log.i(TAG, "isServiceRunning: serviceName = " + i.service.getClassName());
             if (i.service.getClassName().contains(className) == true) {
                 return true;
             }

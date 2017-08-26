@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -147,11 +146,10 @@ public class AddHabitActivity extends FragmentActivity implements View.OnClickLi
             case R.id.complete_img_btn:
                 is = isComplete();
                 if (is == true) {
-                    if(customList.size() != 0){
-                        serviceNumber = customList.get(customList.size() - 1).getServiceNumber();
+                    if(customList.size() > 0){
+                        serviceNumber = customList.get(customList.size() - 1).getServiceNumber() + 1;
                     }else
-                        serviceNumber = 21;
-                    Log.i(TAG, "onClick: serviceNumber = " + serviceNumber);
+                        serviceNumber = 34;
                     String name = nameEditText.getText().toString();
                     int integer = Integer.valueOf(dayEditText.getText().toString());
                     int h = hour_numberPicker.getValue();
