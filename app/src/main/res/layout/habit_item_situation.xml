@@ -4,18 +4,23 @@
     android:layout_height="match_parent"
     android:background="#f9f9f9">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:background="#57a0d2"/>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="58dp"
-        android:background="#ffffff"
-        android:id="@+id/relativeLayout">
+        android:layout_height="50dp"
+        android:background="#47b8e7"
+        android:id="@+id/relativeLayout"
+        android:layout_marginTop="25dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="习惯详情"
-            android:textColor="#262626"
+            android:textColor="#fff"
             android:textSize="18sp" />
 
         <ImageButton
@@ -23,9 +28,12 @@
             android:layout_width="36dp"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
             android:background="@null"
-            android:src="@mipmap/arrow_left" />
+            android:src="@mipmap/arrow_leftw"
+            android:paddingBottom="15dp"
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="15dp"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -33,7 +41,8 @@
         android:layout_height="136dp"
         android:background="@mipmap/card_1_bg"
         android:layout_below="@+id/relativeLayout"
-        android:layout_alignEnd="@+id/relativeLayout2">
+        android:layout_alignEnd="@+id/relativeLayout2"
+        android:layout_marginTop="10dp">
 
         <!--//该图标需要自动去匹配！-->
         <!--<f3.nsu.com.habit.ui.DrawCircle-->
@@ -68,7 +77,8 @@
                 android:id="@+id/image_view_eg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/icon_edit" />
+                android:src="@mipmap/icon_edit"
+                android:layout_marginTop="3dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -151,7 +161,7 @@
         android:layout_width="350dp"
         android:layout_height="149dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="207dp"
+        android:layout_marginTop="233dp"
         android:background="@mipmap/card_2_bg"
         android:id="@+id/relativeLayout2">
 
@@ -201,7 +211,7 @@
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="364dp"
+        android:layout_marginTop="393dp"
         android:background="@mipmap/card_3_bg">
 
         <ImageView

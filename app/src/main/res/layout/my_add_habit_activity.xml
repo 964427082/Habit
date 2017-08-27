@@ -6,30 +6,33 @@
     <!--状态栏-->
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="22dp"
-        android:background="@mipmap/clander_bg_top"
+        android:layout_height="25dp"
+        android:background="#57a0d2"
         android:layout_alignParentTop="true"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="#ffffff"
-        android:layout_marginTop="22dp">
+        android:background="#47b8e7"
+        android:layout_marginTop="25dp">
 
         <ImageButton
             android:id="@+id/habit_back_adapter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:padding="12dp"
-            android:src="@mipmap/arrow_left"
-            android:background="@null"/>
+            android:src="@mipmap/arrow_leftw"
+            android:background="@null"
+            android:paddingRight="20dp"
+            android:paddingTop="15dp"
+            android:paddingLeft="20dp"
+            android:paddingBottom="15dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="添加习惯"
             android:textSize="18sp"
-            android:textColor="#262626"/>
+            android:textColor="#fff"/>
 
         <ImageButton
             android:id="@+id/habit_save_adapter"
@@ -37,9 +40,12 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="13dp"
-            android:src="@mipmap/invalid_name"
-            android:background="@null"/>
+            android:src="@mipmap/invalid_namew"
+            android:background="@null"
+            android:paddingBottom="15dp"
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="15dp"/>
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView

@@ -11,23 +11,26 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="22dp"
-        android:background="@mipmap/clander_bg_top"
+        android:layout_height="25dp"
+        android:background="#57a0d2"
         android:layout_alignParentTop="true"/>
     <RelativeLayout
-        android:layout_marginTop="22dp"
+        android:layout_marginTop="25dp"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="#ffffff">
+        android:background="#47b8e7">
 
         <ImageButton
             android:id="@+id/return_imageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:padding="12dp"
-            android:src="@mipmap/arrow_left"
-            android:background="@null"/>
+            android:src="@mipmap/arrow_leftw"
+            android:background="@null"
+            android:paddingRight="20dp"
+            android:paddingTop="15dp"
+            android:paddingLeft="20dp"
+            android:paddingBottom="15dp"/>
 
         <TextView
             android:id="@+id/textView"
@@ -35,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="新习惯"
-            android:textColor="#262626"
+            android:textColor="#ffffff"
             android:textSize="18sp" />
 
         <ImageButton
@@ -44,8 +47,11 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="13dp"
-            android:src="@mipmap/invalid_name"
+            android:paddingBottom="15dp"
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="15dp"
+            android:src="@mipmap/invalid_namew"
             android:background="@null"/>
     </RelativeLayout>
     <!--习惯名字View-->
@@ -53,7 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="77dp"
+        android:layout_marginTop="80dp"
         android:background="@mipmap/rectangle_2"
         android:elevation="4dp">
 
@@ -211,7 +217,7 @@
         android:layout_width="wrap_content"
         android:layout_height="260dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="267dp"
+        android:layout_marginTop="270dp"
         android:background="@mipmap/rectangle_2"
         android:elevation="4dp">
         <TextView

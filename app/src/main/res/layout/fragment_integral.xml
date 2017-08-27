@@ -9,13 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@mipmap/blue_card"
-        android:layout_marginTop="22dp">
+        android:layout_marginTop="25dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="积分商店"
-            android:textSize="21sp"
+            android:textSize="18sp"
             android:textColor="#ffffff"
             android:layout_marginTop="18dp"
             android:layout_centerHorizontal="true"/>
@@ -25,9 +25,11 @@
             android:layout_height="wrap_content"
             android:src="@mipmap/icon_insert"
             android:background="@null"
-            android:layout_marginTop="21dp"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="17dp"/>
+            android:paddingTop="21dp"
+            android:paddingRight="17dp"
+            android:paddingLeft="17dp"
+            android:paddingBottom="21dp"/>
         <TextView
             android:id="@+id/my_integral_textView"
             android:layout_width="wrap_content"

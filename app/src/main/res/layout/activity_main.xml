@@ -9,8 +9,8 @@
     <!--状态栏-->
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="22dp"
-        android:background="@mipmap/clander_bg_top"
+        android:layout_height="25dp"
+        android:background="#57a0d2"
         android:layout_alignParentTop="true"/>
     <!--底部导航栏-->
     <LinearLayout
