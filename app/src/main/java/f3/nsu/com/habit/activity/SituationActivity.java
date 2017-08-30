@@ -327,6 +327,9 @@ public class SituationActivity extends Activity {
                         int everTime = new CountClockTime(hour, minuet).getTime();
                         int newHour = everTime / 60;
                         int newMinuet = everTime % 60;
+//                        if(isClockTime){
+//                            //此处应做 查看习惯是否完成 去是否开启闹钟
+//                        }
                         if (newHour == 0) {
                             if (newMinuet == 1) {
                                 Toast.makeText(context, "闹钟不到一分钟后提醒", Toast.LENGTH_LONG).show();

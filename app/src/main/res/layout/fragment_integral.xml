@@ -70,6 +70,10 @@
         android:overScrollMode="never"
         android:scrollbars="none"
         android:divider="#00000000">
-
     </ListView>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="150dp"
+        android:id="@+id/list_view_background_02"/>
 </RelativeLayout>

@@ -42,8 +42,7 @@ public class ClockReceiver extends BroadcastReceiver {
 //            }
 //        }
         if (intent.getAction() == "com.habit.service") {
-//            isServiceRunning(context, serviceName);
-
+            isServiceRunning(context, serviceName);
             Bundle bundle = intent.getExtras();
             String name = bundle.getString("name");
             String clockTime = bundle.getString("clockTime");

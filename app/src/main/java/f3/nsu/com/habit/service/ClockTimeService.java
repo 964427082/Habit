@@ -10,15 +10,12 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
 import f3.nsu.com.habit.R;
 import f3.nsu.com.habit.activity.MainActivity;
-import f3.nsu.com.habit.broadcast.ClockReceiver;
 import f3.nsu.com.habit.tool.StartOrStopService;
-import f3.nsu.com.habit.ui.CountClockTime;
 
 /**
  * Created by 爸爸你好 on 2017/8/8.
@@ -31,9 +28,6 @@ public class ClockTimeService extends Service {
     private String clockTime = null;
     private boolean isClockTime = false;
     private int serviceNumber = 0;
-
-    int anMin = 60 * 1000;          //这是一分钟的毫秒数
-    int anS = 1 * 1000;             //这是一秒钟的毫秒数
 
     @Nullable
     @Override

@@ -21,6 +21,15 @@ public class StartOrStopService {
     public StartOrStopService(AlarmManager alarmManager){
         this.alarmManager = alarmManager;
     }
+
+    /**
+     * @param name      习惯名称
+     * @param clockTime 提醒时间
+     * @param serviceNumber     服务序号
+     * @param is        是否去开启
+     * @param context
+     * @param isClockTime    是否已经开启了
+     */
     public void isStartService(String name, String clockTime, int serviceNumber, boolean is,
                                Context context,Boolean isClockTime){
         Intent i = new Intent(context, ClockReceiver.class);
@@ -31,8 +40,8 @@ public class StartOrStopService {
             hour = 24;
         int getTime = new CountClockTime(hour, minuet).getTime();
         int callTime = getTime * anMin;     //这是要提醒的时间
-        int egTime = 10 * anS;
-        triggerAtTime = SystemClock.elapsedRealtime() + egTime;      //测试用     5秒后发送通知
+        int egTime = 10 * anS;              //这是测试用的
+        triggerAtTime = SystemClock.elapsedRealtime() + callTime;
         Bundle bu = new Bundle();
         i.setAction("com.habit.service");
         bu.putString("name", name);

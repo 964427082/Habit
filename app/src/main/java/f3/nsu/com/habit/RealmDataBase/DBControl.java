@@ -336,6 +336,22 @@ public class DBControl {
         });
     }
 
+    //保存我已经完成的习惯
+    public void saveMyHabitTaskIsOk(final MyIntegralList l, final String data) {
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                //可以去存储完成了的习惯   日期为 myHabit.getData
+                int id = DBControl.getId();
+                Log.i(TAG, "execute111: id = " + id + "...data = " + data + "..l.name = " + l.getName());
+                MyHabitTaskIsOk myHabitTaskIsOk = realm.createObject(MyHabitTaskIsOk.class, id);
+                myHabitTaskIsOk.setName(l.getName());
+                myHabitTaskIsOk.setData(data);
+                myHabitTaskIsOk.setInsistDay(l.getInsistDay());
+                Realm.getDefaultInstance().copyToRealmOrUpdate(myHabitTaskIsOk);
+            }
+        });
+    }
 
     /**
      * 复制我前n天的习惯数据
@@ -355,8 +371,10 @@ public class DBControl {
                 for (MyIntegralList m : my) {
                     //如果预计天数等于完成天数   则不去加载
                     if (m.getInsistDay() == m.getExpectDay()) {
+//                        Log.i(TAG, "execute111: 昨天的习惯中有一天全部完成了");
                         //可以去存储完成了的习惯   日期为 myHabit.getData
                         int id = DBControl.getId();
+                        Log.i(TAG, "execute111: id = " + id + "...data = " + myHabit.getData() + "..name = " + m.getName());
                         MyHabitTaskIsOk myHabitTaskIsOk = realm.createObject(MyHabitTaskIsOk.class, id);
                         myHabitTaskIsOk.setName(m.getName());
                         myHabitTaskIsOk.setData(myHabit.getData());
@@ -547,34 +565,52 @@ public class DBControl {
      *
      * @return 都完成 返回true
      */
-    public int showYesterdayIs() {
+    public int[] showYesterdayIs() {
         RealmResults<MyHabitTask> myHabitTasks = mRealm.where(MyHabitTask.class).findAll();
         if (myHabitTasks.size() == 0) {
-            return 0;
+            Log.i(TAG, "execute: 还没有数据  则返回 0 ");
+            int j[] = {0, 0};
+            return j;
         } else {
-            MyHabitTask myHabitTask;
-            if (myHabitTasks.size() == 1) {
-                myHabitTask = myHabitTasks.get(myHabitTasks.size() - 1);
-                return myHabitTask.getHoldNumber();
-            } else
-                myHabitTask = myHabitTasks.get(myHabitTasks.size() - 2);
-            for (MyIntegralList ml : myHabitTask.getMyIntegralList()) {
-                if (!ml.isStart())
-                    return myHabitTask.getHoldNumber();
+            MyHabitTask myHabitTask = myHabitTasks.get(myHabitTasks.size() - 1);
+            if (myHabitTasks.size() > 1) {
+                if (myHabitTask.getData().equals(data)) {
+                    int i = getNumber(myHabitTasks.get(myHabitTasks.size() - 2));
+                    Log.i(TAG, "execute: 1111 数据大于2 且最后一条数据是今天" +
+                            "如果昨天完成 则返回昨天的坚持天数+1 data= " + myHabitTask.getData() + "..i = " + i);
+                    int j[] = {i, 1};
+                    return j;
+                } else {
+                    int i = getNumber(myHabitTask);
+                    Log.i(TAG, "execute: 2222 数据大于2 且最后一条数据不是今天 则返回最后一天的坚持天数 data= "
+                            + myHabitTask.getData() + "..i = " + i);
+                    int j[] = {i, 0};
+                    return j;
+                }
+            } else {
+                if (myHabitTask.getData().equals(data)) {
+                    Log.i(TAG, "execute: 3333 数据只有一条时 且为今天 则返回0");
+                    int j[] = {0, 0};
+                    return j;
+                } else {
+                    Log.i(TAG, "execute: 4444 数据只有一条时 但为昨天 看情况返回");
+                    getNumber(myHabitTask);
+                    int j[] = {getNumber(myHabitTask), 1};
+                    return j;
+                }
             }
-            return (myHabitTask.getHoldNumber() + 1);
         }
     }
 
-
-    //获取个人中心中坚持天数
-    public int getHoldNumber() {
-        MyHabitTask myHabitTasks = mRealm.where(MyHabitTask.class).equalTo("data", data).findFirst();
-        if (myHabitTasks == null) {
-            return 0;
-        } else
-            return myHabitTasks.getHoldNumber();
+    private int getNumber(MyHabitTask t) {
+        for (MyIntegralList l : t.getMyIntegralList()) {
+            if (!l.isStart()) {
+                return t.getHoldNumber();
+            }
+        }
+        return t.getHoldNumber() + 1;
     }
+
 
     //修改累计天数
     public void amendHoldNumber(final int number) {
@@ -582,7 +618,11 @@ public class DBControl {
             @Override
             public void execute(Realm realm) {
                 MyHabitTask myHabitTasks = mRealm.where(MyHabitTask.class).equalTo("data", data).findFirst();
-                myHabitTasks.setHoldNumber(number);
+                if (myHabitTasks != null) {
+                    Log.i(TAG, "execute: 今天有数据");
+                    myHabitTasks.setHoldNumber(number);
+                } else
+                    Log.i(TAG, "execute: 今天没有数据");
             }
         });
     }

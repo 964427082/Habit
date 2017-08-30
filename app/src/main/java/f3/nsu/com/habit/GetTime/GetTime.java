@@ -25,8 +25,8 @@ public class GetTime {
         nowMinute = c.get(Calendar.MINUTE);
 
 //        year = 2017;
-//        month = 9;
-//        day = 1;
+//        month = 8;
+//        day = 8;
 
     }
 
