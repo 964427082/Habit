@@ -16,7 +16,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:layout_marginLeft="61dp"
-        android:text="奖励一个小姐姐"
         android:textSize="16sp"
         android:textColor="#434343"/>
     <TextView
@@ -25,7 +24,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="34dp"
         android:layout_marginLeft="61dp"
-        android:text="奖励"
         android:textSize="12sp"
         android:textColor="#757575"/>
     <RelativeLayout
@@ -47,7 +45,6 @@
             android:id="@+id/Integral"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="200"
             android:textSize="16sp"
             android:textColor="#ffffff"
             android:layout_centerVertical="true"

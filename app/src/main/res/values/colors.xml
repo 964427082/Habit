@@ -8,4 +8,5 @@
     <color name="red_500">#ef4836</color>
     <color name="add_red">#e67979</color>
     <color name="my_text_color">#555</color>
+    <color name="reward_list_finish">#dcdcdc</color>
 </resources>

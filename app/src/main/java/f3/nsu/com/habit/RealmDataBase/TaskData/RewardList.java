@@ -13,13 +13,15 @@ public class RewardList extends RealmObject {
 
     private String why;     //奖励原因
     private int integral;   //所需积分
+    private boolean isFinish;   //是否完成
 
     public RewardList(){}
 
-    public RewardList(String name,String why,int integral){
+    public RewardList(String name,String why,int integral,boolean isFinish){
         this.name = name;
         this.why = why;
         this.integral = integral;
+        this.isFinish = isFinish;
     }
 
     public String getName() {
@@ -44,5 +46,13 @@ public class RewardList extends RealmObject {
 
     public void setIntegral(int integral) {
         this.integral = integral;
+    }
+
+    public boolean getIsFinish() {
+        return isFinish;
+    }
+
+    public void setFinish(boolean finish) {
+        isFinish = finish;
     }
 }

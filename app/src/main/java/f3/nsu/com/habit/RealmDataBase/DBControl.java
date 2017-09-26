@@ -669,6 +669,7 @@ public class DBControl {
                 rewardList.setName(name);
                 rewardList.setWhy(why);
                 rewardList.setIntegral(integral);
+                rewardList.setFinish(false);
             }
         });
     }
@@ -714,6 +715,17 @@ public class DBControl {
                 convertIntegralList.setName(name);
                 convertIntegralList.setIntegral(integral);
                 convertIntegralList.setData(data);
+            }
+        });
+    }
+
+    //奖励兑换后修改isFinish == ture
+    public void amendRewardListIsFinish(final String name) {
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                RewardList rewardList = mRealm.where(RewardList.class).equalTo("name", name).findFirst();
+                    rewardList.setFinish(true);
             }
         });
     }
